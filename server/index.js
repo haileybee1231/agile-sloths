@@ -4,9 +4,7 @@ let db = require('../database-mysql');
 let session = require('express-session');
 require('dotenv').config();
 // let requestHelpers = require('../helpers.js') // to implement from Shannon
-let serverHelpers = require('../lib/serverHelpers.js') // 
-
-
+let serverHelpers = require('../lib/serverHelpers.js') 
 let app = express();
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../react-client/dist'));
