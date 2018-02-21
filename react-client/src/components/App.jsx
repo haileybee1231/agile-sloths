@@ -5,9 +5,8 @@ import LoginForm from './Login.jsx';
 
 const App = ({ store }) => (
   <div>
-    <LoginForm/>
       <Provider store={store}>
-        <h1>Grassroots</h1>
+        <LoginForm/>
       </Provider>
   </div>
 )

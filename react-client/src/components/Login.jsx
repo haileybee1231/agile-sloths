@@ -17,7 +17,8 @@ const LoginForm = () =>  (
         verticalAlign='middle'
       >
         <Grid.Column style={{ maxWidth: 450 }}>
-          <Header as='h2' textAlign='center'>
+          <Header size='huge' style={{ fontSize: 60 }}>GRASSROOTS</Header>
+          <Header as='h2' color='green' textAlign='center'>
             {' '}Log-in to your account
           </Header>
   
@@ -37,7 +38,7 @@ const LoginForm = () =>  (
                 type='password'
               />
                 
-              <Button fluid size='large'>Login</Button>
+              <Button color='green' fluid size='large'>Login</Button>
             </Segment>
           </Form>
           <Message>
