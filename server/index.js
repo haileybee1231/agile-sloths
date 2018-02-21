@@ -17,34 +17,59 @@ app.use(session({
 }));
 
 ///// MAIN PAGE REQUESTS /////
-app.get('/', serverHelpers.checkUserStatus, function(req, res) {
-  // if not redirected via the checkUserStatus helper, will render the index page below
-  res.render('index')
+app.get('/', function(req, res) {
+  // will render index page regardless of loggedIn or not 
+  // but only those logged in will be able to create/save
+  res.render('index');
 });
 
 app.get('/candidates/:id', function(req, res) {
-  // find candidate based on passed in userID
-})
+  // show candidate page
+});
 
-///// USER RELATED REQUESTS /////
+app.post('/candidates/:id', function(req, res) {
+  // find candidate based on passed in userID
+});
+
+app.get('/events/:id', function(req, res) {
+  // show specific event page
+});
+
+app.post('/events/:id', function(req, res) {
+  // find event data based on passed id
+});
+
+
+///// USER-RELATED REQUESTS /////
 app.get('/login', function(req, res) {
   // render login page
 });
 
 app.post('/login', function(req, res) {
   // grab username and password from req
+  let username = req.body.username;
+  let password = req.body.password;
   // check if username exists
-  // if so,
-    // check that users stored password against the hashed version of the user input plain password
-      // if those match
+  // is this still relevant if using passport??
+  requestHelpers.CheckIfUserExists(function(err, user) {
+    // if those match
+    if (user) {
+      // check that users stored password against the hashed version of the user input plain password
+      // check using passport??
+      // if passwords match
         // clear any session that might exist
+        //req.session.destroy()
         // set the session to the current user
+        //req.sesion.user = user;
         // redirect to index page
-      // if not
+        //res.status(201).redirect('/');
+      // else 
         // console.log("That password and/or email combination was unsuccessful. Please try again.");
-        // redirect to login page
-  // if no username exists
-    // redirect to signup page
+        // res.status(302).redirect('login')
+    } else { // if no user was found
+      // redirect to login page
+    }
+  });
 });
 
 app.get('/signup', function(req, res) {
