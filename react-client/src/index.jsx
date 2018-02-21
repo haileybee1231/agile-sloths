@@ -1,20 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import $ from 'jquery';
+import App from './components/App.jsx';
+import store from './store/index.js';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-
-    }
-  }
-
-  render () {
-    return (<div>
-      <h1>Grassroots</h1>
-    </div>)
-  }
-}
-
-ReactDOM.render(<App />, document.getElementById('app'));
+ReactDOM.render(<App store={store}/>, document.getElementById('mount'));
