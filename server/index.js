@@ -22,19 +22,27 @@ app.get('/', function(req, res) {
 });
 
 app.get('/candidates/:id', function(req, res) {
-  // retreive canidate information from DB
-  db.getCanidateById(function(err, data) {
+  // retreive candidate information from DB
+  db.getCandidateById(function(err, data) {
     if(err) {
-      console.log('Error finding canidate');
+      console.log('Error finding candidate');
       res.status(500).end();
     } else {
-      console.log('Successfully retreived canidate');
+      console.log('Successfully retreived candidate');
       res.status(200).send(JSON.stringify(data));
     }
   });
 });
 
-app.post('/candidates/:id', function(req, res) {
+// a post request adds to the list of candidates 
+// or should this be a request to the API??
+app.post('/candidates', function(req, res) {
+  // receives post request upon new candidate form submission
+  // parse out all of the information from the req.body
+  // check if that candidate exists in the database
+
+  // save to the database
+  // res.status(201).end()
 
 });
 
@@ -51,7 +59,9 @@ app.get('/events/:id', function(req, res) {
   });
 });
 
-app.post('/events/:id', function(req, res) {
+// a post request adds to the list of events
+// or should this be a request to the API??
+app.post('/events', function(req, res) {
   // find event data based on passed id
 });
 
@@ -108,6 +118,8 @@ app.post('/logout', function(req, res) {
   // redirect to login page
 });
 
-app.listen(3000, function() {
-  console.log('listening on port 3000!');
+
+let port = 3000
+app.listen(port, function() {
+  console.log(`The server is listening on port ${ port }!`);
 });
