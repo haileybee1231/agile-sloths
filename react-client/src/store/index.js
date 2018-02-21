@@ -3,7 +3,7 @@ import { combineReducers } from 'redux';
 import testReducer from '../../src/reducers/testReducer.js';
 
 const reducer = combineReducers({
-  test: testReducer
+  data: testReducer
 });
 
 const store = createStore(reducer);
