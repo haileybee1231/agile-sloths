@@ -10,27 +10,45 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../react-client/dist'));
 app.use(session({
   secret: process.env.SESSION_PASSWORD,
-  resave: false,
+  resave: true,
   saveUninitialized: true
 }));
 
 ///// MAIN PAGE REQUESTS /////
 app.get('/', function(req, res) {
-  // will render index page regardless of loggedIn or not 
+  // will render index page regardless of logged in or not 
   // but only those logged in will be able to create/save
   res.render('index');
 });
 
 app.get('/candidates/:id', function(req, res) {
-  // show candidate page
+  // retreive canidate information from DB
+  db.getCanidateById(function(err, data) {
+    if(err) {
+      console.log('Error finding canidate');
+      res.status(500).end();
+    } else {
+      console.log('Successfully retreived canidate');
+      res.status(200).send(JSON.stringify(data));
+    }
+  });
 });
 
 app.post('/candidates/:id', function(req, res) {
-  // find candidate based on passed in userID
+
 });
 
 app.get('/events/:id', function(req, res) {
-  // show specific event page
+  // retreive event information from DB
+  db.getEventById(function (err, data) {
+    if (err) {
+      console.log('Error finding event');
+      res.status(500).end();
+    } else {
+      console.log('Successfully retreived event');
+      res.status(200).send(JSON.stringify(data));
+    }
+  });
 });
 
 app.post('/events/:id', function(req, res) {
