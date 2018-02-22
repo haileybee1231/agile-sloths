@@ -62,6 +62,7 @@ class SignUpForm extends React.Component {
                         <Form.Group>
                             <Form.Field required control={Input} label='First Name' placeholder='First name' />
                             <Form.Field required control={Input} label='Last Name' placeholder='Last name' />
+                            <Form.Field required control={Input} label='Zip code' placeholder='Zip code' />
                         </Form.Group>
 
                         { this.state.CandidateTrue && [
