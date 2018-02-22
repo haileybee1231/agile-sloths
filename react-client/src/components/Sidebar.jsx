@@ -7,7 +7,17 @@ class Sidebar extends React.Component {
         return (
             <Menu vertical>
                 <Menu.Item>
-                    <Menu.Header>Test</Menu.Header>
+                    <Menu.Header>Elections</Menu.Header>
+
+                    <Menu.Menu>
+                        <Menu.Item name='Governor'/>
+                        <Menu.Item name='Dog Catcher'/>
+                        <Menu.Item name='President'/>
+                        <Menu.Item name='Senator'/>
+                        <Menu.Item name='School Board'/>
+                        <Menu.Item name='District Representative'/>
+                        <Menu.Item name='House Member'/>
+                    </Menu.Menu>
                 </Menu.Item>
             </Menu>
         )
