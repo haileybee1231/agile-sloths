@@ -3,8 +3,13 @@ let bodyParser = require('body-parser');
 let db = require('../database-mysql');
 let session = require('express-session');
 require('dotenv').config();
-let serverHelpers = require('../lib/serverHelpers.js') 
+let passport = require('passport');
+let flash = require('connect-flash');
+let serverHelpers = require('../lib/serverHelpers.js')
 let app = express();
+
+require('../server/config/passport')(passport);
+
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../react-client/dist'));
 app.use(session({
@@ -12,10 +17,13 @@ app.use(session({
   resave: true,
   saveUninitialized: true
 }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash()); // uses flash connect to allow flash messages in stored session
 
 ///// MAIN PAGE REQUESTS /////
 app.get('/', function(req, res) {
-  // will render index page regardless of logged in or not 
+  // will render index page regardless of logged in or not
   // but only those logged in will be able to create/save
   res.render('index');
 });
@@ -34,7 +42,7 @@ app.get('/candidates/:id', function(req, res) {
   });
 });
 
-// a post request adds to the list of candidates 
+// a post request adds to the list of candidates
 // or should this be a request to the API??
 app.post('/candidates', function(req, res) {
   // receives post request upon new candidate form submission
@@ -86,7 +94,7 @@ app.post('/login', function(req, res) {
     // if those match
     if (user) {
       // check that users stored password against the hashed version of the user input plain password
-      // check if passwords match 
+      // check if passwords match
       // if (match) {
         // save and set sessions via passport instead
         // clear any session that might exist
@@ -105,10 +113,11 @@ app.post('/login', function(req, res) {
   });
 });
 
-app.get('/signup', function(req, res) {
- // render signup page
- res.status(200).render('signup')
-});
+app.get('/signup', passport.authenticate('local-signup', { // passport middleware authenticates signup
+  successRedirect: '/', // on success, redirect to main feed page
+  failureRedirect: '/signup', // on failure, keep on signup page
+  failureFlash: true
+}));
 
 app.post('/signup', function(req, res) {
   // check if username (and email??) exists
@@ -130,7 +139,8 @@ app.post('/logout', function(req, res) {
 });
 
 
-let port = 3000;
+let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000
+
 app.listen(port, function() {
   console.log(`The server is listening on port ${ port }!`);
 });

@@ -6,6 +6,6 @@ const reducer = combineReducers({ // combine all reducers from reducer file
   data: testReducer
 });
 
-const store = createStore(reducer); // create store
+const store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()); // create store and allow for chrome redux plugin
 
 export default store;
