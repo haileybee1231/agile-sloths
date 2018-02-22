@@ -130,6 +130,86 @@ app.post('/logout', function(req, res) {
 });
 
 
+
+
+
+/////////////////////////
+////// write to db //////
+/////////////////////////
+
+// on create user 
+db.connection.query('INSERT INTO users VALUES (email, password, bio, role, race) values ? ? ? ? ?', []);
+
+// on follow
+db.connection.query('INSERT INTO votercandidate (voter_id, candidate_id) values ? ?' []);
+
+// on create event
+db.connection.query('INSERT INTO events (title, location, time, description, host) values ? ? ? ? ?', []);
+
+// on create race
+db.connection.query('INSERT INTO races (office, date, location) values ? ? ?', []);
+
+// on edit profile
+db.connection.query();
+
+// on rsvp to event
+db.connection.query('INSERT INTO eventsusers (event_id, user_id) values ? ?', []);
+
+// on follow race
+db.connection.query('INSERT INTO racesusers (user_id, race_id) values ? ?', []);
+
+
+/////////////////////////
+////// pull from db //////
+/////////////////////////
+
+// load feed
+
+	// select events from following
+	db.connection.query();
+
+
+	// select races following
+	db.connection.query();
+
+
+	// select users following
+	db.connection.query();
+
+
+
+// load profile
+
+	// select user bio/info
+	db.connection.query();
+
+
+	// select events hosting
+	db.connection.query();
+
+
+	// select followers
+	db.connection.query();
+
+
+
+//on post 
+//have variables for email, password
+
+
+//on post to create event
+db.connection.query('INSERT INTO events (title, location, time, description, host) values []');
+
+//on get
+db.connection.query('SELECT [name] FROM users, eventsusers WHERE users ')
+
+//on post 
+
+
+// to get list of attendees:
+db.connection.query('SELECT [name] FROM users, eventsusers WHERE eventsusers.candidate = x AND eventsusers.voter_id = users.id') //?
+
+
 let port = 3000;
 app.listen(port, function() {
   console.log(`The server is listening on port ${ port }!`);
