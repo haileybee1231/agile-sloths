@@ -1,7 +1,16 @@
 import React from 'react'
 import { Menu, Input, Header } from 'semantic-ui-react'
+import data from '../testdata.js'
+const uuidv4 = require('uuid/v4')
 
 class Sidebar extends React.Component {
+    constructor(){
+        super()
+        this.state={
+            activeItem: ''
+        }
+        this.handleItemClick = this.handleItemClick.bind(this)
+    }
 
     handleItemClick(name){ this.setState({ activeItem: name }) }
 
@@ -18,24 +27,24 @@ class Sidebar extends React.Component {
                 <Menu.Item>
                     <Menu.Header>Elections</Menu.Header>
                     <Menu.Menu>
-                        {/* map out elections here */}
-                        <Menu.Item name='governor' active={activeItem === 'governor'} onClick={this.handleItemClick}/>
-                        <Menu.Item name='Dog Catcher' active={activeItem === 'dog catcher'} onClick={this.handleItemClick}/>
-                        <Menu.Item name='President' active={activeItem === 'president'} onClick={this.handleItemClick}/>
-                        <Menu.Item name='Senator' active={activeItem === 'senator'} onClick={this.handleItemClick}/>
-                        <Menu.Item name='School Board' active={activeItem === 'school board'} onClick={this.handleItemClick}/>
-                        <Menu.Item name='District Representative' active={activeItem === 'district representative'} onClick={this.handleItemClick}/>
-                        <Menu.Item name='House Member' active={activeItem === 'house member'} onClick={this.handleItemClick}/>
+                        {data.races.map((race) => {
+                            return (
+                                <Menu.Item name={race.office} active={activeItem === race.office} onClick={this.handleItemClick} key={uuidv4()}/>
+                            )
+                        })}
                     </Menu.Menu>
                 </Menu.Item>
 
                 <Menu.Item>
                     <Menu.Header>Candidates</Menu.Header>
                     <Menu.Menu>
-                        {/* map out candidates here */}
-                        <Menu.Item name='beto oRourke' active={activeItem === 'beto oRourke'} onClick={this.handleItemClick}/>
-
-                        
+                        {data.races.map((race) => {
+                            return race.candidates.map((candidate) => {
+                                return (
+                                    <Menu.Item name={candidate} active={activeItem === candidate} onClick={this.handleItemClick}/>
+                                )
+                            })
+                        })}
                     </Menu.Menu>
                 </Menu.Item>
             </Menu>
