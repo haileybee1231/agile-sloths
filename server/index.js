@@ -5,7 +5,7 @@ let session = require('express-session');
 require('dotenv').config();
 let passport = require('passport');
 let flash = require('connect-flash');
-let serverHelpers = require('../lib/serverHelpers.js')
+let serverHelpers = require('../lib/serverHelpers.js');
 let app = express();
 
 require('../server/config/passport')(passport);
@@ -13,13 +13,21 @@ require('../server/config/passport')(passport);
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../react-client/dist'));
 app.use(session({
-  secret: process.env.SESSION_PASSWORD,
-  resave: true,
-  saveUninitialized: true
+  secret: process.env.SESSION_PASSWORD || 'supersecretsecret',
+  resave: false,
+  saveUninitialized: false
 }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash()); // uses flash connect to allow flash messages in stored session
+
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+
+  res.code(401).end('You must log in to do that!');
+}
 
 ///// MAIN PAGE REQUESTS /////
 app.get('/', function(req, res) {
@@ -78,57 +86,41 @@ app.post('/events', function(req, res) {
 
 
 ///// USER-RELATED REQUESTS /////
-app.get('/login', function(req, res) {
-  // render login page
-  // will need to accomodate for react router
-  res.render('login')
-});
-
-app.post('/login', function(req, res) {
-  // grab username and password from req
-  let username = req.body.username;
-  let password = req.body.password;
-  // check if username exists
+app.post('/login', passport.authenticate('local-login', {
+  successRedirect: '/',
+  failureRedirect: '/login',
+  failureFlash: true
+}));
   // is this still relevant if using passport??
-  db.CheckIfUserExists(function(err, user) { // this name will need to change
-    // if those match
-    if (user) {
-      // check that users stored password against the hashed version of the user input plain password
-      // check if passwords match
-      // if (match) {
-        // save and set sessions via passport instead
-        // clear any session that might exist
-        //req.session.destroy()
-        // set the session to the current user
-        //req.sesion.user = user;
-        // redirect to index page
-        //res.status(201).redirect('/');
-      // } else {
-        // console.log("That password and/or email combination was unsuccessful. Please try again.");
-        // res.status(302).redirect('index')
-    } else { // if no user was found
-      // redirect to login page
-      res.status(302).redirect('login')
-    }
-  });
-});
+  // db.CheckIfUserExists(function(err, user) { // this name will need to change
+  //   // if those match
+  //   if (user) {
+  //     // check that users stored password against the hashed version of the user input plain password
+  //     // check if passwords match
+  //     // if (match) {
+  //       // save and set sessions via passport instead
+  //       // clear any session that might exist
+  //       //req.session.destroy()
+  //       // set the session to the current user
+  //       //req.sesion.user = user;
+  //       // redirect to index page
+  //       //res.status(201).redirect('/');
+  //     // } else {
+  //       // console.log("That password and/or email combination was unsuccessful. Please try again.");
+  //       // res.status(302).redirect('index')
+  //   } else { // if no user was found
+  //     // redirect to login page
+  //     res.status(302).redirect('login')
+  //   }
+  // });
 
-app.get('/signup', passport.authenticate('local-signup', { // passport middleware authenticates signup
+
+app.post('/signup', passport.authenticate('local-signup', { // passport middleware authenticates signup
   successRedirect: '/', // on success, redirect to main feed page
-  failureRedirect: '/signup', // on failure, keep on signup page
+  failureRedirect: '/', // on failure, keep on signup page
   failureFlash: true
 }));
 
-app.post('/signup', function(req, res) {
-  // check if username (and email??) exists
-    // if not,
-      // hash password
-      // save that user information (name, username, email, hashedPassword, bio?, etc.)
-      // set the session id to the current user
-      // redirect to the index page
-    // if so
-      // console.log('That username already exists, please try again')
-});
 
 app.post('/logout', function(req, res) {
   // terminate session id
