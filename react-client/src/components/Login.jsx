@@ -5,25 +5,26 @@ import { bindActionCreators } from 'redux'; // allows you to bind actions to met
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
 import $ from 'jquery';
 
-const LoginForm = (props) =>  ( //pass in props
-  <div className = 'login-form'>
-   <style>{`
-    body > div,
-    body > div > div,
-    body > div > div > div.login-form {
-      height: 100%;
-    }
-  `}</style>
-    <Grid
-      textAlign='center'
-      style = {{ height: '100%' }}
-      verticalAlign='middle'
-    >
-      <Grid.Column style={{ maxWidth: 450 }}>
-        <Header size='huge' style={{ fontSize: 60 }}>GRASSROOTS</Header>
-        <Header as='h2' color='green' textAlign='center'>
-          {' '}Log-in to your account
-        </Header>
+
+const LoginForm = () =>  (
+    <div className = 'login-form'>
+     <style>{`
+      body > div,
+      body > div > div,
+      body > div > div > div.login-form {
+        height: 100%;
+      }
+    `}</style>
+      <Grid
+        textAlign='center'
+        style = {{ height: '100%' }}
+        verticalAlign='middle'
+      >
+        <Grid.Column style={{ maxWidth: 450 }}>
+          <Header size='huge' style={{ fontSize: 60 }}>GRASSROOTS</Header>
+          <Header as='h2' color='green' textAlign='center'>
+            {' '}Log-in to your account
+          </Header>
 
         <Form size='large'>
           <Segment stacked>

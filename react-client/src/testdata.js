@@ -1,6 +1,6 @@
 const data = {
-  races: {
-    1 : {
+  races: [
+    {
       office: 'senator',
       city: null,
       state: 'Texas',
@@ -8,7 +8,7 @@ const data = {
       date: '1/1/2019',
       candidates: ['Beto O\'Rourke', 'Ted Cruz']
     },
-    2 : {
+    {
       office: 'mayor',
       city: 'Lockhart',
       state: 'Texas',
@@ -16,7 +16,7 @@ const data = {
       date: '9/10/2018',
       candidates: ['Lew White', 'Jane Doe', 'John Q. Public']
     },
-    3: {
+    {
       office: 'council member',
       city: 'Austin',
       state: 'Texas',
@@ -24,7 +24,7 @@ const data = {
       date: '10/10/2018',
       candidates: ['Sabino Renteria', 'Susana Almanzana']
     },
-  },
+  ],
   users: {
     'squillen@gmail.com': {
       name: 'Sean Quillen',
