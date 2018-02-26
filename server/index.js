@@ -2,6 +2,7 @@ let express = require('express');
 let bodyParser = require('body-parser');
 let db = require('../database-mysql');
 let session = require('express-session');
+let path = require('path');
 require('dotenv').config();
 let passport = require('passport');
 let flash = require('connect-flash');
@@ -11,7 +12,8 @@ let app = express();
 require('../server/config/passport')(passport);
 
 app.use(bodyParser.json());
-app.use(express.static(__dirname + '/../react-client/dist'));
+// app.use(express.static(__dirname + '/../react-client/dist'));
+// app.use('../react-client/dist', express.static(__dirname + '/index.html'));
 app.use(session({
   secret: process.env.SESSION_PASSWORD || 'supersecretsecret',
   resave: false,
@@ -20,92 +22,96 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash()); // uses flash connect to allow flash messages in stored session
+app.use(express.static(path.join(__dirname, '../react-client/dist')));
 
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'))
+})
+// function isLoggedIn(req, res, next) {
+//   if (req.isAuthenticated()) {
+//     return next();
+//   }
 
-  res.code(401).end('You must log in to do that!');
-}
+//   res.code(401).end('You must log in to do that!');
+// }
 
-///// MAIN PAGE REQUESTS /////
-app.get('/', function(req, res) {
-  // will render index page regardless of logged in or not
-  // but only those logged in will be able to create/save
-  res.render('index');
-});
+// ///// MAIN PAGE REQUESTS /////
+// app.get('/', function(req, res) {
+//   // will render index page regardless of logged in or not
+//   // but only those logged in will be able to create/save
+//   res.render('index');
+// });
 
-// get request for specific candidate
-app.get('/candidates/:id', function(req, res) {
-  // retreive candidate information from DB
-  db.getCandidateById(function(err, data) { // this function doesn't actually exist yet
-    if(err) {
-      console.log('Error finding candidate');
-      res.status(500).end();
-    } else {
-      console.log('Successfully retreived candidate');
-      res.status(200).send(JSON.stringify(data));
-    }
-  });
-});
+// // get request for specific candidate
+// app.get('/candidates/:id', function(req, res) {
+//   // retreive candidate information from DB
+//   db.getCandidateById(function(err, data) { // this function doesn't actually exist yet
+//     if(err) {
+//       console.log('Error finding candidate');
+//       res.status(500).end();
+//     } else {
+//       console.log('Successfully retreived candidate');
+//       res.status(200).send(JSON.stringify(data));
+//     }
+//   });
+// });
 
-// a post request adds to the list of candidates
-// or should this be a request to the API??
-app.post('/candidates', function(req, res) {
-  // receives post request upon new candidate form submission
-  // parse out all of the information from the req.body
-  // check if that candidate exists in the database
-  // save to the database
-  // res.status(201).end()
-});
+// // a post request adds to the list of candidates
+// // or should this be a request to the API??
+// app.post('/candidates', function(req, res) {
+//   // receives post request upon new candidate form submission
+//   // parse out all of the information from the req.body
+//   // check if that candidate exists in the database
+//   // save to the database
+//   // res.status(201).end()
+// });
 
-// get request for specific event
-app.get('/events/:id', function(req, res) {
-  // retreive event information from DB
-  db.getEventById(function (err, data) { // this function doesn't actually exist yet
-    if (err) {
-      console.log('Error finding event');
-      res.status(500).end();
-    } else {
-      console.log('Successfully retreived event');
-      res.status(200).send(JSON.stringify(data));
-    }
-  });
-});
+// // get request for specific event
+// app.get('/events/:id', function(req, res) {
+//   // retreive event information from DB
+//   db.getEventById(function (err, data) { // this function doesn't actually exist yet
+//     if (err) {
+//       console.log('Error finding event');
+//       res.status(500).end();
+//     } else {
+//       console.log('Successfully retreived event');
+//       res.status(200).send(JSON.stringify(data));
+//     }
+//   });
+// });
 
-// a post request adds to the list of events
-// or should this be a request to the API??
-app.post('/events', function(req, res) {
-  // receives post request upon new candidate form submission
-  // parse out all of the information from the req.body
-  // check if that candidate exists in the database
-  // save to the database
-  // res.status(201).end()
-});
-
-
-///// USER-RELATED REQUESTS /////
-app.post('/login', passport.authenticate('local-login', {
-  successRedirect: '/',
-  failureRedirect: '/login',
-  failureFlash: true
-}));
-
-app.post('/signup', passport.authenticate('local-signup', { // passport middleware authenticates signup
-  successRedirect: '/', // on success, redirect to main feed page
-  failureRedirect: '/', // on failure, keep on signup page
-  failureFlash: true
-}));
+// // a post request adds to the list of events
+// // or should this be a request to the API??
+// app.post('/events', function(req, res) {
+//   // receives post request upon new candidate form submission
+//   // parse out all of the information from the req.body
+//   // check if that candidate exists in the database
+//   // save to the database
+//   // res.status(201).end()
+// });
 
 
-app.post('/logout', function(req, res) {
-  // terminate session id
-  req.session.destroy(function() {
-    // redirect to login page
-    res.status(302).redirect('index')
-  });
-});
+// ///// USER-RELATED REQUESTS /////
+// app.post('/login', passport.authenticate('local-login', {
+//   successRedirect: '/',
+//   failureRedirect: '/login',
+//   failureFlash: true
+// }));
+
+// app.post('/signup', passport.authenticate('local-signup', { // passport middleware authenticates signup
+//   successRedirect: '/', // on success, redirect to main feed page
+//   failureRedirect: '/', // on failure, keep on signup page
+//   failureFlash: true
+// }));
+
+
+// app.post('/logout', function(req, res) {
+//   // terminate session id
+//   req.session.destroy(function() {
+//     // redirect to login page
+//     res.status(302).redirect('index')
+//   });
+// });
 
 
 let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000
