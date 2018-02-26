@@ -3,26 +3,28 @@ import login from '../../src/actions/actions.js'; // import action
 import { connect } from 'react-redux'; // used to connect "smart" components with actions
 import { bindActionCreators } from 'redux'; // allows you to bind actions to methods
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
+import $ from 'jquery';
 
-const LoginForm = (props) =>  ( //pass in props
-  <div className = 'login-form'>
-   <style>{`
-    body > div,
-    body > div > div,
-    body > div > div > div.login-form {
-      height: 100%;
-    }
-  `}</style>
-    <Grid
-      textAlign='center'
-      style = {{ height: '100%' }}
-      verticalAlign='middle'
-    >
-      <Grid.Column style={{ maxWidth: 450 }}>
-        <Header size='huge' style={{ fontSize: 60 }}>GRASSROOTS</Header>
-        <Header as='h2' color='green' textAlign='center'>
-          {' '}Log-in to your account
-        </Header>
+
+const LoginForm = () =>  (
+    <div className = 'login-form'>
+     <style>{`
+      body > div,
+      body > div > div,
+      body > div > div > div.login-form {
+        height: 100%;
+      }
+    `}</style>
+      <Grid
+        textAlign='center'
+        style = {{ height: '100%' }}
+        verticalAlign='middle'
+      >
+        <Grid.Column style={{ maxWidth: 450 }}>
+          <Header size='huge' style={{ fontSize: 60 }}>GRASSROOTS</Header>
+          <Header as='h2' color='green' textAlign='center'>
+            {' '}Log-in to your account
+          </Header>
 
         <Form size='large'>
           <Segment stacked>
@@ -30,7 +32,8 @@ const LoginForm = (props) =>  ( //pass in props
               fluid
               icon='user'
               iconPosition='left'
-              placeholder='Username'
+              placeholder='Email'
+              type='email'
             />
             <Form.Input
               fluid
@@ -42,7 +45,7 @@ const LoginForm = (props) =>  ( //pass in props
 
             <Button
               onClick={() => {
-                props.login('test', 'test');  {/* call action which is on props */}
+                props.login($('input[type=email]').val(), $('input[type=password]').val());  {/* call action which is on props */}
               }}
               color='green'
               fluid size='large'
