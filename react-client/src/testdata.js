@@ -126,8 +126,8 @@ const data = {
       followers: ['Jacob Granberry', 'Hailey Bobella']
     }
   },
-  events: {
-    1: {
+  events: [
+    {
       title: 'Bet-o-rama',
       location: 'The Capitol Building',
       time: '12:00PM',
@@ -136,7 +136,7 @@ const data = {
       host: 'Beto O\'Rourke',
       attendees: ['Sean Quillen', 'Shannon Pearson', 'Hailey Bobella']
     },
-    2: {
+    {
       title: 'Cruzin',
       location: 'the city dump',
       time: '3:00AM',
@@ -145,7 +145,7 @@ const data = {
       host: 'Ted Cruz',
       attendees: ['Jacob Granberry']
     },
-    3: {
+    {
       title: 'I love you Ted Cruz!',
       location: 'my house',
       time: '12:00PM',
@@ -154,7 +154,7 @@ const data = {
       host: 'Jacob Granberry',
       attendees: []
     },
-    4: {
+    {
       title: 'Generic Rally',
       location: 'Lockhart City Hall',
       time: '12:00PM',
@@ -163,7 +163,7 @@ const data = {
       host: 'Jane Doe',
       attendees: ['Shannon Pearson', 'Hailey Bobella']
     },
-    5: {
+    {
       title: 'Generic Rally 2.0',
       location: 'Lockhart City Hall',
       time: '12:00PM',
@@ -172,7 +172,7 @@ const data = {
       host: 'Jane Doe',
       attendees: ['Shannon Pearson', 'Hailey Bobella']
     },
-    6: {
+    {
       title: 'Council Party!',
       location: 'the park',
       time: '10:30PM',
@@ -181,7 +181,7 @@ const data = {
       host: 'Susana Almanzana',
       attendees: ['Sean Quillen', 'Jacob Granberry', 'Shannon Pearson', 'Hailey Bobella', 'Sabino Renteria']
     }
-  }
+  ]
 }
 
 export default data;
