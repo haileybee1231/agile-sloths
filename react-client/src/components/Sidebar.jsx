@@ -1,5 +1,5 @@
 import React from 'react'
-import { Menu, Input, Header } from 'semantic-ui-react'
+import { Menu, Input, Header, Container } from 'semantic-ui-react'
 import data from '../testdata.js'
 const uuidv4 = require('uuid/v4')
 
@@ -17,6 +17,7 @@ class Sidebar extends React.Component {
     render() {
         const { activeItem } = this.state || {}
         return (
+            <Container style={{paddingLeft: 100}}>
             <Menu vertical fixed = 'left' style={{overflowY: 'scroll'}} size = 'large'>
             <Menu.Item>
                 <Header as='h2' textAlign='center' size='huge'>GRASSROOTS</Header>
@@ -48,6 +49,7 @@ class Sidebar extends React.Component {
                     </Menu.Menu>
                 </Menu.Item>
             </Menu>
+            </Container>
             
         )
     }
