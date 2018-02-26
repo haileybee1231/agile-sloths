@@ -20,8 +20,7 @@ const history = syncHistoryWithStore(createBrowserHistory(), store);
 const Root = ({ store }) => (
   <Provider store={ store }>
     <Router history={ history }>
-      <Route path='/:filter?' component={App}>
-      </Route>
+      <Route path='/:filter?' component={App} />
     </Router>
   </Provider>
 )

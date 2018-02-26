@@ -55,7 +55,7 @@ const LoginForm = () =>  (
           </Segment>
         </Form>
         <Message>
-          New to Grassroots?  <a href='#'>Sign up</a>
+          New to Grassroots?  <a href='/signup'>Sign up</a>
         </Message>
       </Grid.Column>
     </Grid>
