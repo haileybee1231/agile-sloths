@@ -1,6 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './components/App.jsx';
+import React from 'react'
+import { render } from 'react-dom'
+import Root from './components/Root.jsx'
 import store from './store/index.js';
 
-ReactDOM.render(<App store={store}/>, document.getElementById('mount'));
+render(
+  <Root store={store} />,
+  document.getElementById('mount')
+)
