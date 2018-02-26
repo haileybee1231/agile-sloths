@@ -8,7 +8,7 @@ var connection = mysql.createConnection({
   database : 'grassroots'
 });
 
-connection.connect();
+// connection.connect();
 
 var selectAllRaces = function(cb) {
   connection.query('SELECT * FROM races', function(err, results) {
