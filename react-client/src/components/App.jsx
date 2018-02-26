@@ -6,14 +6,6 @@ import LoginForm from './Login.jsx';
 import Sidebar from './Sidebar.jsx';
 import SignupForm from './Signup.jsx'
 
-// const App = ({ store }) => (
-//   <div>
-//       <Provider store={store}>
-//         <LoginForm/>
-//       </Provider>
-//   </div>
-// )
-
 class App extends React.Component {
   constructor(props) {
     super(props)
@@ -24,12 +16,9 @@ class App extends React.Component {
         <Route path='/' component={Sidebar} />
         <Route path='/login' component={LoginForm} />
         <Route path='/signup' component={SignupForm} />
-        {/* { this.props.children } */}
       </div>
     )
   }
 }
-
-
 
 export default App;

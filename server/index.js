@@ -12,8 +12,6 @@ let app = express();
 require('../server/config/passport')(passport);
 
 app.use(bodyParser.json());
-// app.use(express.static(__dirname + '/../react-client/dist'));
-// app.use('../react-client/dist', express.static(__dirname + '/index.html'));
 app.use(session({
   secret: process.env.SESSION_PASSWORD || 'supersecretsecret',
   resave: false,
@@ -24,9 +22,19 @@ app.use(passport.session());
 app.use(flash()); // uses flash connect to allow flash messages in stored session
 app.use(express.static(path.join(__dirname, '../react-client/dist')));
 
+// This wildcard acts as a catch-all to let react-router redirect instead of using Express to
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'))
 })
+
+let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000
+
+app.listen(port, function() {
+  console.log(`The server is listening on port ${ port }!`);
+});
+
+// EVERYTHING BELOW TO BE DELETED?
+
 // function isLoggedIn(req, res, next) {
 //   if (req.isAuthenticated()) {
 //     return next();
@@ -114,11 +122,6 @@ app.get('/*', (req, res) => {
 // });
 
 
-let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000
-
-app.listen(port, function() {
-  console.log(`The server is listening on port ${ port }!`);
-});
 
 
 
