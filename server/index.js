@@ -1,14 +1,14 @@
 let express = require('express');
 let bodyParser = require('body-parser');
-let db = require('../database-mysql');
-let session = require('express-session');
+// let db = require('../database-mysql'); // to delete
+let session = require('express-session'); 
 let path = require('path');
-require('dotenv').config();
 let passport = require('passport');
 let flash = require('connect-flash');
-let serverHelpers = require('../lib/serverHelpers.js');
+// let serverHelpers = require('../lib/serverHelpers.js'); // to delete?
 let app = express();
 
+require('dotenv').config();
 require('../server/config/passport')(passport);
 
 app.use(bodyParser.json());

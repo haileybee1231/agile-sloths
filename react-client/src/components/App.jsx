@@ -12,6 +12,8 @@ class App extends React.Component {
   constructor(props) {
     super(props)
   }
+
+  // App component handles all redirections based on path options below
   render() {
     return (
       <div>
