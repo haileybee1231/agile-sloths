@@ -6,7 +6,7 @@ import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui
 import $ from 'jquery';
 
 
-const LoginForm = () =>  (
+const LoginForm = (props) =>  (
     <div className = 'login-form'>
      <style>{`
       body > div,

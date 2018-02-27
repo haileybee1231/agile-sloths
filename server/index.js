@@ -1,7 +1,7 @@
 let express = require('express');
 let bodyParser = require('body-parser');
 // let db = require('../database-mysql'); // to delete
-let session = require('express-session'); 
+let session = require('express-session');
 let path = require('path');
 let passport = require('passport');
 let flash = require('connect-flash');
@@ -35,13 +35,13 @@ app.listen(port, function() {
 
 // EVERYTHING BELOW TO BE DELETED?
 
-// function isLoggedIn(req, res, next) {
-//   if (req.isAuthenticated()) {
-//     return next();
-//   }
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
 
-//   res.code(401).end('You must log in to do that!');
-// }
+  res.code(401).end('You must log in to do that!');
+}
 
 // ///// MAIN PAGE REQUESTS /////
 // app.get('/', function(req, res) {
@@ -100,29 +100,17 @@ app.listen(port, function() {
 
 
 // ///// USER-RELATED REQUESTS /////
-// app.post('/login', passport.authenticate('local-login', {
-//   successRedirect: '/',
-//   failureRedirect: '/login',
-//   failureFlash: true
-// }));
+app.post('/login', passport.authenticate('local-login', {
+  successRedirect: '/',
+  failureRedirect: '/login',
+  failureFlash: true
+}));
 
-// app.post('/signup', passport.authenticate('local-signup', { // passport middleware authenticates signup
-//   successRedirect: '/', // on success, redirect to main feed page
-//   failureRedirect: '/', // on failure, keep on signup page
-//   failureFlash: true
-// }));
-
-
-// app.post('/logout', function(req, res) {
-//   // terminate session id
-//   req.session.destroy(function() {
-//     // redirect to login page
-//     res.status(302).redirect('index')
-//   });
-// });
-
-
-
+app.post('/signup', passport.authenticate('local-signup', { // passport middleware authenticates signup
+  successRedirect: '/', // on success, redirect to main feed page
+  failureRedirect: '/', // on failure, keep on signup page
+  failureFlash: true
+}));
 
 
 /////////////////////////
