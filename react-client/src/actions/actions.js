@@ -7,9 +7,14 @@ export const login = (username, password) => ( // actions return a plain object 
     }
   }
 )
+export const logout = () => ( // no payload or parameters necessary for logout
+  {
+    type: 'LOGOUT'
+  }
+)
 
-export const fetchEvents = () => {
-  return {
+export const fetchEvents = () => (
+  {
     type: 'FETCH-EVENTS'
   }
-}
+)
