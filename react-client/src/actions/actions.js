@@ -8,7 +8,7 @@ const login = (username, password) => ( // actions return a plain object with a 
   }
 )
 
-export const signup = (email, password, role, firstName, lastName, zipCode, bio) => (
+export const signup = (email, password, role, firstName, lastName, zipCode, bio, race) => (
   {
     type: 'SIGNUP',
     payload: {
@@ -19,7 +19,7 @@ export const signup = (email, password, role, firstName, lastName, zipCode, bio)
       lastName: lastName,
       zipCode: zipCode,
       bio: bio,
-      role: role
+      race: race
     }
   }
 )
