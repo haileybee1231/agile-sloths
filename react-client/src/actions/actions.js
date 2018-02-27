@@ -7,5 +7,10 @@ const login = (username, password) => ( // actions return a plain object with a 
     }
   }
 )
+const logout = () => ( // no payload or parameters necessary for logout
+  {
+    type: 'LOGOUT'
+  }
+)
 
-export default login;
+export default { login, logout };
