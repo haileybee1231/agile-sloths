@@ -7,6 +7,11 @@ export const login = (username, password) => ( // actions return a plain object 
     }
   }
 )
+const logout = () => ( // no payload or parameters necessary for logout
+  {
+    type: 'LOGOUT'
+  }
+)
 
 export const signup = (email, password, role, firstName, lastName, zipCode, bio, race) => (
   {
@@ -26,3 +31,4 @@ export const signup = (email, password, role, firstName, lastName, zipCode, bio,
 
 
 
+export default { login, logout };
