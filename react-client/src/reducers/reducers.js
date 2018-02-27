@@ -12,10 +12,14 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         contentType: 'application/json',
         data: data,
         success: data => {
+          //verify username, password matches whats in DB
+          //if so, set state to loggedin and redirect to your Feed
           console.log(data)
         }
       })
-    case 'SIGNUP':
+    }
+
+    case 'SIGNUP': {
       let data = JSON.stringify(action.payload);
       $.ajax({
         type: 'POST',
@@ -23,13 +27,18 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         contentType: 'application/json',
         data: data,
         success: data => {
+          //pushes user into database
+          //sets state to loggedin 
+          //redirects to feed
           console.log(data)
         },
         error: data => {
           console.log('error with signup', data)
         }
       })
-    } case 'LOGOUT': {
+    }
+
+    case 'LOGOUT': {
       $.ajax({
         type: 'POST',
         url: '/logout',
