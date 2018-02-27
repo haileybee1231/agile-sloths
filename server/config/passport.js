@@ -6,7 +6,7 @@ let bodyParser = require('body-parser');
 
 module.exports = function(passport) {
 
-  passport.serializeUser(function(user, done) {
+  passport.serializeUser(function(user, done) { // creating sessions
     done(null, user);
   });
 
@@ -16,7 +16,7 @@ module.exports = function(passport) {
 
 
   // LOCAL LOGIN STRATEGY
-  passport.use('local-login', new LocalStrategy(
+  passport.use('local-login', new LocalStrategy( // strategy = type of logging in (e.g. fb)
     function(email, password, cb) {
       db.getUserByEmail(email, function(err, user) {
         if (err) {

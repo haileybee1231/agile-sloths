@@ -8,6 +8,7 @@ import MainFeed from './FeedList.jsx';
 import LoginForm from './Login.jsx';
 import Sidebar from './Sidebar.jsx';
 import SignupForm from './Signup.jsx';
+import Profile from './Profile.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -18,7 +19,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Route exact path='/' component={ MainFeed } />
+        <Route exact path='/' component={ Profile } />
         <Route path='/login' component={ LoginForm } />
         <Route path='/signup' component={ SignupForm } />
       </div>
