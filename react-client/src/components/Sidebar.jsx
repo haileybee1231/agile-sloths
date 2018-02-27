@@ -1,5 +1,6 @@
 import React from 'react'
-import { Menu, Input, Header, Container } from 'semantic-ui-react'
+import { Menu, Input, Header, Container, Button } from 'semantic-ui-react'
+import { Link } from 'react-router-dom'
 import data from '../testdata.js'
 const uuidv4 = require('uuid/v4')
 
@@ -7,7 +8,8 @@ class Sidebar extends React.Component {
     constructor(){
         super()
         this.state={
-            activeItem: ''
+            activeItem: '',
+            currentUser: true // created for testing purposes
         }
         this.handleItemClick = this.handleItemClick.bind(this)
     }
@@ -47,6 +49,14 @@ class Sidebar extends React.Component {
                             })
                         })}
                     </Menu.Menu>
+                </Menu.Item>
+                <Menu.Item>
+                    <Button size='small'>
+                        { this.state.currentUser
+                            ? <Link to="/logout">Logout</Link>
+                            : <Link to="/login">Login</Link>
+                        }
+                    </Button>
                 </Menu.Item>
             </Menu>
             </Container>

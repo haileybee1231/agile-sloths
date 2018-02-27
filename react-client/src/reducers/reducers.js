@@ -18,7 +18,7 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
     } case 'LOGOUT': {
       $.ajax({
         type: 'POST',
-        url: '/signup',
+        url: '/logout',
         contentType: 'application/json',
         success: () => {
           console.log('You have been successfully logged out')
