@@ -1,10 +1,17 @@
 import React from 'react';
-import { Grid, Container, Header, Segment, Divider, Feed } from 'semantic-ui-react'
-import Sidebar from './Sidebar.jsx'
-import data from '../testdata.js'
-const uuidv4 = require('uuid/v4')
+import { Grid, Container, Header, Segment, Divider, Feed } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import Sidebar from './Sidebar.jsx';
+import InfiniteScroll from 'react-infinite-scroll-component';
+const uuidv4 = require('uuid/v4');
 
-const FeedList = () => (
+const refresh = () => {
+}
+const fetchData = () => {
+}
+
+const FeedList = (props) => (
     <div>
         <Grid container style={{paddingLeft: 230}}>
                 <Sidebar />
@@ -13,10 +20,28 @@ const FeedList = () => (
                 <Divider/>
             </Grid.Row>
             <Divider/>
-            <Grid.Row >
-                
+            <Grid.Row>
+
+              <InfiniteScroll
+                pullDownToRefresh
+                pullDownToRefreshContent={
+                  <h3 style={{textAlign: 'center'}}>&#8595; Pull down to refresh</h3>
+                }
+                releaseToRefreshContent={
+                  <h3 style={{textAlign: 'center'}}>&#8593; Release to refresh</h3>
+                }
+                refreshFunction={refresh}
+                height={600}
+                next={fetchData}
+                hasMore={true}
+                loader={<h4>Loading...</h4>}
+                endMessage={
+                  <p style={{textAlign: 'center'}}>
+                    <b>Yay! You have seen it all</b>
+                  </p>
+              }>
                 <Feed>
-                    {data.events.map((event) => {
+                    {props.events.map((event) => {
                         return (
                             <Feed.Event key={uuidv4()}>
                                 <Feed.Label image='https://react.semantic-ui.com/assets/images/avatar/small/laura.jpg' />
@@ -33,11 +58,20 @@ const FeedList = () => (
                         )
                     })}
                 </Feed>
-               
+              </InfiniteScroll>
+
             </Grid.Row>
         </Grid>
-        
+
     </div>
 )
 
-export default FeedList
+const mapStateToProps = (state) => ({
+  events: state.data.events
+})
+
+const mapDispatchToProps = (dispatch) => ({
+
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(FeedList);
