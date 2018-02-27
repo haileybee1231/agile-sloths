@@ -1,5 +1,8 @@
 import React from 'react'
+import signup from '../actions/actions.js'
 import { Button, Form, Grid, Header, Message, Segment, Input, Select, Dropdown, TextArea } from 'semantic-ui-react'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 const options = [
     { key: 'v', text: 'Voter', value: 'voter' },
@@ -10,7 +13,15 @@ class SignUpForm extends React.Component {
     constructor(props) {
         super()
         this.state = {
-            CandidateTrue: undefined
+            CandidateTrue: undefined,
+            email: '',
+            password: '',
+            role: '',
+            firstName: '',
+            lastName: '',
+            zipCode: '',
+            bio: '',
+            role: ''
         }
         this.handleChange = this.handleChange.bind(this)
     }
@@ -50,25 +61,26 @@ class SignUpForm extends React.Component {
                     <Form size='large'>
                     <Segment>
                         <Form.Group widths='equal'>
-                            <Form.Field required control={Input} label='Email' placeholder='Email' />
-                            <Form.Field required control={Input} label='Password' placeholder='Password' />
+                            <Form.Field required control={Input} name='email' label='Email' placeholder='Email' />
+                            <Form.Field required control={Input} name='password' label='Password' placeholder='Password' />
                             <Form.Field required control={Dropdown}
                                         fluid
                                         label='Role' 
                                         selection options={options} 
                                         placeholder='Role'
-                                        onChange={this.handleChange}/>
+                                        onChange={this.handleChange}
+                                        name='role'/>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Field required control={Input} label='First Name' placeholder='First name' />
-                            <Form.Field required control={Input} label='Last Name' placeholder='Last name' />
-                            <Form.Field required control={Input} label='Zip code' placeholder='Zip code' />
+                            <Form.Field required control={Input} name='firstName' label='First Name' placeholder='First name' />
+                            <Form.Field required control={Input} name='lastName' label='Last Name' placeholder='Last name' />
+                            <Form.Field required control={Input} name='zipCode' label='Zip code' placeholder='Zip code' />
                         </Form.Group>
 
                         { this.state.CandidateTrue && [
                             <Form.Group widths='equal' key="1">
-                                <Form.Field key="2" control={TextArea} label='Bio' placeholder='Tell us about yourself' />
-                                <Form.Field key ="3" control={Input} label='Race' placeholder='What office are you running for?'/>
+                                <Form.Field key="2" control={TextArea} name='bio' label='Bio' placeholder='Tell us about yourself' />
+                                <Form.Field key ="3" control={Input} name='race' label='Race' placeholder='What office are you running for?'/>
                             </Form.Group>
                             
                             ]
@@ -86,4 +98,8 @@ class SignUpForm extends React.Component {
     }
 }
 
-export default SignUpForm
+const mapDispatchToProps = (dispatch) => {
+    return bindActionCreators({signup}, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(SignUpForm)
