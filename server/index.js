@@ -109,7 +109,7 @@ app.post('/signup', passport.authenticate('local-signup', { // passport middlewa
 
 app.post('/logout', function(req, res) {
   req.logout();
-  res.redirect('/')
+  res.redirect('/');
 });
 
 let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000

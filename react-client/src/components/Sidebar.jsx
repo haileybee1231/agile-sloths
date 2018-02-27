@@ -9,7 +9,7 @@ class Sidebar extends React.Component {
         super()
         this.state={
             activeItem: '',
-            currentUser: true // created for testing purposes
+            currentUser: true // Created for testing purposes. Will need to call props.user once set up
         }
         this.handleItemClick = this.handleItemClick.bind(this)
     }
