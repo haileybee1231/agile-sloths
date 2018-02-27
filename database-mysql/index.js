@@ -8,9 +8,9 @@ var connection = mysql.createConnection({
   database : 'grassroots'
 });
 
-// connection.connect();
+connection.connect();
 
-var selectAllRaces = function(cb) {
+export const selectAllRaces = function(cb) {
   connection.query('SELECT * FROM races', function(err, results) {
     if(err) {
       cb(err, null);
@@ -20,11 +20,11 @@ var selectAllRaces = function(cb) {
   });
 };
 
-var addUser = function(email, password, name, role, bio, location, race, cb) {
+export const addUser = function(email, password, firstname, lastname, role, bio, location, race, cb) {
   console.log(cb);
   bcrypt.hash(password, 10, function(err, hash) {
     connection.query('INSERT INTO users (email, password, name, role, bio, location, race) VALUES (?, ?, ?, ?, ?, ?, ?)',
-    [email, hash, name, role, bio, location, race], function(err, results) {
+    [email, hash, firstname, lastname, role, bio, location, race], function(err, results) {
       if (err) {
         cb(err, null);
       } else {
@@ -35,7 +35,7 @@ var addUser = function(email, password, name, role, bio, location, race, cb) {
 })
 }
 
-var getUserByEmail = function(email, cb) {
+export const getUserByEmail = function(email, cb) {
   connection.query('SELECT * FROM users where email=?', [email], function(err, results) {
     if (err) {
       cb(err, null);
