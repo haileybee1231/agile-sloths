@@ -8,7 +8,13 @@ var connection = mysql.createConnection({
   database : 'grassroots'
 });
 
-connection.connect();
+connection.connect(err => {
+  if (err) {
+    console.log('error connecting to database');
+  } else {
+    console.log('Database connected!');
+  }
+});
 
 const selectAllRaces = function(cb) {
   connection.query('SELECT * FROM races', function(err, results) {
