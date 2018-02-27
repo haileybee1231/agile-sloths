@@ -15,6 +15,20 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
           console.log(data)
         }
       })
+    case 'FETCH-EVENTS':
+      $.ajax({
+        type: 'GET',
+        url: `EVENTS/${state.events.length - 1}`,
+        success: newEvents => {
+          return {
+            ...state,
+            events: [...state.events, ...newEvents]
+          }
+        },
+        error: () => {
+          console.log('oops')
+        }
+      })
     default: return state;
   }
 }

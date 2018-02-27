@@ -1,4 +1,4 @@
-const login = (username, password) => ( // actions return a plain object with a type and payload
+export const login = (username, password) => ( // actions return a plain object with a type and payload
   {
     type: 'LOGIN',
     payload: {
@@ -8,4 +8,8 @@ const login = (username, password) => ( // actions return a plain object with a 
   }
 )
 
-export default login;
+export const fetchEvents = () => {
+  return {
+    type: 'FETCH-EVENTS'
+  }
+}

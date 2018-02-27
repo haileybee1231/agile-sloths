@@ -23,9 +23,14 @@ app.use(flash()); // uses flash connect to allow flash messages in stored sessio
 app.use(express.static(path.join(__dirname, '../react-client/dist')));
 
 // This wildcard acts as a catch-all to let react-router redirect instead of using Express to
+app.get('/events/*', (req, res) => {
+  // to handle request for new feed events, needs to be filled
+  res.end();
+});
+
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'))
-})
+});
 
 let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000
 

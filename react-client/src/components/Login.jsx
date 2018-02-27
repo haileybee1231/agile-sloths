@@ -1,5 +1,5 @@
 import React from 'react';
-import login from '../../src/actions/actions.js'; // import action
+import { login } from '../../src/actions/actions.js'; // import action
 import { connect } from 'react-redux'; // used to connect "smart" components with actions
 import { bindActionCreators } from 'redux'; // allows you to bind actions to methods
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
