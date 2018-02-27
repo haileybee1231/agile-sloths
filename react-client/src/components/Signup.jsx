@@ -53,6 +53,7 @@ class SignUpForm extends React.Component {
                             <Form.Field required control={Input} type='password' name='password' label='Password' placeholder='Password' />
                             <Form.Field required control={Dropdown}
                                         fluid
+                                        type='text'
                                         label='Role' 
                                         selection options={options} 
                                         placeholder='Role'
@@ -74,18 +75,19 @@ class SignUpForm extends React.Component {
                             ]
                         }
 
-                            <Form.Field control={Button} type='submit' onClick={() => {
+                            <Form.Field control={Button} 
+                                        type='submit' 
+                                        color='green'
+                                        onClick={() => {
                                 props.signup($('input[type=email]').val(),
                                              $('input[type=password]').val(),
-                                             $('input[type=]').val(),
-                                             $('input[type=]').val(),
-                                             $('input[type=]').val(),
-                                             $('input[type=]').val(),
-                                             $('input[type=]').val(),
-                                             $('input[type=]').val(),
-                                             $('input[type=]').val() 
-                            )
-                            }}>Submit</Form.Field>
+                                             $('input[type=text]').val(),
+                                             $('input[type=text]').val(),
+                                             $('input[type=text]').val(),
+                                             $('input[type=number]').val(),
+                                             $('input[type=text]').val(),
+                                             $('input[type=text]').val()
+                                )}}>Submit</Form.Field>
                         </Segment>
                         
                         

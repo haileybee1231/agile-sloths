@@ -1,4 +1,4 @@
-const login = (username, password) => ( // actions return a plain object with a type and payload
+export const login = (username, password) => ( // actions return a plain object with a type and payload
   {
     type: 'LOGIN',
     payload: {
@@ -24,5 +24,5 @@ export const signup = (email, password, role, firstName, lastName, zipCode, bio,
   }
 )
 
-export default login;
+
 
