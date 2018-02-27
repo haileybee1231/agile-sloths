@@ -8,6 +8,7 @@ import MainFeed from './FeedList.jsx';
 import LoginForm from './Login.jsx';
 import Sidebar from './Sidebar.jsx';
 import SignupForm from './Signup.jsx';
+import Profile from './Profile.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -15,10 +16,11 @@ class App extends React.Component {
   }
 
   // App component handles all redirections based on path options below
+  // switch first route to Profile to see profile
   render() {
     return (
       <div>
-        <Route exact path='/' component={ MainFeed } />
+        <Route exact path='/' component={ MainFeed } /> 
         <Route path='/login' component={ LoginForm } />
         <Route path='/signup' component={ SignupForm } />
       </div>
