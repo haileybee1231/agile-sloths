@@ -3,6 +3,7 @@ import signup from '../actions/actions.js'
 import { Button, Form, Grid, Header, Message, Segment, Input, Select, Dropdown, TextArea } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import $ from 'jquery'
 
 const options = [
     { key: 'v', text: 'Voter', value: 'voter' },

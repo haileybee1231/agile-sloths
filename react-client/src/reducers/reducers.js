@@ -15,6 +15,20 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
           console.log(data)
         }
       })
+    case 'SIGNUP':
+    let data = JSON.stringify(action.payload);
+    $.ajax({
+      type: 'POST',
+      url: '/signup',
+      contentType: 'application/json',
+      data: data,
+      success: data => {
+        console.log(data)
+      },
+      error: data => {
+        console.log('error with signup', data)
+      }
+    })
     default: return state;
   }
 }
