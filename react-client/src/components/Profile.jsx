@@ -82,10 +82,6 @@ class Profile extends React.Component {
 
 			</Container>)
 
-
-		// basic render should include profile photo, 
-		// name, location, tabs/buttons
-
 	}
 }
 
