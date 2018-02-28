@@ -43,7 +43,8 @@ module.exports = function(passport) {
   },
     function(req, email, password, cb) {
       let body = req.body;
-      let name = body.name;
+      let firstname = body.firstname;
+      let lastname = body.lastname;
       let bio = body.bio;
       let role = body.role;
       let location = body.location;
@@ -55,11 +56,11 @@ module.exports = function(passport) {
         if (user.length > 0) {
           return cb(null, false);
         }
-        db.addUser(email, password, name, role, bio, location, race, function(err, results) { // add whatever else needs to be added here, like bio
+        db.addUser(email, password, firstname, lastname, role, bio, location, race, function(err, results) { // add whatever else needs to be added here, like bio
           if (err) {
             return cb(err);
           }
-          return cb(results); // put something here to verify signup successful
+          return cb('signup successful', results); // put something here to verify signup successful
         });
       })
     }

@@ -30,7 +30,7 @@ const selectAllRaces = function(cb) {
 const addUser = function(email, password, firstname, lastname, role, bio, location, race, cb) {
   console.log(cb);
   bcrypt.hash(password, 10, function(err, hash) {
-    connection.query('INSERT INTO users (email, password, name, role, bio, location, race) VALUES (?, ?, ?, ?, ?, ?, ?)',
+    connection.query('INSERT INTO users (email, password, firstname, lastname, role, bio, location, race) VALUES (?, ?, ?, ?, ?, ?, ?)',
     [email, hash, firstname, lastname, role, bio, location, race], function(err, results) {
       if (err) {
         cb(err, null);

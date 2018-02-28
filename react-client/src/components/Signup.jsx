@@ -1,9 +1,10 @@
 import React from 'react'
-import signup from '../actions/actions.js'
+import { signup } from '../actions/actions.js'
 import { Button, Form, Grid, Header, Message, Segment, Input, Select, Dropdown, TextArea } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import $ from 'jquery'
+
 
 const options = [
     { key: 'v', text: 'Voter', value: 'voter' },
@@ -12,7 +13,7 @@ const options = [
 
 class SignUpForm extends React.Component {
     constructor(props) {
-        super()
+        super(props)
         this.state = {
             CandidateTrue: undefined
         }
@@ -27,7 +28,7 @@ class SignUpForm extends React.Component {
         }
     }
 
-    render() {
+    render(props) {
         return (
             <div className='login-form'>
                 <style>{`
@@ -54,7 +55,7 @@ class SignUpForm extends React.Component {
                             <Form.Field required control={Input} type='password' name='password' label='Password' placeholder='Password' />
                             <Form.Field required control={Dropdown}
                                         fluid
-                                        type='text'
+                                        selection
                                         label='Role' 
                                         selection options={options} 
                                         placeholder='Role'
@@ -79,10 +80,10 @@ class SignUpForm extends React.Component {
                             <Form.Field control={Button} 
                                         type='submit' 
                                         color='green'
-                                        onClick={() => {
-                                props.signup($('input[name=email]').val(),
+                                        onClick={() => {this.props.signup(
+                                             $('input[type=email]').val(),
                                              $('input[name=password]').val(),
-                                             $('input[name=role]').val(),
+                                             $('.text').text(),
                                              $('input[name=firstName]').val(),
                                              $('input[name=lastName]').val(),
                                              $('input[name=zipCode]').val(),
