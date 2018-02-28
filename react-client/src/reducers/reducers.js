@@ -1,6 +1,5 @@
 import data from '../../src/testdata.js';
 import $ from 'jquery';
-const db = require('../../../database-mysql')
 
 const mainReducer = (state = data, action) => { // reducers are dispatched here
   switch(action.type) { // if their action type matches a case,
