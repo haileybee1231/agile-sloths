@@ -29,10 +29,10 @@ class Sidebar extends React.Component {
         contentType: 'application/json',
         success: () => {
           this.props.logout();
-          console.log('You have been successfully logged out')
+          alert('You have been successfully logged out')
         },
         error: () => {
-          console.log('There was an issue logging you out.')
+          alert('There was an issue logging you out. Please try again.')
         }
       })
     };

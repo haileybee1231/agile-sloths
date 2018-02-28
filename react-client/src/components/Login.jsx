@@ -10,6 +10,14 @@ import $ from 'jquery';
 const LoginForm = (props) =>  {
 
   const fetchUser = (username, password) => {
+    if (!username || username.indexOf('@') < 0 || !username.match('.com')) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+    if (!password) {
+      alert('Please enter a valid password.');
+      return;
+    }
     let data = JSON.stringify({ username: username, password: password });
     $.ajax({
       type: 'POST',

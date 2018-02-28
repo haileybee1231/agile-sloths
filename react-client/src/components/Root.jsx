@@ -1,7 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import ReduxThunk from 'redux-thunk';
 import { Router, Route } from 'react-router-dom';
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
 import { createBrowserHistory } from 'history';
@@ -15,7 +14,6 @@ const store = createStore(
     ...reducers,
     routing: routerReducer
   }),
-  applyMiddleware(ReduxThunk)
 );
 
 // used to give URL history to redux
