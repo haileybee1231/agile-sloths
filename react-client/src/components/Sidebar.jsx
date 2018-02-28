@@ -1,6 +1,7 @@
 import React from 'react';
 import { Menu, Input, Header, Container, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { logout } from '../../src/actions/actions.js';
 import { bindActionCreators } from 'redux';
@@ -11,7 +12,7 @@ class Sidebar extends React.Component {
         super(props)
         this.state={
             activeItem: '',
-            currentUser: true // Created for testing purposes. Will need to call props.user once set up
+            currentUser: false // Created for testing purposes. Will need to call props.user once set up
         }
         this.handleItemClick = this.handleItemClick.bind(this)
     }
@@ -78,4 +79,4 @@ const mapDispatchToProps = (dispatch) => {
   return bindActionCreators({logout}, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Sidebar);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Sidebar));

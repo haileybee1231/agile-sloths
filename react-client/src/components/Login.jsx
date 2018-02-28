@@ -2,6 +2,7 @@ import React from 'react';
 import { login } from '../../src/actions/actions.js'; // import action
 import { connect } from 'react-redux'; // used to connect "smart" components with actions
 import { bindActionCreators } from 'redux'; // allows you to bind actions to methods
+import { withRouter } from 'react-router';
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
 import $ from 'jquery';
 
@@ -66,4 +67,4 @@ const mapDispatchToProps = (dispatch) => { // takes dispatch method from store
   return bindActionCreators({login}, dispatch); // attaches dispatch to login action so that
 }                                       //  when it fires, it dispatches an action
 
-export default connect(null, mapDispatchToProps)(LoginForm); // how you connect a "smart" component to props
+export default connect(null, mapDispatchToProps)(withRouter(LoginForm)); // how you connect a "smart" component to props

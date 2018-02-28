@@ -32,7 +32,6 @@ app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'))
 });
 
-
 // EVERYTHING BELOW TO BE DELETED?
 
 function isLoggedIn(req, res, next) {
