@@ -1,7 +1,7 @@
 let LocalStrategy = require('passport-local').Strategy;
 let db = require('../../database-mysql');
 let serverHelpers = require('../../lib/serverHelpers.js');
-let bcrypt = require('bcrypt');
+let bcrypt = require('bcrypt-nodejs');
 let bodyParser = require('body-parser');
 
 module.exports = function(passport) {

@@ -1,5 +1,6 @@
 import data from '../../src/testdata.js';
 import $ from 'jquery';
+const db = require('../../../database-mysql')
 
 const mainReducer = (state = data, action) => { // reducers are dispatched here
   console.log(state, action); // this log is just to prove that state is in fact changing, it will be removed soon

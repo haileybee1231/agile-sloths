@@ -22,8 +22,5 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true  // serves up main page for react-router to work with redux
-  },
-  node: {
-    fs: 'empty'
   }
 };
