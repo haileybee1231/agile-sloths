@@ -1,5 +1,6 @@
 import React from 'react'
 import { signup } from '../actions/actions.js'
+import { Link, withRouter } from 'react-router-dom';
 import { Button, Form, Grid, Header, Message, Segment, Input, Select, Dropdown, TextArea } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -106,3 +107,4 @@ const mapDispatchToProps = (dispatch) => {
 }
 
 export default connect(null, mapDispatchToProps)(SignUpForm)
+export default withRouter(SignUpForm);

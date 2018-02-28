@@ -32,7 +32,6 @@ app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'))
 });
 
-
 // EVERYTHING BELOW TO BE DELETED?
 
 function isLoggedIn(req, res, next) {
@@ -100,11 +99,9 @@ function isLoggedIn(req, res, next) {
 
 
 // ///// USER-RELATED REQUESTS /////
-app.post('/login', passport.authenticate('local-login', {
-  successRedirect: '/',
-  failureRedirect: '/login',
-  failureFlash: true
-}));
+app.post('/login', passport.authenticate('local-login'), (req, res) => {
+  res.status(201).send(req.body.username);
+});
 
 app.post('/signup', passport.authenticate('local-signup', { // passport middleware authenticates signup
   successRedirect: '/', // on success, redirect to main feed page
@@ -112,10 +109,9 @@ app.post('/signup', passport.authenticate('local-signup', { // passport middlewa
   failureFlash: true
 }));
 
-app.post('/logout', function(req, res) {
-  req.session.destroy(function (err) {
-    res.redirect('/');
-  });
+app.post('/logout', isLoggedIn, function(req, res) {
+  req.logout();
+  res.clearCookie('connect.sid').status(200).redirect('/');
 });
 
 let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000

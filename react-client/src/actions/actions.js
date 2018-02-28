@@ -1,9 +1,8 @@
-export const login = (username, password) => ( // actions return a plain object with a type and payload
+export const login = (username) => ( // actions return a plain object with a type and payload
   {
     type: 'LOGIN',
     payload: {
-      username: username,
-      password: password
+      username: username
     }
   }
 )

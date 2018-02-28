@@ -3,54 +3,19 @@ import $ from 'jquery';
 const db = require('../../../database-mysql')
 
 const mainReducer = (state = data, action) => { // reducers are dispatched here
-  console.log(state, action); // this log is just to prove that state is in fact changing, it will be removed soon
   switch(action.type) { // if their action type matches a case,
     case 'LOGIN': {
-      let data = JSON.stringify(action.payload);
-      $.ajax({
-        type: 'POST',
-        url: '/login',
-        contentType: 'application/json',
-        data: data,
-        success: data => {
-          //verify username, password matches whats in DB
-          //if so, set state to loggedin and redirect to your Feed
-          console.log(data)
+      console.log(action.payload)
+        return {
+          ...state,
+          currentUser: action.payload.username
         }
-      })
-    }
-
-    case 'SIGNUP': {
-      let data = JSON.stringify(action.payload);
-      $.ajax({
-        type: 'POST',
-        url: '/signup',
-        contentType: 'application/json',
-        data: data,
-        success: data => {
-          //pushes user into database
-          //sets state to loggedin 
-          //redirects to feed
-          console.log(data)
-        },
-        error: data => {
-          console.log('error with signup', data)
-        }
-      })
-    }
-
+      };
     case 'LOGOUT': {
-      $.ajax({
-        type: 'POST',
-        url: '/logout',
-        contentType: 'application/json',
-        success: () => {
-          console.log('You have been successfully logged out')
-        },
-        error: () => {
-          console.log('There was an issue logging you out.')
-        }
-      })
+      return {
+        ...state,
+        currentUser: null
+      }
     }
     case 'FETCH-EVENTS':
       $.ajax({
@@ -65,7 +30,8 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         error: () => {
           console.log('oops')
         }
-      })
+      });
+      break;
     default: return state;
   }
 }
