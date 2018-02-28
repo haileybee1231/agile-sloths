@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Route, withRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, withRouter, browserHistory } from 'react-router-dom';
 
 // VIEWS TO RENDER
 import MainFeed from './FeedList.jsx';
@@ -19,11 +19,13 @@ class App extends React.Component {
   // switch first route to Profile to see profile
   render() {
     return (
-      <div>
-        <Route exact path='/' component={ MainFeed } /> 
-        <Route path='/login' component={ LoginForm } />
-        <Route path='/signup' component={ SignupForm } />
-      </div>
+      <Router history={browserHistory}>
+        <Switch>
+          <Route exact path='/' component={ MainFeed } />
+          <Route path='/login' component={ LoginForm } />
+          <Route path='/signup' component={ SignupForm } />
+        </Switch>
+      </Router>
     )
   }
 }

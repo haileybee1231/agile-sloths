@@ -1,4 +1,5 @@
 const data = {
+  currentUser: null,
   races: [
     {
       office: 'senator',
