@@ -99,11 +99,9 @@ function isLoggedIn(req, res, next) {
 
 
 // ///// USER-RELATED REQUESTS /////
-app.post('/login', passport.authenticate('local-login', {
-  successRedirect: '/',
-  failureRedirect: '/login',
-  failureFlash: true
-}));
+app.post('/login', passport.authenticate('local-login'), (req, res) => {
+  res.status(201).send(req.body.username);
+});
 
 app.post('/signup', passport.authenticate('local-signup', { // passport middleware authenticates signup
   successRedirect: '/', // on success, redirect to main feed page

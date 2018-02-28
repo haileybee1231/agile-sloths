@@ -11,8 +11,7 @@ class Sidebar extends React.Component {
     constructor(props){
         super(props)
         this.state={
-            activeItem: '',
-            currentUser: false // Created for testing purposes. Will need to call props.user once set up
+          activeItem: '',
         }
         this.handleItemClick = this.handleItemClick.bind(this)
     }
@@ -57,7 +56,7 @@ class Sidebar extends React.Component {
                     </Menu.Menu>
                 </Menu.Item>
                 <Menu.Item>
-                { this.state.currentUser
+                { this.props.currentUser
                   ? <Button onClick={this.props.logout} size='small'>Logout</Button>
                   : <Button size='small'>
                       <Link to="/login">Login</Link>
