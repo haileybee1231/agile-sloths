@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { BrowserRouter as Router, Route, Switch, browserHistory } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, withRouter, browserHistory } from 'react-router-dom';
 
 // VIEWS TO RENDER
 import MainFeed from './FeedList.jsx';

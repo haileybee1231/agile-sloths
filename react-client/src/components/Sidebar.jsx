@@ -5,6 +5,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import { logout } from '../../src/actions/actions.js';
 import { bindActionCreators } from 'redux';
+import $ from 'jquery';
 const uuidv4 = require('uuid/v4');
 
 class Sidebar extends React.Component {
@@ -20,6 +21,21 @@ class Sidebar extends React.Component {
       let name = e.target.innerHTML.split('-->')[1].split('<!--')[0]; // Jacob, this wasn't targeting correclty and I had to come up with this... we should find a more elegant solution
       this.setState({ activeItem: name })
     }
+
+    sendLogoutRequest() {
+      $.ajax({
+        type: 'POST',
+        url: '/logout',
+        contentType: 'application/json',
+        success: () => {
+          this.props.logout();
+          console.log('You have been successfully logged out')
+        },
+        error: () => {
+          console.log('There was an issue logging you out.')
+        }
+      })
+    };
 
     render() {
         const { activeItem } = this.state || {}
@@ -57,10 +73,12 @@ class Sidebar extends React.Component {
               </Menu.Item>
               <Menu.Item>
               { this.props.currentUser
-                ? <Button onClick={this.props.logout} size='small'>Logout</Button>
-                : <Button size='small'>
-                    <Link to="/login">Login</Link>
-                  </Button>
+                ? <Button onClick={this.sendLogoutRequest.bind(this)} size='small'>Logout</Button>
+                : <Link to="/login">
+                    <Button size='small'>
+                      Login
+                    </Button>
+                  </Link>
               }
               </Menu.Item>
           </Menu>

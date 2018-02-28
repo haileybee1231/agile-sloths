@@ -11,18 +11,11 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         }
       };
     case 'LOGOUT': {
-      $.ajax({
-        type: 'POST',
-        url: '/logout',
-        contentType: 'application/json',
-        success: () => {
-          console.log('You have been successfully logged out')
-        },
-        error: () => {
-          console.log('There was an issue logging you out.')
-        }
-      })};
-      break;
+      return {
+        ...state,
+        currentUser: null
+      }
+    }
     case 'FETCH-EVENTS':
       $.ajax({
         type: 'GET',
