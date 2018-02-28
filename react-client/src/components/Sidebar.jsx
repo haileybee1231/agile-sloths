@@ -19,7 +19,14 @@ class Sidebar extends React.Component {
 
     handleItemClick(e){
       let name = e.target.innerHTML.split('-->')[1].split('<!--')[0]; // Jacob, this wasn't targeting correclty and I had to come up with this... we should find a more elegant solution
-      this.setState({ activeItem: name })
+      this.setState({ activeItem: name });
+      $.ajax({
+        type: 'GET',
+        url: `/user?${name}`,
+        success: userPage => {
+          console.log(userPage)
+        }
+      })
     }
 
     sendLogoutRequest() {

@@ -3,6 +3,7 @@ let bodyParser = require('body-parser');
 // let db = require('../database-mysql'); // to delete
 let session = require('express-session');
 let path = require('path');
+let db = require('../database-mysql');
 let passport = require('passport');
 let flash = require('connect-flash');
 // let serverHelpers = require('../lib/serverHelpers.js'); // to delete?
@@ -22,18 +23,6 @@ app.use(passport.session());
 app.use(flash()); // uses flash connect to allow flash messages in stored session
 app.use(express.static(path.join(__dirname, '../react-client/dist')));
 
-// This wildcard acts as a catch-all to let react-router redirect instead of using Express to
-app.get('/events/*', (req, res) => {
-  // to handle request for new feed events, needs to be filled
-  res.end();
-});
-
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'))
-});
-
-// EVERYTHING BELOW TO BE DELETED?
-
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
@@ -41,6 +30,33 @@ function isLoggedIn(req, res, next) {
 
   res.code(401).end('You must log in to do that!');
 }
+// This wildcard acts as a catch-all to let react-router redirect instead of using Express to
+app.get('/events/*', (req, res) => {
+  // to handle request for new feed events, needs to be filled
+  res.end();
+});
+
+app.get('/user*', (req, res) => {
+  let user = decodeURIComponent(req._parsedOriginalUrl.query).split(' ');
+  db.getUserByName(user[0], user[1], (err, user) => {
+    console.log(user);
+    if (err) {
+      res.status(500);
+    }
+    if (!user.length) {
+      res.status(404);
+    }
+    res.status(201).send(user);
+  });
+});
+
+// app.get('/*', (req, res) => {
+//   console.log(req);
+//   res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'))
+// });
+
+// EVERYTHING BELOW TO BE DELETED?
+
 
 // ///// MAIN PAGE REQUESTS /////
 // app.get('/', function(req, res) {
@@ -106,6 +122,7 @@ app.post('/login', passport.authenticate('local-login'), (req, res) => {
 app.post('/signup', passport.authenticate('local-signup', { // passport middleware authenticates signup
   successRedirect: '/', // on success, redirect to main feed page
   failureRedirect: '/signup', // on failure, keep on signup page
+  badRequestMessage: 'Please try again.',
   failureFlash: true
 }));
 
