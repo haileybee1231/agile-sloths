@@ -24,54 +24,55 @@ class Sidebar extends React.Component {
     render() {
         const { activeItem } = this.state || {}
         return (
-            <Container style={{paddingLeft: 100}}>
-            <Menu vertical fixed = 'left' style={{overflowY: 'scroll'}} size = 'large'>
-            <Menu.Item>
-                <Header as='h2' textAlign='center' size='huge'>GRASSROOTS</Header>
-            </Menu.Item>
-            <Menu.Item>
-                <Input className='icon' icon='search' placeholder='Search...' />
-            </Menu.Item>
-                <Menu.Item>
-                    <Menu.Header>Elections</Menu.Header>
-                    <Menu.Menu>
-                        {this.props.races.map((race) => {
-                            return (
-                                <Menu.Item name={race.office} active={activeItem === race.office} onClick={this.handleItemClick} key={uuidv4()}/>
-                            )
-                        })}
-                    </Menu.Menu>
-                </Menu.Item>
+          <Container style={{paddingLeft: 100}}>
+          <Menu vertical fixed = 'left' style={{overflowY: 'scroll'}} size = 'large'>
+          <Menu.Item>
+              <Header as='h2' textAlign='center' size='huge'>GRASSROOTS</Header>
+          </Menu.Item>
+          <Menu.Item>
+              <Input className='icon' icon='search' placeholder='Search...' />
+          </Menu.Item>
+              <Menu.Item>
+                  <Menu.Header>Elections</Menu.Header>
+                  <Menu.Menu>
+                      {this.props.races.map((race) => {
+                          return (
+                              <Menu.Item name={race.office} active={activeItem === race.office} onClick={this.handleItemClick} key={uuidv4()}/>
+                          )
+                      })}
+                  </Menu.Menu>
+              </Menu.Item>
 
-                <Menu.Item>
-                    <Menu.Header>Candidates</Menu.Header>
-                    <Menu.Menu>
-                        {this.props.races.map((race) => {
-                            return race.candidates.map((candidate) => {
-                                return (
-                                    <Menu.Item name={candidate} active={activeItem === candidate} onClick={this.handleItemClick}/>
-                                )
-                            })
-                        })}
-                    </Menu.Menu>
-                </Menu.Item>
-                <Menu.Item>
-                { this.props.currentUser
-                  ? <Button onClick={this.props.logout} size='small'>Logout</Button>
-                  : <Button size='small'>
-                      <Link to="/login">Login</Link>
-                    </Button>
-                }
-                </Menu.Item>
-            </Menu>
-            </Container>
+              <Menu.Item>
+                  <Menu.Header>Candidates</Menu.Header>
+                  <Menu.Menu>
+                      {this.props.races.map((race) => {
+                          return race.candidates.map((candidate) => {
+                              return (
+                                  <Menu.Item name={candidate} active={activeItem === candidate} onClick={this.handleItemClick}/>
+                              )
+                          })
+                      })}
+                  </Menu.Menu>
+              </Menu.Item>
+              <Menu.Item>
+              { this.props.currentUser
+                ? <Button onClick={this.props.logout} size='small'>Logout</Button>
+                : <Button size='small'>
+                    <Link to="/login">Login</Link>
+                  </Button>
+              }
+              </Menu.Item>
+          </Menu>
+          </Container>
 
         )
     }
 }
 
 const mapStateToProps = (state) => ({
-  races: state.data.races
+  races: state.data.races,
+  currentUser: state.data.currentUser
 });
 
 const mapDispatchToProps = (dispatch) => {

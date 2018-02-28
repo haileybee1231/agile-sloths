@@ -19,10 +19,11 @@ module.exports = function(passport) {
   passport.use('local-login', new LocalStrategy( // strategy = type of logging in (e.g. fb)
     function(email, password, cb) {
       db.getUserByEmail(email, function(err, user) {
+        console.log(user);
         if (err) {
           return cb(err);
         }
-        if (!user) {
+        if (!user.length) {
           return cb(null, false);
         }
         bcrypt.compare(password, user[0].password, function(err, res) {

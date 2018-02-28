@@ -8,6 +8,7 @@ import $ from 'jquery';
 
 
 const LoginForm = (props) =>  {
+
   const fetchUser = (username, password) => {
     let data = JSON.stringify({ username: username, password: password });
     $.ajax({
@@ -17,6 +18,12 @@ const LoginForm = (props) =>  {
       data: data,
       success: username => {
         props.login(username);
+        props.history.push('/');
+      },
+      error: err => {
+        err.responseText === 'Unauthorized' ?
+          alert('Incorrect email or password, please try again.')
+          : alert('There was an error on our end, sorry :(')
       }
     })
   }
