@@ -45,12 +45,26 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         contentType: 'application/json',
         success: () => {
           console.log('You have been successfully logged out')
-        }, 
+        },
         error: () => {
           console.log('There was an issue logging you out.')
         }
       })
     }
+    case 'FETCH-EVENTS':
+      $.ajax({
+        type: 'GET',
+        url: `EVENTS/${state.events.length - 1}`,
+        success: newEvents => {
+          return {
+            ...state,
+            events: [...state.events, ...newEvents]
+          }
+        },
+        error: () => {
+          console.log('oops')
+        }
+      })
     default: return state;
   }
 }
