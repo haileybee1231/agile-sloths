@@ -80,14 +80,14 @@ class SignUpForm extends React.Component {
                                         type='submit' 
                                         color='green'
                                         onClick={() => {
-                                props.signup($('input[type=email]').val(),
-                                             $('input[type=password]').val(),
-                                             $('input[type=text]').val(),
-                                             $('input[type=text]').val(),
-                                             $('input[type=text]').val(),
-                                             $('input[type=number]').val(),
-                                             $('input[type=text]').val(),
-                                             $('input[type=text]').val()
+                                props.signup($('input[name=email]').val(),
+                                             $('input[name=password]').val(),
+                                             $('input[name=role]').val(),
+                                             $('input[name=firstName]').val(),
+                                             $('input[name=lastName]').val(),
+                                             $('input[name=zipCode]').val(),
+                                             $('input[name=bio]').val(),
+                                             $('input[name=race]').val()
                                 )}}>Submit</Form.Field>
                         </Segment>
                         
