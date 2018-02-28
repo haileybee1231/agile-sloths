@@ -1,13 +1,13 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { createStore, combineReducers } from 'redux';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { Router, Route } from 'react-router-dom';
 import { syncHistoryWithStore, routerReducer } from 'react-router-redux';
 import { createBrowserHistory } from 'history';
 import App from './App.jsx';
 import reducers from '../reducers/reducers.js';
 
-// store file not currently being used. 
+// store file not currently being used.
 // Biggest difference is current version does not account for redux plugin
 const store = createStore(
   combineReducers({
@@ -19,7 +19,7 @@ const store = createStore(
 // used to give URL history to redux
 const history = syncHistoryWithStore(createBrowserHistory(), store);
 
-/* Root component can only have one child component (App). 
+/* Root component can only have one child component (App).
 App component handles route redirection based on the filtered path option below */
 const Root = ({ store }) => (
   <Provider store={ store }>

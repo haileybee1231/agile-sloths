@@ -1,7 +1,7 @@
 let express = require('express');
 let bodyParser = require('body-parser');
 // let db = require('../database-mysql'); // to delete
-let session = require('express-session'); 
+let session = require('express-session');
 let path = require('path');
 let passport = require('passport');
 let flash = require('connect-flash');
@@ -23,25 +23,30 @@ app.use(flash()); // uses flash connect to allow flash messages in stored sessio
 app.use(express.static(path.join(__dirname, '../react-client/dist')));
 
 // This wildcard acts as a catch-all to let react-router redirect instead of using Express to
+app.get('/events/*', (req, res) => {
+  // to handle request for new feed events, needs to be filled
+  res.end();
+});
+
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'))
-})
+});
 
 
 // EVERYTHING BELOW TO BE DELETED?
 
-// function isLoggedIn(req, res, next) {
-  //   if (req.isAuthenticated()) {
-    //     return next();
-    //   }
-    
-    //   res.code(401).end('You must log in to do that!');
-    // }
-    
-    // ///// MAIN PAGE REQUESTS /////
-    // app.get('/', function(req, res) {
-      //   // will render index page regardless of logged in or not
-      //   // but only those logged in will be able to create/save
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+
+  res.code(401).end('You must log in to do that!');
+}
+
+// ///// MAIN PAGE REQUESTS /////
+// app.get('/', function(req, res) {
+//   // will render index page regardless of logged in or not
+//   // but only those logged in will be able to create/save
 //   res.render('index');
 // });
 
@@ -108,8 +113,9 @@ app.post('/signup', passport.authenticate('local-signup', { // passport middlewa
 }));
 
 app.post('/logout', function(req, res) {
-  req.logout();
-  res.redirect('/');
+  req.session.destroy(function (err) {
+    res.redirect('/');
+  });
 });
 
 let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000
