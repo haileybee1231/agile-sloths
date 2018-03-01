@@ -31,7 +31,7 @@ const addUser = function(email, password, firstname, lastname, role, bio, locati
   console.log(cb);
   bcrypt.hash(password, 10, function(err, hash) {
     connection.query('INSERT INTO users (email, password, firstname, lastname, role, bio, location, race) VALUES (?, ?, ?, ?, ?, ?, ?)',
-    [email, hash, firstname, lastname, role, bio, location, race], function(err, results) {
+    [email, hash, name, role, bio, location, race], function(err, results) {
       if (err) {
         cb(err, null);
       } else {
@@ -42,8 +42,19 @@ const addUser = function(email, password, firstname, lastname, role, bio, locati
 })
 }
 
-const getUserByEmail = function(email, cb) {
-  connection.query('SELECT * FROM users where email=?', [email], function(err, results) {
+var getUserByEmail = function(email, cb) {
+  connection.query('SELECT * FROM users WHERE email=?', [email], function(err, results) {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, results);
+    }
+  })
+}
+
+var getUserByName = function(first, last, cb) {
+  connection.query('SELECT * FROM users WHERE firstname=? AND lastname=?', [first, last], function(err, results) {
+    // need to add query to also get followers/favorites from votercandidate table and send them back too
     if (err) {
       cb(err, null);
     } else {
@@ -56,3 +67,4 @@ const getUserByEmail = function(email, cb) {
 module.exports.selectAllRaces = selectAllRaces;
 module.exports.addUser = addUser;
 module.exports.getUserByEmail = getUserByEmail;
+module.exports.getUserByName = getUserByName;
