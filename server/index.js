@@ -3,6 +3,7 @@ let bodyParser = require('body-parser');
 // let db = require('../database-mysql'); // to delete
 let session = require('express-session');
 let path = require('path');
+let db = require('../database-mysql');
 let passport = require('passport');
 let flash = require('connect-flash');
 // let serverHelpers = require('../lib/serverHelpers.js'); // to delete?
@@ -22,19 +23,6 @@ app.use(passport.session());
 app.use(flash()); // uses flash connect to allow flash messages in stored session
 app.use(express.static(path.join(__dirname, '../react-client/dist')));
 
-// This wildcard acts as a catch-all to let react-router redirect instead of using Express to
-app.get('/events/*', (req, res) => {
-  // to handle request for new feed events, needs to be filled
-  res.end();
-});
-
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'))
-});
-
-
-// EVERYTHING BELOW TO BE DELETED?
-
 function isLoggedIn(req, res, next) {
   if (req.isAuthenticated()) {
     return next();
@@ -42,6 +30,38 @@ function isLoggedIn(req, res, next) {
 
   res.code(401).end('You must log in to do that!');
 }
+// This wildcard acts as a catch-all to let react-router redirect instead of using Express to
+app.get('/events*', (req, res) => {
+  // to handle request for new feed events, needs to be filled
+  res.end();
+});
+
+app.get('/user*', (req, res) => {
+  let username = decodeURIComponent(req._parsedOriginalUrl.query).split(' ');
+  res.end();
+  // db.getUserByName(username[0], username[1], (err, user) => {
+  //   db.getEventsByUsername(user, (err, events) => { // function still needs to be written, should just pull all events and then use below filter to select only the relevant ones
+  //     // let userEvents = events.filter(event => {
+  //     //   return event.host = `${user.firstName} ${user.lastName}`
+  //     // })
+  //     if (err) {
+  //       res.status(500);
+  //     }
+  //     if (!user.length) {
+  //       res.status(404);
+  //     }
+  //     res.status(201).send(user);
+  //   })
+  // });
+});
+
+// app.get('/*', (req, res) => {
+//   console.log(req);
+//   res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'))
+// });
+
+// EVERYTHING BELOW TO BE DELETED?
+
 
 // ///// MAIN PAGE REQUESTS /////
 // app.get('/', function(req, res) {
@@ -100,22 +120,20 @@ function isLoggedIn(req, res, next) {
 
 
 // ///// USER-RELATED REQUESTS /////
-app.post('/login', passport.authenticate('local-login', {
-  successRedirect: '/',
-  failureRedirect: '/login',
-  failureFlash: true
-}));
+app.post('/login', passport.authenticate('local-login'), (req, res) => {
+  res.status(201).send(req.body.username);
+});
 
 app.post('/signup', passport.authenticate('local-signup', { // passport middleware authenticates signup
   successRedirect: '/', // on success, redirect to main feed page
   failureRedirect: '/signup', // on failure, keep on signup page
+  badRequestMessage: 'Please try again.',
   failureFlash: true
 }));
 
-app.post('/logout', function(req, res) {
-  req.session.destroy(function (err) {
-    res.redirect('/');
-  });
+app.post('/logout', isLoggedIn, function(req, res) {
+  req.logout();
+  res.clearCookie('connect.sid').status(200).redirect('/');
 });
 
 let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000
