@@ -51,11 +51,11 @@ const LoginForm = (props) =>  {
         verticalAlign='middle'
       >
         <Grid.Column style={{ maxWidth: 450 }}>
-          <Header size='huge' style={{ fontSize: 60 }}>
-            <Link to='/'>
+          <Link to='/'>
+            <Header size='huge' style={{ fontSize: 60 }}>
               GRASSROOTS
-            </Link>
-          </Header>
+            </Header>
+          </Link>
           <Header as='h2' color='green' textAlign='center'>
             {' '}Log-in to your account
           </Header>

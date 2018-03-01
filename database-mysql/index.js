@@ -35,18 +35,17 @@ var addUser = function(email, password, name, role, bio, location, race, cb) {
 }
 
 var addEvent = function(title, location, time, description, host, cb) { // host should be the email of the logged in user
-    if (err) {
-      cb(err, null);
-    } else {
-      attendEvent(title, host, function(err, result) { // host will be listed as attendee so they have to attend
-        if (err) {
-          cb(err, null);
-        } else {
-          cb(null, result);
-        }
+  if (err) {
+    cb(err, null);
+  } else {
+    attendEvent(title, host, function(err, result) { // host will be listed as attendee so they have to attend
+      if (err) {
+        cb(err, null);
+      } else {
+        cb(null, result);
       }
-    }
-  })
+    });
+  }
 }
 
 var attendEvent = function(title, email, cb) { // query will insert based on userid and eventid so retrieve those first

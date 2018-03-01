@@ -44,13 +44,13 @@ class SignUpForm extends React.Component {
               verticalAlign='middle'
           >
             <Grid.Column style={{ maxWidth: 750 }}>
-            <Header size='huge' style={{ fontSize: 60 }}>
-              <Link to='/'>
+            <Link to='/'>
+              <Header size='huge' style={{ fontSize: 60 }}>
                 GRASSROOTS
-              </Link>
-            </Header>
+              </Header>
+            </Link>
             <Header as='h2' color='green' textAlign='center'>
-                {' '}Sign up for an account
+                {' '}Sign up for an account or <Link to='/login'>log-in</Link>
             </Header>
             <Form size='large'>
               <Segment>

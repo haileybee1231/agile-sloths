@@ -40,11 +40,13 @@ app.get('/user*', (req, res) => {
   let username = decodeURIComponent(req._parsedOriginalUrl.query).split(' ');
   res.end();
   db.getUserByName(username[0], username[1], (err, user) => {
-    let userId = user.id;
     db.getAllEvents((err, events) => {
-      let userEvents = events.filter(event => {
-        return event.host = userId
-      })
+      let userEvents = null;
+      if (events) {
+        userEvents = events.filter(event => {
+          return event.host = user.id
+        })
+      }
       if (err) {
         res.status(500);
       }
@@ -57,10 +59,9 @@ app.get('/user*', (req, res) => {
   });
 });
 
-// app.get('/*', (req, res) => {
-//   console.log(req);
-//   res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'))
-// });
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'))
+});
 
 // EVERYTHING BELOW TO BE DELETED?
 

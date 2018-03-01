@@ -1,9 +1,10 @@
 import React from 'react';
-import { Grid, Container, Header, Segment, Divider, Feed } from 'semantic-ui-react';
+import { Grid, Container, Button, Header, Segment, Divider, Feed } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchEvents } from '../../src/actions/actions.js';
 import Sidebar from './Sidebar.jsx';
+import EventForm from './EventForm.jsx';
 import InfiniteScroll from 'react-infinite-scroll-component';
 const uuidv4 = require('uuid/v4');
 
@@ -12,7 +13,12 @@ const FeedList = (props) => (
     <Grid container style={{paddingLeft: 230}}>
       <Sidebar />
       <Grid.Row style={{paddingTop: 130}}>
-        <Header as='h1'>Feed</Header>
+        <Grid.Column floated='left' width={3}>
+          <Header as='h1'>Feed</Header>
+        </Grid.Column>
+        <Grid.Column floated='right' width={5}>
+          <EventForm/>
+        </Grid.Column>
           <Divider/>
       </Grid.Row>
       <Divider/>
