@@ -27,11 +27,11 @@ const selectAllRaces = function(cb) {
   });
 };
 
-const addUser = function(email, password, firstname, lastname, role, bio, location, race, cb) {
+const addUser = function(email, password, firstname, lastname, bio, role, location, race, cb) {
   console.log(cb);
   bcrypt.hash(password, 10, function(err, hash) {
-    connection.query('INSERT INTO users (email, password, firstname, lastname, role, bio, location, race) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-    [email, hash, firstname, lastname, role, bio, location, race], function(err, results) {
+    connection.query('INSERT INTO users (email, password, firstname, lastname, bio, role, location, race) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    [email, hash, firstname, lastname, bio, role, location, race], function(err, results) {
       if (err) {
         cb(err, null);
       } else {
@@ -41,6 +41,8 @@ const addUser = function(email, password, firstname, lastname, role, bio, locati
   )
 })
 }
+
+
 
 var getUserByEmail = function(email, cb) {
   connection.query('SELECT * FROM users WHERE email=?', [email], function(err, results) {
