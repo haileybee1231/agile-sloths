@@ -43,7 +43,6 @@ const addUser = function(email, password, firstname, lastname, bio, role, locati
 }
 
 
-
 var getUserByEmail = function(email, cb) {
   connection.query('SELECT * FROM users WHERE email=?', [email], function(err, results) {
     if (err) {

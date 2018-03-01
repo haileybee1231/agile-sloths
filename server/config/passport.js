@@ -49,22 +49,21 @@ module.exports = function(passport) {
       let lastname = body.lastname;
       let bio = body.bio;
       let role = body.role;
-      let location = body.location;
+      let location = body.zipcode;
       let race = body.race;
       db.getUserByEmail(email, function(err, user) {
         if (err) {
           return cb(err);
-        }
-        if (user) {
+        } else if (user) {
           return cb(null, false);
-        } 
-          db.addUser(email, password, firstname, lastname, role, bio, location, race, function(err, results) { // add whatever else needs to be added here, like bio
+        } else {
+          db.addUser(email, password, firstname, lastname, bio, role, location, race, function(err, results) { // add whatever else needs to be added here, like bio
             if (err) {
               return cb('error adding user', err);
             }
             return cb('signup successful', results); // put something here to verify signup successful
           });
-        
+        }
       })
     }
   ));

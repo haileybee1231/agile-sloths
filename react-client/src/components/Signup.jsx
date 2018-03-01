@@ -16,23 +16,25 @@ class SignUpForm extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            CandidateTrue: undefined
+            CandidateTrue: undefined,
+            role: ''
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
-    handleSubmit(email, password, role, firstname, lastname, zipcode, bio, race) {
+    handleSubmit(email, password, firstname, lastname, bio, role, zipcode, race) {
         let data = JSON.stringify({
             email: email,
             password: password,
-            role: role,
+            role: this.state.role,
             firstname: firstname,
             lastname: lastname,
             zipcode: zipcode,
             bio: bio,
             race: race
         })
+        console.log(data)
         $.ajax({
             type: 'POST',
             url: '/signup',
@@ -50,9 +52,9 @@ class SignUpForm extends React.Component {
 
     handleChange(e, {value}) {
         if (value === 'voter') {
-            this.setState({CandidateTrue: false})
+            this.setState({CandidateTrue: false, role: 'Voter'})
         } else {
-            this.setState({CandidateTrue: true}) 
+            this.setState({CandidateTrue: true, role: 'Candidate'}) 
         }
     }
 
@@ -109,14 +111,14 @@ class SignUpForm extends React.Component {
                                         color='green'
                                         onClick={() => {
                                             this.handleSubmit(
-                                                $('input[type=email]').val(),
+                                                $('input[name=email]').val(),
                                                 $('input[name=password]').val(),
-                                                $('.text').val(),
                                                 $('input[name=firstName]').val(),
                                                 $('input[name=lastName]').val(),
+                                                $('textArea[name=bio]').val() || null,
+                                                this.state.role,
                                                 $('input[name=zipCode]').val(),
-                                                $('input[name=bio]').val(),
-                                                $('input[name=race]').val()
+                                                $('input[name=race]').val() || null
                                             )}}>Submit</Form.Field>
                         </Segment>
                     </Form>
