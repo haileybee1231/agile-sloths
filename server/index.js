@@ -39,20 +39,22 @@ app.get('/events*', (req, res) => {
 app.get('/user*', (req, res) => {
   let username = decodeURIComponent(req._parsedOriginalUrl.query).split(' ');
   res.end();
-  // db.getUserByName(username[0], username[1], (err, user) => {
-  //   db.getEventsByUsername(user, (err, events) => { // function still needs to be written, should just pull all events and then use below filter to select only the relevant ones
-  //     // let userEvents = events.filter(event => {
-  //     //   return event.host = `${user.firstName} ${user.lastName}`
-  //     // })
-  //     if (err) {
-  //       res.status(500);
-  //     }
-  //     if (!user.length) {
-  //       res.status(404);
-  //     }
-  //     res.status(201).send(user);
-  //   })
-  // });
+  db.getUserByName(username[0], username[1], (err, user) => {
+    let userId = user.id;
+    db.getAllEvents((err, events) => {
+      let userEvents = events.filter(event => {
+        return event.host = userId
+      })
+      if (err) {
+        res.status(500);
+      }
+      if (!user.length) {
+        res.status(404);
+      }
+      let body = {user, userEvents}
+      res.status(201).end(body);
+    })
+  });
 });
 
 // app.get('/*', (req, res) => {

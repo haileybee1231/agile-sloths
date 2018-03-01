@@ -21,7 +21,6 @@ var selectAllRaces = function(cb) {
 };
 
 var addUser = function(email, password, name, role, bio, location, race, cb) {
-  console.log(cb);
   bcrypt.hash(password, 10, function(err, hash) {
     connection.query('INSERT INTO users (email, password, firstname, lastname, role, bio, location, race) VALUES (?, ?, ?, ?, ?, ?, ?)',
     [email, hash, name, role, bio, location, race], function(err, results) {
@@ -35,19 +34,54 @@ var addUser = function(email, password, name, role, bio, location, race, cb) {
 })
 }
 
-var getUserByEmail = function(email, cb) {
-  connection.query('SELECT * FROM users WHERE email=?', [email], function(err, results) {
+var addEvent = function(title, location, time, description, host, cb) { // host should be the email of the logged in user
     if (err) {
       cb(err, null);
     } else {
-      cb(null, results);
+      attendEvent(title, host, function(err, result) { // host will be listed as attendee so they have to attend
+        if (err) {
+          cb(err, null);
+        } else {
+          cb(null, result);
+        }
+      }
+    }
+  })
+}
+
+var attendEvent = function(title, email, cb) { // query will insert based on userid and eventid so retrieve those first
+  connection.query('INSERT INTO eventsusers (event, user) VALUES ((SELECT id FROM users WHERE email=?), (SELECT id FROM events WHERE title=?))', function(err, result) {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb (null, result);
+    }
+  })
+}
+
+var getUserByEmail = function(email, cb) {
+  connection.query('SELECT * FROM users WHERE email=?', [email], function(err, user) {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, user);
     }
   })
 }
 
 var getUserByName = function(first, last, cb) {
-  connection.query('SELECT * FROM users WHERE firstname=? AND lastname=?', [first, last], function(err, results) {
+  connection.query('SELECT * FROM users WHERE firstname=? AND lastname=?', [first, last], function(err, user) {
     // need to add query to also get followers/favorites from votercandidate table and send them back too
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, user);
+    }
+  })
+}
+
+var getAllEvents = function(cb) {
+  connection.query('SELECT * FROM events', function(err, results) {
     if (err) {
       cb(err, null);
     } else {
@@ -61,3 +95,4 @@ module.exports.selectAllRaces = selectAllRaces;
 module.exports.addUser = addUser;
 module.exports.getUserByEmail = getUserByEmail;
 module.exports.getUserByName = getUserByName;
+module.exports.getAllEvents = getAllEvents;
