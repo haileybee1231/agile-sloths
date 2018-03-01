@@ -34,15 +34,15 @@ class SignUpForm extends React.Component {
             bio: bio,
             race: race
         })
-        console.log(data)
         $.ajax({
             type: 'POST',
             url: '/signup',
             contentType: 'application/json',
             data: data,
             success: user => {
+                console.log(data)
                 this.props.signup(user)
-                console.log('signup successful', user)
+                console.log('signup successful!')
             },
             error: err => {
                 console.log('signup error', err)

@@ -12,17 +12,17 @@ export const logout = () => ( // no payload or parameters necessary for logout
   }
 )
 
-export const signup = (email, password, role, firstName, lastName, zipCode, bio, race) => (
+export const signup = (email, password, firstName, lastName, bio, role, zipCode, race) => (
   {
     type: 'SIGNUP',
     payload: {
       email: email,
       password: password,
-      role: role,
       firstName: firstName,
       lastName: lastName,
-      zipCode: zipCode,
       bio: bio,
+      role: role,
+      zipCode: zipCode,
       race: race
     }
   }

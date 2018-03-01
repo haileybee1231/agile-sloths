@@ -54,14 +54,15 @@ module.exports = function(passport) {
       db.getUserByEmail(email, function(err, user) {
         if (err) {
           return cb(err);
-        } else if (user) {
-          return cb(null, false);
+        } 
+        if (user) {
+          return cb(null, false, {error: 'That email is in use'});
         } else {
           db.addUser(email, password, firstname, lastname, bio, role, location, race, function(err, results) { // add whatever else needs to be added here, like bio
             if (err) {
               return cb('error adding user', err);
             }
-            return cb('signup successful', results); // put something here to verify signup successful
+            return cb('signup successful!', results); // put something here to verify signup successful
           });
         }
       })
