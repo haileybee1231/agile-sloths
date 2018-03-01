@@ -19,9 +19,6 @@ class Profile extends React.Component {
 		this.state = {
 			placeholder: []
 		}
-		this.handleEventsTabClick = this.handleEventsTabClick.bind(this),
-		this.handleFollowersTabClick = this.handleFollowersTabClick.bind(this),
-		this.handleRaceTabClick = this.handleRaceTabClick.bind(this)
 	}
 
 	render() {
