@@ -1,10 +1,19 @@
 import React from 'react';
-import { Icon, Card, Grid, Header, Container, Image, Button } from 'semantic-ui-react';
+
+import { Icon, List, Card, Grid, Header, Container, Image, Button } from 'semantic-ui-react';
+import data from '../testdata.js';
+
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import Sidebar from './Sidebar.jsx';
+import TabMenu from './Tabs.jsx'
+
 const uuidv4 = require('uuid/v4');
+
+var thisUser = data.users['bororourke@gmail.com'];
+var eventsData = data.events;
+var race = data.races[0];
 
 
 class Profile extends React.Component {
@@ -13,31 +22,10 @@ class Profile extends React.Component {
 		this.state = {
 			placeholder: []
 		}
-		this.handleBioTabClick = this.handleBioTabClick.bind(this),
-		this.handleEventsTabClick = this.handleEventsTabClick.bind(this),
-		this.handleFollowersTabClick = this.handleFollowersTabClick.bind(this),
-		this.handleRaceTabClick = this.handleRaceTabClick.bind(this)
-	}
-
-	handleBioTabClick() {
-		// should empty container and render bio element
-	}
-
-	handleEventsTabClick() {
-		// should empty container and render events list
-
-	}
-
-	handleFollowersTabClick() {
-		// should empty container and render followers list
-	}
-
-	handleRaceTabClick() {
-		// should empty container and render race info element
-
 	}
 
 	render() {
+
 		return (
 			<Container style={{paddingLeft: 210}}>
 				<Grid container style={{paddingTop: 63}}>
@@ -56,25 +44,14 @@ class Profile extends React.Component {
 								{this.props.users['bororourke@gmail.com'].bio}
 							</Card.Description>
 							<Card.Content extra>
-							follower count goes here
+								{thisUser.followers.length} followers
 							</Card.Content>
 						</Card>
 					</Grid.Column>
 
 					<Grid.Column width={10}>
 
-						<Grid.Row style={{paddingBottom: 30}}>
-							<Button style={{marginRight: 10}} > Events </Button>
-							<Button style={{marginRight: 10}} > Election Info </Button>
-							<Button style={{marginRight: 10}} > Followers </Button>
-						</Grid.Row>
-
-						<Grid.Row>
-							<div> Dummy events so this space is not empty: </div>
-							{this.props.events.map(event => (
-								<div key={uuidv4()} style={{padding: 5, fontWeight: 700}}> {event.title} by {event.host} at {event.location} </div>
-								))}
-						</Grid.Row>
+					<TabMenu />
 
 					</Grid.Column>
 
@@ -84,6 +61,7 @@ class Profile extends React.Component {
 
 	}
 }
+
 
 const mapStateToProps = state => ({
 	events: state.data.events,

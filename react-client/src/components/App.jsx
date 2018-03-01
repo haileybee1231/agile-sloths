@@ -19,6 +19,7 @@ class App extends React.Component {
   // switch first route to Profile to see profile
   render() {
     return (
+
       <Router history={browserHistory}>
         <Switch>
           <Route exact path='/' component={ MainFeed } />
