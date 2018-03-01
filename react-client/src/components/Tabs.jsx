@@ -5,10 +5,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import Sidebar from './Sidebar.jsx';
-import Event from './ProfileTabs.jsx';
-import EventsList from './ProfileTabs.jsx';
-import RaceInfo from './ProfileTabs.jsx';
-import FollowersList from './ProfileTabs.jsx';
 
 const uuidv4 = require('uuid/v4');
 
@@ -64,21 +60,3 @@ const TabMenu = () => (
 )
 
 export default TabMenu
-
-// const EventsList = (props) => (
-// 	<Item.Group>
-// 		{this.props.events.map(event => (
-// 			<Item> 
-// 				<Item.Content>
-// 					<Item.Header as='a'> {event.title} </Item.Header> 
-// 					<Item.Meta> {event.date}, {event.time} </Item.Meta>
-// 					<Item.Extra> {event.location} </Item.Extra>
-// 					<Item.Description> {event.description} </Item.Description>
-// 				</Item.Content>
-// 			</Item>
-// 			))}
-// 	</Item.Group>
-
-// );
-
-// export default EventsList;

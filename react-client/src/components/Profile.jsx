@@ -5,10 +5,6 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import Sidebar from './Sidebar.jsx';
-import Event from './ProfileTabs.jsx';
-import EventsList from './ProfileTabs.jsx';
-import RaceInfo from './ProfileTabs.jsx';
-import FollowersList from './ProfileTabs.jsx';
 import TabMenu from './Tabs.jsx'
 
 const uuidv4 = require('uuid/v4');
@@ -26,8 +22,6 @@ class Profile extends React.Component {
 	}
 
 	render() {
-		console.log(data.events)
-		console.log(race)
 		return ( 
 			<Container style={{paddingLeft: 210}}>
 				<Grid container style={{paddingTop: 63}}>
@@ -65,16 +59,3 @@ class Profile extends React.Component {
 }
 
 export default Profile
-
-						// <div>
-						// <Header as='h1'> {race.office} </Header>
-						// <Header as='h3'> {race.city}, {race.state} </Header>
-						// <Header as='h3'> {race.district} </Header>
-						// <Header as='h2'> {race.date} </Header>
-						// <Header as='h3'> Candidates: </Header>
-						// <List>
-						// {race.candidates.map(candidate => (
-						// 	<List.Item> {candidate} </List.Item>
-						// 	))}
-						// </List>
-						// </div>
