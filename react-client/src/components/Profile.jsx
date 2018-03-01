@@ -1,14 +1,15 @@
 import React from 'react';
 import { Icon, Card, Grid, Header, Container, Image, Button } from 'semantic-ui-react';
-import data from '../testdata.js';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import Sidebar from './Sidebar.jsx';
+const uuidv4 = require('uuid/v4');
 
-var thisUser = data.users['bororourke@gmail.com'];
 
 class Profile extends React.Component {
-	constructor() {
-		super()
+	constructor(props) {
+		super(props)
 		this.state = {
 			placeholder: []
 		}
@@ -37,23 +38,22 @@ class Profile extends React.Component {
 	}
 
 	render() {
-		console.log(data.events)
-		return ( 
+		return (
 			<Container style={{paddingLeft: 210}}>
 				<Grid container style={{paddingTop: 63}}>
 					<Sidebar />
 
-					<Grid.Column width={4}>
+					<Grid.Column width={6}>
 						<Card>
 							<Image src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Beto_O%27Rourke%2C_Official_portrait%2C_113th_Congress.jpg/800px-Beto_O%27Rourke%2C_Official_portrait%2C_113th_Congress.jpg'/>
 							<Card.Header style={{paddingLeft: 15, paddingRight: 15, fontSize: 20, paddingTop: 10, fontWeight: 800, paddingBottom: 10}}>
-								{thisUser.name}
+								{this.props.users['bororourke@gmail.com'].name}
 							</Card.Header>
 							<Card.Meta style={{paddingLeft: 15, paddingRight: 15, paddingBottom: 10}}>
 							location goes here?
 							</Card.Meta>
 							<Card.Description style={{paddingLeft: 15, paddingRight: 15}}>
-								{thisUser.bio}
+								{this.props.users['bororourke@gmail.com'].bio}
 							</Card.Description>
 							<Card.Content extra>
 							follower count goes here
@@ -71,8 +71,8 @@ class Profile extends React.Component {
 
 						<Grid.Row>
 							<div> Dummy events so this space is not empty: </div>
-							{data.events.map(event => (
-								<div style={{padding: 5, fontWeight: 700}}> {event.title} by {event.host} at {event.location} </div> 
+							{this.props.events.map(event => (
+								<div key={uuidv4()} style={{padding: 5, fontWeight: 700}}> {event.title} by {event.host} at {event.location} </div>
 								))}
 						</Grid.Row>
 
@@ -85,4 +85,13 @@ class Profile extends React.Component {
 	}
 }
 
-export default Profile
+const mapStateToProps = state => ({
+	events: state.data.events,
+	users: state.data.users
+});
+
+const mapDispatchToProps = dispatch => {
+	return {};
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);

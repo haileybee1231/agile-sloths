@@ -24,6 +24,7 @@ class App extends React.Component {
           <Route exact path='/' component={ MainFeed } />
           <Route path='/login' component={ LoginForm } />
           <Route path='/signup' component={ SignupForm } />
+          <Route path='/user*' component={ Profile } />
         </Switch>
       </Router>
     )
