@@ -1,7 +1,17 @@
 import React from 'react';
-import { Tab, Grid, Header, Container, Item, List } from 'semantic-ui-react';
-import data from '../testdata.js'
-import ElectionInfo from './ElectionInfo.jsx';
+import { Icon, Item, List, Card, Grid, Header, Container, Image, Button, Tab } from 'semantic-ui-react';
+import data from '../testdata.js';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import Sidebar from './Sidebar.jsx';
+import Event from './ProfileTabs.jsx';
+import EventsList from './ProfileTabs.jsx';
+import RaceInfo from './ProfileTabs.jsx';
+import FollowersList from './ProfileTabs.jsx';
+
+const uuidv4 = require('uuid/v4');
+
 
 var events = data.events;
 var race = data.races[0];
@@ -11,7 +21,7 @@ const panes = [
 	{ menuItem: 'Events', 
 	render: () => <Tab.Pane attached={true}>
 		{events.map(event => (
-			<Item key={event.title} style={{paddingBottom: 12}}>
+			<Item key={uuidv4()} style={{marginBottom: 12, padding: 5, border: '1px solid #b7b7b7'}}>
 				<Item.Header as='as' style={{fontWeight: 700, color: '#0099ff'}}>{event.title} </Item.Header>
 				<Item.Meta> <span style={{fontWeight: 700}}> {event.date} {event.time} </span> </Item.Meta>
 				<Item.Description> 
@@ -31,7 +41,7 @@ const panes = [
 			<Item.Description> 
 				<span style={{fontWeight: 700}}> Candidates: </span>
 				{race.candidates.map(candidate => (
-					<div> &nbsp;&nbsp;&nbsp;&nbsp; {candidate} </div>
+					<div key={uuidv4()}> &nbsp;&nbsp;&nbsp;&nbsp; {candidate} </div>
 				))}
 			</Item.Description>
 			<Item.Extra> <span style={{fontWeight: 700}}> Date: </span> {race.date} </Item.Extra>
@@ -42,7 +52,7 @@ const panes = [
 	render: () => <Tab.Pane attached={true}>
 		<List>
 			{followers.map(follower => (
-				<List.Item key={follower}> {follower} </List.Item>
+				<List.Item key={uuidv4()}> {follower} </List.Item>
 			))}
 		</List>
 	</Tab.Pane>

@@ -1,6 +1,8 @@
 import React from 'react';
 import { Icon, List, Card, Grid, Header, Container, Image, Button } from 'semantic-ui-react';
 import data from '../testdata.js';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 import Sidebar from './Sidebar.jsx';
 import Event from './ProfileTabs.jsx';
@@ -8,6 +10,8 @@ import EventsList from './ProfileTabs.jsx';
 import RaceInfo from './ProfileTabs.jsx';
 import FollowersList from './ProfileTabs.jsx';
 import TabMenu from './Tabs.jsx'
+
+const uuidv4 = require('uuid/v4');
 
 var thisUser = data.users['bororourke@gmail.com'];
 var eventsData = data.events;
