@@ -40,9 +40,7 @@ class SignUpForm extends React.Component {
             contentType: 'application/json',
             data: data,
             success: user => {
-                console.log(data)
                 this.props.signup(user)
-                console.log('signup successful!')
             },
             error: err => {
                 console.log('signup error', err)

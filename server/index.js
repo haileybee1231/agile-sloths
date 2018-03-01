@@ -105,7 +105,7 @@ app.post('/login', passport.authenticate('local-login'), (req, res) => {
 
 app.post('/signup', passport.authenticate('local-signup', { // passport middleware authenticates signup
   successRedirect: '/', // on success, redirect to main feed page
-  failureRedirect: '/signup', // on failure, keep on signup page
+  failureRedirect: '/fdssdfgfsd', // on failure, keep on signup page
   failureFlash: true
 }));
 

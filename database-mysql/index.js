@@ -1,5 +1,5 @@
 var mysql = require('mysql');
-var bcrypt = require('bcrypt-nodejs');
+var bcrypt = require('bcrypt');
 
 
 var connection = mysql.createConnection({
@@ -28,7 +28,6 @@ const selectAllRaces = function(cb) {
 };
 
 const addUser = function(email, password, firstname, lastname, bio, role, location, race, cb) {
-  console.log(cb);
   bcrypt.hash(password, 10, function(err, hash) {
     connection.query('INSERT INTO users (email, password, firstname, lastname, bio, role, location, race) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
     [email, hash, firstname, lastname, bio, role, location, race], function(err, results) {
