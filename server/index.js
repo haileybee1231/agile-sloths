@@ -63,6 +63,8 @@ app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'))
 });
 
+app.post('/events')
+
 // EVERYTHING BELOW TO BE DELETED?
 
 

@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { fetchEvents } from '../../src/actions/actions.js';
 import { createEvent } from '../../src/actions/actions.js';
+import $ from 'jquery';
 
 class EventForm extends React.Component {
   constructor(props) {
@@ -12,6 +13,7 @@ class EventForm extends React.Component {
     this.state = {
       title: '',
       location: '',
+      date: '',
       time: '',
       description: '',
       host: this.props.currentUser
@@ -26,10 +28,22 @@ class EventForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    console.log(this.state)
-    const { title, location, time, description, host } = this.state;
-    console.log(title)
-    console.log(title, location, time, description, host)
+    const { title, location, date, time, description, host } = this.state;
+    let data = JSON.stringify({
+      title: title,
+      location: location,
+      date: date,
+      description: description,
+      host: host
+    });
+    $.ajax({
+      type: 'POST',
+      url: '/events',
+      data: data,
+      success: response => {
+        this.props.createEvent(JSON.parse(response));
+      }
+    })
   }
 
   open() {
@@ -40,7 +54,7 @@ class EventForm extends React.Component {
   }
 
   render () {
-    const { open, title, time, location, description} = this.state;
+    const { open, title, date, time, location, description} = this.state;
 
     return (
       <Modal trigger={<Button>Host An Event</Button>}>
@@ -52,21 +66,32 @@ class EventForm extends React.Component {
           <Modal.Description>
             <Form size='large' onSubmit={this.handleSubmit.bind(this)}>
               <Segment>
-                <Form.Group widths='equal'>
+                <Form.Group>
                   <Form.Field
                     required control={Input}
+                    width={16}
                     label='Title'
                     name='title'
                     value={title}
                     placeholder='Title'
                     onChange={this.handleChange.bind(this)}
                   />
+              </Form.Group>
+                <Form.Group widths='equal'>
                   <Form.Field
                     required control={Input}
                     label='Date'
+                    name='date'
+                    value={date}
+                    placeholder='mm/dd/yyyy'
+                    onChange={this.handleChange.bind(this)}
+                  />
+                  <Form.Field
+                    required control={Input}
+                    label='Time'
                     name='time'
                     value={time}
-                    placeholder='mm/dd/yyyy'
+                    placeholder='Zip code'
                     onChange={this.handleChange.bind(this)}
                   />
                   <Form.Field
