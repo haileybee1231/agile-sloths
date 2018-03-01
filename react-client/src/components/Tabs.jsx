@@ -1,24 +1,24 @@
 import React from 'react';
-import { Tab, Grid, Header, Container, Item } from 'semantic-ui-react';
+import { Tab, Grid, Header, Container, Item, List } from 'semantic-ui-react';
 import data from '../testdata.js'
 import ElectionInfo from './ElectionInfo.jsx';
 
 var events = data.events;
 var race = data.races[0];
-var followers = data.users;
+var followers = data.users['bororourke@gmail.com'].followers;
 
 const panes = [
 	{ menuItem: 'Events', 
 	render: () => <Tab.Pane attached={true}>
 		{events.map(event => (
-			<Item>
-				<Item.Header as='a'> {event.title} </Item.Header>
-				<Item.Meta> Hosted by {event.host} </Item.Meta>
+			<Item key={event.title} style={{paddingBottom: 12}}>
+				<Item.Header as='as' style={{fontWeight: 700, color: '#0099ff'}}>{event.title} </Item.Header>
+				<Item.Meta> <span style={{fontWeight: 700}}> {event.date} {event.time} </span> </Item.Meta>
 				<Item.Description> 
+					<div> Hosted by {event.host} </div>
 					<div> {event.description} </div>
-					<div> {event.date} {event.time} </div>
 				</Item.Description>
-				<Item.Extra> {event.location} </Item.Extra>
+				<Item.Extra> <span style={{fontWeight: 700}}>Location:</span> {event.location} </Item.Extra>
 			</Item>
 		))}
 	</Tab.Pane>
@@ -26,16 +26,15 @@ const panes = [
 	{ menuItem: 'Election Info',
 	render: () => <Tab.Pane attached={true}>
 		<Item>
-			<Item.Header> {race.office} </Item.Header>
-			<Item.Meta> {race.city} {race.state} {race.district} </Item.Meta>
+			<Item.Header> <span style={{fontWeight: 700}}> Office: </span> {race.office} </Item.Header>
+			<Item.Meta> <span style={{fontWeight: 700}}>Location: </span> {race.city} {race.state} {race.district} </Item.Meta>
 			<Item.Description> 
-			<div>
+				<span style={{fontWeight: 700}}> Candidates: </span>
 				{race.candidates.map(candidate => (
-					<div> {candidate} </div>
+					<div> &nbsp;&nbsp;&nbsp;&nbsp; {candidate} </div>
 				))}
-			</div>
 			</Item.Description>
-			<Item.Extra> {race.date} </Item.Extra>
+			<Item.Extra> <span style={{fontWeight: 700}}> Date: </span> {race.date} </Item.Extra>
 		</Item>
 	</Tab.Pane>
 	},
@@ -43,7 +42,7 @@ const panes = [
 	render: () => <Tab.Pane attached={true}>
 		<List>
 			{followers.map(follower => (
-				<List.Item> {follower.name} </List.Item>
+				<List.Item key={follower}> {follower} </List.Item>
 			))}
 		</List>
 	</Tab.Pane>

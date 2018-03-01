@@ -42,7 +42,7 @@ class Profile extends React.Component {
 								{thisUser.bio}
 							</Card.Description>
 							<Card.Content extra>
-							follower count goes here
+								{thisUser.followers.length} followers
 							</Card.Content>
 						</Card>
 					</Grid.Column>
