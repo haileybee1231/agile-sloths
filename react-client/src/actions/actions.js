@@ -17,3 +17,16 @@ export const fetchEvents = () => (
     type: 'FETCH-EVENTS'
   }
 )
+
+export const createEvent = (title, host, location, date, description) => (
+  {
+    type: 'CREATE-EVENT',
+    payload: {
+      title: title,
+      host: host,
+      location: location,
+      date: date,
+      description: description
+    }
+  }
+)

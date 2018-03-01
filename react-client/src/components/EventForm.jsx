@@ -1,17 +1,35 @@
 import React from 'react';
 import { Button, Icon, Modal, Form, Grid, Header, Message, Segment, Input, Select, Dropdown, TextArea } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { fetchEvents } from '../../src/actions/actions.js';
+import { createEvent } from '../../src/actions/actions.js';
 
 class EventForm extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      title: null,
-      location: null,
-      time: null,
-      description: null,
-      host: null, // change to be logged in user
+      title: '',
+      location: '',
+      time: '',
+      description: '',
+      host: this.props.currentUser
     }
+  }
+
+  handleChange(e, { name, value }) {
+    this.setState({
+      [name]: value
+    })
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    console.log(this.state)
+    const { title, location, time, description, host } = this.state;
+    console.log(title)
+    console.log(title, location, time, description, host)
   }
 
   open() {
@@ -22,7 +40,7 @@ class EventForm extends React.Component {
   }
 
   render () {
-    const { open } = this.state
+    const { open, title, time, location, description} = this.state;
 
     return (
       <Modal trigger={<Button>Host An Event</Button>}>
@@ -32,18 +50,47 @@ class EventForm extends React.Component {
             <Icon name='calendar' />
           </div>
           <Modal.Description>
-            <Form size='large'>
+            <Form size='large' onSubmit={this.handleSubmit.bind(this)}>
               <Segment>
                 <Form.Group widths='equal'>
-                  <Form.Field required control={Input} label='Title' placeholder='Title' />
-                  <Form.Field required control={Input} label='Date' placeholder='mm/dd/yyyy'/>
-                  <Form.Field required control={Input} label='Zip code' placeholder='Zip code' />
+                  <Form.Field
+                    required control={Input}
+                    label='Title'
+                    name='title'
+                    value={title}
+                    placeholder='Title'
+                    onChange={this.handleChange.bind(this)}
+                  />
+                  <Form.Field
+                    required control={Input}
+                    label='Date'
+                    name='time'
+                    value={time}
+                    placeholder='mm/dd/yyyy'
+                    onChange={this.handleChange.bind(this)}
+                  />
+                  <Form.Field
+                    required control={Input}
+                    label='Zip code'
+                    name='location'
+                    value={location}
+                    placeholder='Zip code'
+                    onChange={this.handleChange.bind(this)}
+                  />
               </Form.Group>
               <Form.Group>
-                  <Form.Field width={16} control={TextArea} label='Description' placeholder='Tell us about your event' />
+                  <Form.Field
+                    width={16}
+                    control={TextArea}
+                    label='Description'
+                    name='description'
+                    value={description}
+                    placeholder='Tell us about your event'
+                    onChange={this.handleChange.bind(this)}
+                  />
               </Form.Group>
 
-                  <Form.Field control={Button}>Submit</Form.Field>
+                  <Form.Button content='Submit' />
                 </Segment>
 
 
@@ -55,4 +102,12 @@ class EventForm extends React.Component {
   }
 }
 
-export default EventForm;
+const mapStateToProps = state => ({
+  currentUser: state.data.currentUser
+});
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators({createEvent}, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(EventForm);
