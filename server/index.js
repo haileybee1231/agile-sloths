@@ -31,23 +31,28 @@ function isLoggedIn(req, res, next) {
   res.code(401).end('You must log in to do that!');
 }
 // This wildcard acts as a catch-all to let react-router redirect instead of using Express to
-app.get('/events/*', (req, res) => {
+app.get('/events*', (req, res) => {
   // to handle request for new feed events, needs to be filled
   res.end();
 });
 
 app.get('/user*', (req, res) => {
-  let user = decodeURIComponent(req._parsedOriginalUrl.query).split(' ');
-  db.getUserByName(user[0], user[1], (err, user) => {
-    console.log(user);
-    if (err) {
-      res.status(500);
-    }
-    if (!user.length) {
-      res.status(404);
-    }
-    res.status(201).send(user);
-  });
+  let username = decodeURIComponent(req._parsedOriginalUrl.query).split(' ');
+  res.end();
+  // db.getUserByName(username[0], username[1], (err, user) => {
+  //   db.getEventsByUsername(user, (err, events) => { // function still needs to be written, should just pull all events and then use below filter to select only the relevant ones
+  //     // let userEvents = events.filter(event => {
+  //     //   return event.host = `${user.firstName} ${user.lastName}`
+  //     // })
+  //     if (err) {
+  //       res.status(500);
+  //     }
+  //     if (!user.length) {
+  //       res.status(404);
+  //     }
+  //     res.status(201).send(user);
+  //   })
+  // });
 });
 
 // app.get('/*', (req, res) => {

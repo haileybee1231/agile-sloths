@@ -24,7 +24,7 @@ class Sidebar extends React.Component {
         type: 'GET',
         url: `/user?${name}`,
         success: userPage => {
-          console.log(userPage)
+          this.props.history.push(`/user?${name}`);
         }
       })
     }
@@ -50,7 +50,11 @@ class Sidebar extends React.Component {
           <Container style={{paddingLeft: 100}}>
           <Menu vertical fixed = 'left' style={{overflowY: 'scroll'}} size = 'large'>
           <Menu.Item>
-              <Header as='h2' textAlign='center' size='huge'>GRASSROOTS</Header>
+              <Header as='h2' textAlign='center' size='huge'>
+                <Link to='/'>
+                  GRASSROOTS
+                </Link>
+              </Header>
           </Menu.Item>
           <Menu.Item>
               <Input className='icon' icon='search' placeholder='Search...' />
