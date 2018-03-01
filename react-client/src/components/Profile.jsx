@@ -1,10 +1,17 @@
 import React from 'react';
-import { Icon, Card, Grid, Header, Container, Image, Button } from 'semantic-ui-react';
+import { Icon, List, Card, Grid, Header, Container, Image, Button } from 'semantic-ui-react';
 import data from '../testdata.js';
 
 import Sidebar from './Sidebar.jsx';
+import Event from './ProfileTabs.jsx';
+import EventsList from './ProfileTabs.jsx';
+import RaceInfo from './ProfileTabs.jsx';
+import FollowersList from './ProfileTabs.jsx';
+import TabMenu from './Tabs.jsx'
 
 var thisUser = data.users['bororourke@gmail.com'];
+var eventsData = data.events;
+var race = data.races[0];
 
 class Profile extends React.Component {
 	constructor() {
@@ -12,32 +19,14 @@ class Profile extends React.Component {
 		this.state = {
 			placeholder: []
 		}
-		this.handleBioTabClick = this.handleBioTabClick.bind(this),
 		this.handleEventsTabClick = this.handleEventsTabClick.bind(this),
 		this.handleFollowersTabClick = this.handleFollowersTabClick.bind(this),
 		this.handleRaceTabClick = this.handleRaceTabClick.bind(this)
 	}
 
-	handleBioTabClick() {
-		// should empty container and render bio element
-	}
-
-	handleEventsTabClick() {
-		// should empty container and render events list
-
-	}
-
-	handleFollowersTabClick() {
-		// should empty container and render followers list
-	}
-
-	handleRaceTabClick() {
-		// should empty container and render race info element
-
-	}
-
 	render() {
 		console.log(data.events)
+		console.log(race)
 		return ( 
 			<Container style={{paddingLeft: 210}}>
 				<Grid container style={{paddingTop: 63}}>
@@ -63,18 +52,7 @@ class Profile extends React.Component {
 
 					<Grid.Column width={10}>
 
-						<Grid.Row style={{paddingBottom: 30}}>
-							<Button style={{marginRight: 10}} > Events </Button>
-							<Button style={{marginRight: 10}} > Election Info </Button>
-							<Button style={{marginRight: 10}} > Followers </Button>
-						</Grid.Row>
-
-						<Grid.Row>
-							<div> Dummy events so this space is not empty: </div>
-							{data.events.map(event => (
-								<div style={{padding: 5, fontWeight: 700}}> {event.title} by {event.host} at {event.location} </div> 
-								))}
-						</Grid.Row>
+					<TabMenu />
 
 					</Grid.Column>
 
@@ -86,3 +64,16 @@ class Profile extends React.Component {
 }
 
 export default Profile
+
+						// <div>
+						// <Header as='h1'> {race.office} </Header>
+						// <Header as='h3'> {race.city}, {race.state} </Header>
+						// <Header as='h3'> {race.district} </Header>
+						// <Header as='h2'> {race.date} </Header>
+						// <Header as='h3'> Candidates: </Header>
+						// <List>
+						// {race.candidates.map(candidate => (
+						// 	<List.Item> {candidate} </List.Item>
+						// 	))}
+						// </List>
+						// </div>

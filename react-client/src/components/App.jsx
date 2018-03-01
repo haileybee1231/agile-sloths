@@ -20,7 +20,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Route exact path='/' component={ MainFeed } /> 
+        <Route exact path='/' component={ Profile } /> 
         <Route path='/login' component={ LoginForm } />
         <Route path='/signup' component={ SignupForm } />
       </div>
