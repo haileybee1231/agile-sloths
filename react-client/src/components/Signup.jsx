@@ -19,6 +19,23 @@ class SignUpForm extends React.Component {
             CandidateTrue: undefined
         }
         this.handleChange = this.handleChange.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
+    }
+
+    handleSubmit(userInfo) {
+        let user = JSON.stringify(userInfo)
+        $.ajax({
+            type: 'POST',
+            url: '/signup',
+            contentType: 'application/json',
+            data: user,
+            success: data => {
+                console.log('signup successful', data)
+            },
+            error: data => {
+                console.log('signup error', data)
+            }
+        })
     }
 
     handleChange(e, {value}) {
@@ -81,19 +98,19 @@ class SignUpForm extends React.Component {
                             <Form.Field control={Button} 
                                         type='submit' 
                                         color='green'
-                                        onClick={() => {this.props.signup(
-                                             $('input[type=email]').val(),
-                                             $('input[name=password]').val(),
-                                             $('.text').text(),
-                                             $('input[name=firstName]').val(),
-                                             $('input[name=lastName]').val(),
-                                             $('input[name=zipCode]').val(),
-                                             $('input[name=bio]').val(),
-                                             $('input[name=race]').val()
-                                )}}>Submit</Form.Field>
+                                        onClick={() => {
+                                            var users = {
+                                                email: $('input[type=email]').val(),
+                                                password: $('input[name=password]').val(),
+                                                role: $('.text').text(),
+                                                firstname: $('input[name=firstName]').val(),
+                                                lastname: $('input[name=lastName]').val(),
+                                                zipCode: $('input[name=zipCode]').val(),
+                                                bio: $('input[name=bio]').val(),
+                                                race: $('input[name=race]').val()
+                                            }; this.handleSubmit(users)
+                                            }}>Submit</Form.Field>
                         </Segment>
-                        
-                        
                     </Form>
                     </Grid.Column>
                 </Grid>
@@ -106,5 +123,5 @@ const mapDispatchToProps = (dispatch) => {
     return bindActionCreators({signup}, dispatch)
 }
 
-// export default connect(null, mapDispatchToProps)(SignUpForm)
-export default withRouter(SignUpForm);
+export default connect(null, mapDispatchToProps)(SignUpForm)
+//export default withRouter(SignUpForm);
