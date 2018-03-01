@@ -15,7 +15,11 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         ...state,
         currentUser: null
       }
-    }
+    };
+    case 'SIGNUP': {
+      console.log('signup reducer', action.payload)
+      return state
+    };
     case 'FETCH-EVENTS':
       $.ajax({
         type: 'GET',

@@ -22,18 +22,28 @@ class SignUpForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
-    handleSubmit(userInfo) {
-        let user = JSON.stringify(userInfo)
+    handleSubmit(email, password, role, firstname, lastname, zipcode, bio, race) {
+        let data = JSON.stringify({
+            email: email,
+            password: password,
+            role: role,
+            firstname: firstname,
+            lastname: lastname,
+            zipcode: zipcode,
+            bio: bio,
+            race: race
+        })
         $.ajax({
             type: 'POST',
             url: '/signup',
             contentType: 'application/json',
-            data: user,
-            success: data => {
-                console.log('signup successful', data)
+            data: data,
+            success: user => {
+                this.props.signup(user)
+                console.log('signup successful', user)
             },
-            error: data => {
-                console.log('signup error', data)
+            error: err => {
+                console.log('signup error', err)
             }
         })
     }
@@ -94,22 +104,20 @@ class SignUpForm extends React.Component {
                             
                             ]
                         }
-
                             <Form.Field control={Button} 
                                         type='submit' 
                                         color='green'
                                         onClick={() => {
-                                            var users = {
-                                                email: $('input[type=email]').val(),
-                                                password: $('input[name=password]').val(),
-                                                role: $('.text').text(),
-                                                firstname: $('input[name=firstName]').val(),
-                                                lastname: $('input[name=lastName]').val(),
-                                                zipCode: $('input[name=zipCode]').val(),
-                                                bio: $('input[name=bio]').val(),
-                                                race: $('input[name=race]').val()
-                                            }; this.handleSubmit(users)
-                                            }}>Submit</Form.Field>
+                                            this.handleSubmit(
+                                                $('input[type=email]').val(),
+                                                $('input[name=password]').val(),
+                                                $('.text').val(),
+                                                $('input[name=firstName]').val(),
+                                                $('input[name=lastName]').val(),
+                                                $('input[name=zipCode]').val(),
+                                                $('input[name=bio]').val(),
+                                                $('input[name=race]').val()
+                                            )}}>Submit</Form.Field>
                         </Segment>
                     </Form>
                     </Grid.Column>

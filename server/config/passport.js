@@ -43,6 +43,7 @@ module.exports = function(passport) {
     passReqToCallback: true
   },
     function(req, email, password, cb) {
+      console.log(req)
       let body = req.body;
       let firstname = body.firstname;
       let lastname = body.lastname;
@@ -54,15 +55,16 @@ module.exports = function(passport) {
         if (err) {
           return cb(err);
         }
-        if (user.length > 0) {
+        if (user) {
           return cb(null, false);
+        } else {
+          db.addUser(email, password, firstname, lastname, role, bio, location, race, function(err, results) { // add whatever else needs to be added here, like bio
+            if (err) {
+              return cb('error adding user', err);
+            }
+            return cb('signup successful', results); // put something here to verify signup successful
+          });
         }
-        db.addUser(email, password, firstname, lastname, role, bio, location, race, function(err, results) { // add whatever else needs to be added here, like bio
-          if (err) {
-            return cb(err);
-          }
-          return cb('signup successful', results); // put something here to verify signup successful
-        });
       })
     }
   ));
