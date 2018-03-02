@@ -25,6 +25,11 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         ...state,
         events: [...state.events, ...payload.newEvents]
       }
+    case 'SET-USER':
+      return {
+        ...state,
+        selectedUser: action.payload.selectedUser
+      }
     default: return state;
   }
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Container, Button, Header, Segment, Divider, Feed } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchEvents } from '../../src/actions/actions.js';
+import { fetchEvents, getUser } from '../../src/actions/actions.js';
 import Sidebar from './Sidebar.jsx';
 import EventForm from './EventForm.jsx';
 import InfiniteScroll from 'react-infinite-scroll-component';

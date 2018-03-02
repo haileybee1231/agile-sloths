@@ -3,7 +3,7 @@ import { Menu, Input, Header, Container, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { logout } from '../../src/actions/actions.js';
+import { logout, setUser } from '../../src/actions/actions.js';
 import { bindActionCreators } from 'redux';
 import $ from 'jquery';
 const uuidv4 = require('uuid/v4');
@@ -20,15 +20,15 @@ class Sidebar extends React.Component {
     handleItemClick(e){
       let name = e.target.innerHTML.split('-->')[1].split('<!--')[0]; // Jacob, this wasn't targeting correclty and I had to come up with this... we should find a more elegant solution
       this.setState({ activeItem: name });
+      this.props.history.push(`/user?${name}`);
       $.ajax({
         type: 'GET',
-        url: `/user?${name}`,
+        url: `/api/user?${name}`,
         success: user => {
-          console.log(user)
-          this.props.history.push(`/user?${name}`);
+          this.props.setUser(user);
         },
         error: err => {
-          console.error(err);
+          console.error('Error retrieving user: ', err);
         }
       })
     }
@@ -89,7 +89,8 @@ class Sidebar extends React.Component {
               <Menu.Item>
               { this.props.currentUser
                 ? <Button onClick={this.sendLogoutRequest.bind(this)} size='small'>Logout</Button>
-                : <Link to="/login">
+                :
+                <Link to="/login">
                     <Button size='small'>
                       Login
                     </Button>
@@ -109,7 +110,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({logout}, dispatch);
+  return bindActionCreators({logout, setUser}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Sidebar));

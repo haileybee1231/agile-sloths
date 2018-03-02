@@ -1,4 +1,4 @@
-export const login = (username) => ( // actions return a plain object with a type and payload
+export const login = username => ( // actions return a plain object with a type and payload
   {
     type: 'LOGIN',
     payload: {
@@ -28,7 +28,7 @@ export const signup = (email, password, firstName, lastName, bio, role, zipCode,
   }
 )
 
-export const fetchEvents = (newEvents) => (
+export const fetchEvents = newEvents => (
   {
     type: 'FETCH-EVENTS',
     payload: {
@@ -37,7 +37,16 @@ export const fetchEvents = (newEvents) => (
   }
 )
 
-export const createEvent = (event) => (
+export const setUser = user => (
+  {
+    type: 'SET-USER',
+    payload: {
+      selectedUser: user
+    }
+  }
+)
+
+export const createEvent = event => (
   {
     type: 'CREATE-EVENT',
     payload: {
