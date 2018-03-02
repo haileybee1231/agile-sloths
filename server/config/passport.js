@@ -56,7 +56,7 @@ module.exports = function(passport) {
           return cb(err, null);
         } 
         if (user.length > 0) {
-          console.log('hi wassup')
+          console.log('User exists!')
           return cb(null, false);
         } else {
           console.log(cb)
