@@ -20,12 +20,15 @@ class SignUpForm extends React.Component {
             role: '',
             success: false,
             failure: false,
-            raceoptions: [],
+            raceoptions: undefined,
             header: '',
-            messageContent: ''
+            messageContent: '',
+            currentValue: ''
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleAddition = this.handleAddition.bind(this)
+        this.handleRaceChange = this.handleRaceChange.bind(this)
     }
 
     handleSubmit(email, password, firstname, lastname, bio, role, zipcode, race) {
@@ -70,7 +73,7 @@ class SignUpForm extends React.Component {
             this.props.signup(user);
             this.setState({success: true})
             setTimeout(() => {
-            this.props.history.push('/login')
+                this.props.history.push('/login')
             }, 3000)
             },
             error: err => {
@@ -91,6 +94,16 @@ class SignUpForm extends React.Component {
         }
     }
 
+    handleAddition(e, { value }) {
+        this.setState({
+          raceoptions: [{ text: value, value }, ...this.state.raceoptions],
+        })
+    }
+
+    handleRaceChange (e, { value }) {
+        this.setState({ currentValue: value }) 
+    }
+
     componentDidMount() {
         //grab all races from database
         //populate the race dropdown with all races
@@ -103,7 +116,6 @@ class SignUpForm extends React.Component {
                 this.setState({
                     raceoptions: races
                 })
-                console.log('infsindsfi', this.state.raceoptions)
             },
             error: err => {
                 console.log(err)
@@ -177,12 +189,14 @@ class SignUpForm extends React.Component {
                         { this.state.CandidateTrue && [
                             <Form.Group widths='equal' key="1">
                                 <Form.Field key="2" control={TextArea} type='text' name='bio' label='Bio' placeholder='Tell us about yourself' />
-                                <Form.Field key ="3"
+                                <Form.Field key='3'
                                             fluid multiple search selection 
                                             options={this.state.raceoptions}
                                             control={Dropdown}
-                                            allowAdditions 
-                                            type='text' 
+                                            allowAdditions
+                                            value={this.state.currentValue}
+                                            onAddItem={this.handleAddition}
+                                            onChange={this.handleRaceChange}
                                             name='race' 
                                             label='Race' 
                                             placeholder='What office are you running for?'/>
@@ -203,7 +217,7 @@ class SignUpForm extends React.Component {
                                                 $('textArea[name=bio]').val() || null,
                                                 this.state.role,
                                                 $('input[name=zipCode]').val(),
-                                                $('input[name=race]').val() || null
+                                                this.state.currentValue || null
                                             )}}>Submit</Form.Field>
                         </Segment>
                     </Form>

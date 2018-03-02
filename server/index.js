@@ -70,8 +70,12 @@ app.get('/api/user*', (req, res) => {
 
 app.get('/races', (req, res) => {
   db.selectAllRaces(function(err, races) {
-    console.log(races)
-    res.json(races)
+    races.forEach(race => {
+      res.json([{key: race.id,
+                text: race.office,
+                value: race.office
+        }])
+    })
   })
 })
 
