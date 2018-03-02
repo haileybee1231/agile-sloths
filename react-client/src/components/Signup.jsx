@@ -1,5 +1,5 @@
 import React from 'react'
-import { signup } from '../actions/actions.js'
+import { signup, fetchraces } from '../actions/actions.js'
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Form, Grid, Header, Message, Segment, Input, Select, Dropdown, TextArea } from 'semantic-ui-react'
 import { connect } from 'react-redux'
@@ -19,7 +19,8 @@ class SignUpForm extends React.Component {
             CandidateTrue: undefined,
             role: '',
             success: false,
-            failure: false
+            failure: false,
+            raceoptions: []
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -68,8 +69,13 @@ class SignUpForm extends React.Component {
         $.ajax({
             type: 'GET',
             url: '/races',
+            contentType: 'json',
             success: races => {
-                console.log(races)
+                console.log('races', races)
+                this.setState({
+                    raceoptions: races
+                })
+                console.log('infsindsfi', this.state.raceoptions)
             },
             error: err => {
                 console.log(err)
@@ -140,7 +146,7 @@ class SignUpForm extends React.Component {
                                 <Form.Field key="2" control={TextArea} type='text' name='bio' label='Bio' placeholder='Tell us about yourself' />
                                 <Form.Field key ="3"
                                             fluid multiple search selection 
-                                            options={options}
+                                            options={this.state.raceoptions}
                                             control={Dropdown}
                                             allowAdditions 
                                             type='text' 

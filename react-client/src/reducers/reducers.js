@@ -16,9 +16,15 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         currentUser: null
       }
     };
+    
     case 'SIGNUP': {
       return state
     };
+
+    case 'FETCH_RACES': {
+      return state
+    };
+
     case 'FETCH-EVENTS':
       $.ajax({
         type: 'GET',

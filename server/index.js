@@ -1,6 +1,6 @@
 let express = require('express');
 let bodyParser = require('body-parser');
-// let db = require('../database-mysql'); // to delete
+let db = require('../database-mysql'); // to delete
 let session = require('express-session');
 let path = require('path');
 let passport = require('passport');
@@ -33,8 +33,10 @@ app.get('/*', (req, res) => {
 });
 
 app.get('/races', (req, res) => {
-  console.log('get request for races')
-  db.selectAllRaces()
+  db.selectAllRaces(function(err, races) {
+    console.log(races)
+    res.json(races)
+  })
 })
 
 // EVERYTHING BELOW TO BE DELETED?
