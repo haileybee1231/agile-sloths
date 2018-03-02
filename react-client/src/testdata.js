@@ -1,5 +1,6 @@
 const data = {
   currentUser: null,
+  selectedUser: null,
   races: [
     {
       office: 'senator',

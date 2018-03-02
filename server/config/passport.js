@@ -19,7 +19,6 @@ module.exports = function(passport) {
   passport.use('local-login', new LocalStrategy( // strategy = type of logging in (e.g. fb)
     function(email, password, cb) {
       db.getUserByEmail(email, function(err, user) {
-        console.log(user);
         if (err) {
           return cb(err);
         }
@@ -43,7 +42,6 @@ module.exports = function(passport) {
     passReqToCallback: true
   },
     function(req, email, password, cb) {
-      console.log('request', req.body)
       let body = req.body;
       let firstname = body.firstname;
       let lastname = body.lastname;
@@ -54,16 +52,14 @@ module.exports = function(passport) {
       db.getUserByEmail(email, function(err, user) {
         if (err) {
           return cb(err, null);
-        } 
+        }
         if (user.length > 0) {
-          console.log('User exists!')
-          return cb(null, false);
+          return cb(err, null);
         } else {
-          console.log(cb)
           db.addUser(email, password, firstname, lastname, bio, role, location, race, function(err, results) { // add whatever else needs to be added here, like bio
             if (err) {
               return cb(err, null);
-            } 
+            }
             return cb(null, results); // put something here to verify signup successful
           });
         }
