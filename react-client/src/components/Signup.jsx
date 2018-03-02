@@ -17,7 +17,9 @@ class SignUpForm extends React.Component {
         super(props)
         this.state = {
             CandidateTrue: undefined,
-            role: ''
+            role: '',
+            success: false,
+            failure: false
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -41,9 +43,13 @@ class SignUpForm extends React.Component {
             data: data,
             success: user => {
                 this.props.signup(user)
+                this.setState({success: true})
+                setTimeout(() => {
+                    this.props.history.push('/login')
+                }, 3000)
             },
             error: err => {
-                console.log('signup error', err)
+                this.setState({failure: true})
             }
         })
     }
@@ -73,6 +79,22 @@ class SignUpForm extends React.Component {
                 >
                     <Grid.Column style={{ maxWidth: 750 }}>
                     <Header size='huge' style={{ fontSize: 60 }}>GRASSROOTS</Header>
+                    {this.state.success && [
+                          <Message
+                          success
+                          header='Your user registration was successful!'
+                          content='Redirecting you to the login page soon'
+                        />
+                    ]
+                    }
+                    {this.state.failure && [
+                          <Message
+                          negative
+                          header='There was a problem with your submission'
+                          content='The email you entered already exists.  Please use another.'
+                        />
+                    ]
+                    }
                     <Header as='h2' color='green' textAlign='center'>
                         {' '}Sign up for an account
                     </Header>
