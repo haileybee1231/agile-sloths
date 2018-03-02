@@ -81,6 +81,7 @@ class SignUpForm extends React.Component {
                     <Header size='huge' style={{ fontSize: 60 }}>GRASSROOTS</Header>
                     {this.state.success && [
                           <Message
+                          key='1'
                           success
                           header='Your user registration was successful!'
                           content='Redirecting you to the login page soon'
@@ -89,6 +90,7 @@ class SignUpForm extends React.Component {
                     }
                     {this.state.failure && [
                           <Message
+                          key='1'
                           negative
                           header='There was a problem with your submission'
                           content='The email you entered already exists.  Please use another.'
@@ -121,7 +123,15 @@ class SignUpForm extends React.Component {
                         { this.state.CandidateTrue && [
                             <Form.Group widths='equal' key="1">
                                 <Form.Field key="2" control={TextArea} type='text' name='bio' label='Bio' placeholder='Tell us about yourself' />
-                                <Form.Field key ="3" control={Input} type='text' name='race' label='Race' placeholder='What office are you running for?'/>
+                                <Form.Field key ="3"
+                                            fluid multiple search selection 
+                                            options={}
+                                            control={Dropdown} 
+                                            type='text' 
+                                            name='race' 
+                                            label='Race' 
+                                            placeholder='What office are you running for?'/>
+                                
                             </Form.Group>
                             
                             ]
