@@ -1,5 +1,5 @@
 import React from 'react'
-import { signup } from '../actions/actions.js'
+import { signup, login } from '../actions/actions.js'
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Form, Grid, Header, Message, Segment, Input, Select, Dropdown, TextArea } from 'semantic-ui-react'
 import { connect } from 'react-redux'
@@ -24,35 +24,69 @@ class SignUpForm extends React.Component {
     }
 
     handleSubmit(email, password, firstname, lastname, bio, role, zipcode, race) {
-        let data = JSON.stringify({
-            email: email,
-            password: password,
-            role: this.state.role,
-            firstname: firstname,
-            lastname: lastname,
-            zipcode: zipcode,
-            bio: bio,
-            race: race
-        })
-        $.ajax({
-            type: 'POST',
-            url: '/signup',
-            contentType: 'application/json',
-            data: data,
-            success: user => {
-                this.props.signup(user)
-            },
-            error: err => {
-                console.log('signup error', err)
-            }
-        })
+      if (email.indexOf('@') < 0 || !email.match('com')) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+      if (!password) {
+        alert('Please enter a password.');
+        return;
+      }
+      if (!firstname) {
+        alert('Please enter a first name.');
+        return;
+      }
+      if (!lastname) {
+        alert('Please enter a last name.');
+        return;
+      }
+      let data = JSON.stringify({
+          email: email,
+          password: password,
+          role: this.state.role,
+          firstname: firstname,
+          lastname: lastname,
+          zipcode: zipcode,
+          bio: bio,
+          race: race
+      })
+      $.ajax({ // this is the exact function from the login page, we should put it in another file and import it instead of rewriting here
+          type: 'POST',
+          url: '/signup',
+          contentType: 'application/json',
+          data: data,
+          success: user => {
+            this.props.signup(user);
+            let data = JSON.stringify({ username: email, password: password });
+            $.ajax({
+              type: 'POST',
+              url: '/login',
+              contentType: 'application/json',
+              data: data,
+              success: username => {
+                this.props.login(username);
+                this.props.history.push('/');
+              },
+              error: err => {
+                err.responseText === 'Unauthorized' ?
+                  alert('Incorrect email or password, please try again.')
+                  : alert('There was an error on our end, sorry :(')
+              }
+            })
+          },
+          error: err => {
+            err === 'Unauthorized' ?
+            alert('That email is taken, please choose a valid email.')
+            : alert('There was an error on our end, sorry :(');
+          }
+      })
     }
 
     handleChange(e, {value}) {
         if (value === 'voter') {
             this.setState({CandidateTrue: false, role: 'Voter'})
         } else {
-            this.setState({CandidateTrue: true, role: 'Candidate'}) 
+            this.setState({CandidateTrue: true, role: 'Candidate'})
         }
     }
 
@@ -72,7 +106,11 @@ class SignUpForm extends React.Component {
                     verticalAlign='middle'
                 >
                     <Grid.Column style={{ maxWidth: 750 }}>
-                    <Header size='huge' style={{ fontSize: 60 }}>GRASSROOTS</Header>
+                    <Link to='/'>
+                      <Header size='huge' style={{ fontSize: 60 }}>
+                        GRASSROOTS
+                      </Header>
+                    </Link>
                     <Header as='h2' color='green' textAlign='center'>
                         {' '}Sign up for an account
                     </Header>
@@ -84,8 +122,8 @@ class SignUpForm extends React.Component {
                             <Form.Field required control={Dropdown}
                                         fluid
                                         selection
-                                        label='Role' 
-                                        selection options={options} 
+                                        label='Role'
+                                        selection options={options}
                                         placeholder='Role'
                                         onChange={this.handleChange}
                                         name='role'/>
@@ -101,11 +139,11 @@ class SignUpForm extends React.Component {
                                 <Form.Field key="2" control={TextArea} type='text' name='bio' label='Bio' placeholder='Tell us about yourself' />
                                 <Form.Field key ="3" control={Input} type='text' name='race' label='Race' placeholder='What office are you running for?'/>
                             </Form.Group>
-                            
+
                             ]
                         }
-                            <Form.Field control={Button} 
-                                        type='submit' 
+                            <Form.Field control={Button}
+                                        type='submit'
                                         color='green'
                                         onClick={() => {
                                             this.handleSubmit(
@@ -128,8 +166,7 @@ class SignUpForm extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({signup}, dispatch)
+    return bindActionCreators({ signup, login }, dispatch)
 }
 
-export default connect(null, mapDispatchToProps)(SignUpForm)
-//export default withRouter(SignUpForm);
+export default connect(null, mapDispatchToProps)(withRouter(SignUpForm));

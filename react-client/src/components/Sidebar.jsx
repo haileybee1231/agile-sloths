@@ -3,7 +3,7 @@ import { Menu, Input, Header, Container, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { logout } from '../../src/actions/actions.js';
+import { logout, setUser } from '../../src/actions/actions.js';
 import { bindActionCreators } from 'redux';
 import $ from 'jquery';
 const uuidv4 = require('uuid/v4');
@@ -22,9 +22,14 @@ class Sidebar extends React.Component {
       this.setState({ activeItem: name });
       $.ajax({
         type: 'GET',
-        url: `/user?${name}`,
-        success: userPage => {
+        url: `/api/user?${name}`,
+        success: user => {
+          console.log(user);
+          this.props.setUser(JSON.parse(user));
           this.props.history.push(`/user?${name}`);
+        },
+        error: err => {
+          console.error('Error retrieving user: ', err);
         }
       })
     }
@@ -50,11 +55,11 @@ class Sidebar extends React.Component {
           <Container style={{paddingLeft: 100}}>
           <Menu vertical fixed = 'left' style={{overflowY: 'scroll'}} size = 'large'>
           <Menu.Item>
+            <Link to='/'>
               <Header as='h2' textAlign='center' size='huge'>
-                <Link to='/'>
-                  GRASSROOTS
-                </Link>
+                GRASSROOTS
               </Header>
+            </Link>
           </Menu.Item>
           <Menu.Item>
               <Input className='icon' icon='search' placeholder='Search...' />
@@ -85,7 +90,8 @@ class Sidebar extends React.Component {
               <Menu.Item>
               { this.props.currentUser
                 ? <Button onClick={this.sendLogoutRequest.bind(this)} size='small'>Logout</Button>
-                : <Link to="/login">
+                :
+                <Link to="/login">
                     <Button size='small'>
                       Login
                     </Button>
@@ -105,7 +111,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({logout}, dispatch);
+  return bindActionCreators({logout, setUser}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Sidebar));
