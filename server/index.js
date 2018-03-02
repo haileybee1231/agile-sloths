@@ -93,28 +93,6 @@ app.get('/*', (req, res) => {
 
 
 
-// ///// USER-RELATED REQUESTS /////
-app.post('/login', passport.authenticate('local-login'), (req, res) => {
-  res.status(201).send(req.body.username);
-});
-
-app.post('/signup', passport.authenticate('local-signup', { // passport middleware authenticates signup
-  successRedirect: '/', // on success, redirect to main feed page
-  failureRedirect: '/signup', // on failure, keep on signup page
-  failureFlash: true
-}));
-
-app.post('/logout', isLoggedIn, function(req, res) {
-  req.logout();
-  res.clearCookie('connect.sid').status(200).redirect('/');
-});
-
-let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000
-
-app.listen(port, function() {
-  console.log(`The server is listening on port ${ port }!`);
-});
-
 // ///// MAIN PAGE REQUESTS /////
 // app.get('/', function(req, res) {
 //   // will render index page regardless of logged in or not
