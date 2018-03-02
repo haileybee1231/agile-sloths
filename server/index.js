@@ -3,7 +3,6 @@ let bodyParser = require('body-parser');
 // let db = require('../database-mysql'); // to delete
 let session = require('express-session');
 let path = require('path');
-let db = require('../database-mysql');
 let passport = require('passport');
 let flash = require('connect-flash');
 // let serverHelpers = require('../lib/serverHelpers.js'); // to delete?
@@ -23,15 +22,8 @@ app.use(passport.session());
 app.use(flash()); // uses flash connect to allow flash messages in stored session
 app.use(express.static(path.join(__dirname, '../react-client/dist')));
 
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-
-  res.code(401).end('You must log in to do that!');
-}
 // This wildcard acts as a catch-all to let react-router redirect instead of using Express to
-app.get('/events*', (req, res) => {
+app.get('/events/*', (req, res) => {
   // to handle request for new feed events, needs to be filled
   res.end();
 });
@@ -67,6 +59,13 @@ app.post('/events')
 
 // EVERYTHING BELOW TO BE DELETED?
 
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+
+  res.code(401).end('You must log in to do that!');
+}
 
 // ///// MAIN PAGE REQUESTS /////
 // app.get('/', function(req, res) {
@@ -131,8 +130,7 @@ app.post('/login', passport.authenticate('local-login'), (req, res) => {
 
 app.post('/signup', passport.authenticate('local-signup', { // passport middleware authenticates signup
   successRedirect: '/', // on success, redirect to main feed page
-  failureRedirect: '/signup', // on failure, keep on signup page
-  badRequestMessage: 'Please try again.',
+  failureRedirect: '/fdssdfgfsd', // on failure, keep on signup page
   failureFlash: true
 }));
 

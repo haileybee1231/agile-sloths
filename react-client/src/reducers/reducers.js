@@ -16,6 +16,11 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         currentUser: null
       }
     }
+    case 'CREATE-EVENT':
+      return {
+        ...state,
+        events: [...events, payload.event]
+      }
     case 'FETCH-EVENTS':
       $.ajax({
         type: 'GET',

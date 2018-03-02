@@ -45,24 +45,26 @@ module.exports = function(passport) {
   },
     function(req, email, password, cb) {
       let body = req.body;
-      let name = body.name;
+      let firstname = body.firstname;
+      let lastname = body.lastname;
       let bio = body.bio;
       let role = body.role;
-      let location = body.location;
+      let location = body.zipcode;
       let race = body.race;
       db.getUserByEmail(email, function(err, user) {
         if (err) {
-          return cb(err);
+          return cb(err, null);
         }
         if (user.length > 0) {
           return cb(null, false);
+        } else {
+          db.addUser(email, password, firstname, lastname, bio, role, location, race, function(err, results) { // add whatever else needs to be added here, like bio
+            if (err) {
+              return cb(err, null);
+            }
+            return cb(null, results); // put something here to verify signup successful
+          });
         }
-        db.addUser(email, password, name, role, bio, location, race, function(err, results) { // add whatever else needs to be added here, like bio
-          if (err) {
-            return cb(err);
-          }
-          return cb(results); // put something here to verify signup successful
-        });
       })
     }
   ));

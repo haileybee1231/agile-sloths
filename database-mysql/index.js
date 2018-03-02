@@ -1,6 +1,7 @@
 var mysql = require('mysql');
 var bcrypt = require('bcrypt');
 
+
 var connection = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
@@ -8,9 +9,15 @@ var connection = mysql.createConnection({
   database : 'grassroots'
 });
 
-// connection.connect();
+connection.connect(err => {
+  if (err) {
+    console.log('error connecting to database');
+  } else {
+    console.log('Database connected!');
+  }
+});
 
-var selectAllRaces = function(cb) {
+const selectAllRaces = function(cb) {
   connection.query('SELECT * FROM races', function(err, results) {
     if(err) {
       cb(err, null);
@@ -20,10 +27,10 @@ var selectAllRaces = function(cb) {
   });
 };
 
-var addUser = function(email, password, name, role, bio, location, race, cb) {
+const addUser = function(email, password, firstname, lastname, bio, role, location, race, cb) {
   bcrypt.hash(password, 10, function(err, hash) {
-    connection.query('INSERT INTO users (email, password, firstname, lastname, role, bio, location, race) VALUES (?, ?, ?, ?, ?, ?, ?)',
-    [email, hash, name, role, bio, location, race], function(err, results) {
+    connection.query('INSERT INTO users (email, password, firstname, lastname, bio, role, location, race) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+    [email, hash, firstname, lastname, bio, role, location, race], function(err, results) {
       if (err) {
         cb(err, null);
       } else {
