@@ -62,6 +62,11 @@ class SignUpForm extends React.Component {
         }
     }
 
+    componentDidMount() {
+        //grab all races from database
+        //populate the race dropdown with all races
+    }
+
     render(props) {
         return (
             <div className='login-form'>
@@ -125,8 +130,9 @@ class SignUpForm extends React.Component {
                                 <Form.Field key="2" control={TextArea} type='text' name='bio' label='Bio' placeholder='Tell us about yourself' />
                                 <Form.Field key ="3"
                                             fluid multiple search selection 
-                                            options={}
-                                            control={Dropdown} 
+                                            options={options}
+                                            control={Dropdown}
+                                            allowAdditions 
                                             type='text' 
                                             name='race' 
                                             label='Race' 

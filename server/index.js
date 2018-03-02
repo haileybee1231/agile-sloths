@@ -32,6 +32,10 @@ app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'))
 });
 
+app.get('/races', (req, res) => {
+  db.selectAllRaces()
+})
+
 // EVERYTHING BELOW TO BE DELETED?
 
 function isLoggedIn(req, res, next) {
@@ -41,6 +45,29 @@ function isLoggedIn(req, res, next) {
 
   res.code(401).end('You must log in to do that!');
 }
+
+
+// ///// USER-RELATED REQUESTS /////
+app.post('/login', passport.authenticate('local-login'), (req, res) => {
+  res.status(201).send(req.body.username);
+});
+
+app.post('/signup', passport.authenticate('local-signup', { // passport middleware authenticates signup
+  successRedirect: '/', // on success, redirect to main feed page
+  failureRedirect: '/signup', // on failure, keep on signup page
+  failureFlash: true
+}));
+
+app.post('/logout', isLoggedIn, function(req, res) {
+  req.logout();
+  res.clearCookie('connect.sid').status(200).redirect('/');
+});
+
+let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000
+
+app.listen(port, function() {
+  console.log(`The server is listening on port ${ port }!`);
+});
 
 // ///// MAIN PAGE REQUESTS /////
 // app.get('/', function(req, res) {
@@ -96,29 +123,6 @@ function isLoggedIn(req, res, next) {
 //   // save to the database
 //   // res.status(201).end()
 // });
-
-
-// ///// USER-RELATED REQUESTS /////
-app.post('/login', passport.authenticate('local-login'), (req, res) => {
-  res.status(201).send(req.body.username);
-});
-
-app.post('/signup', passport.authenticate('local-signup', { // passport middleware authenticates signup
-  successRedirect: '/', // on success, redirect to main feed page
-  failureRedirect: '/signup', // on failure, keep on signup page
-  failureFlash: true
-}));
-
-app.post('/logout', isLoggedIn, function(req, res) {
-  req.logout();
-  res.clearCookie('connect.sid').status(200).redirect('/');
-});
-
-let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000
-
-app.listen(port, function() {
-  console.log(`The server is listening on port ${ port }!`);
-});
 
 /////////////////////////
 ////// write to db //////
