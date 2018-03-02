@@ -14,13 +14,13 @@ var race = data.races[0];
 var followers = data.users['bororourke@gmail.com'].followers;
 
 const panes = [
-	{ menuItem: 'Events', 
+	{ menuItem: 'Events',
 	render: () => <Tab.Pane attached={true}>
 		{events.map(event => (
 			<Item key={uuidv4()} style={{marginBottom: 12, padding: 5, border: '1px solid #b7b7b7'}}>
 				<Item.Header as='as' style={{fontWeight: 700, color: '#0099ff'}}>{event.title} </Item.Header>
 				<Item.Meta> <span style={{fontWeight: 700}}> {event.date} {event.time} </span> </Item.Meta>
-				<Item.Description> 
+				<Item.Description>
 					<div> Hosted by {event.host} </div>
 					<div> {event.description} </div>
 				</Item.Description>
@@ -34,7 +34,7 @@ const panes = [
 		<Item>
 			<Item.Header> <span style={{fontWeight: 700}}> Office: </span> {race.office} </Item.Header>
 			<Item.Meta> <span style={{fontWeight: 700}}>Location: </span> {race.city} {race.state} {race.district} </Item.Meta>
-			<Item.Description> 
+			<Item.Description>
 				<span style={{fontWeight: 700}}> Candidates: </span>
 				{race.candidates.map(candidate => (
 					<div key={uuidv4()}> &nbsp;&nbsp;&nbsp;&nbsp; {candidate} </div>
@@ -55,8 +55,17 @@ const panes = [
 	}
 ]
 
-const TabMenu = () => (
-	<Tab menu={{ pointing: true }} panes={panes} />
-)
+const TabMenu = (props) => {
+	console.log(props.events)
+	return <Tab menu={{ pointing: true }} panes={panes} />
+}
 
-export default TabMenu
+const mapStateToProps = state => ({
+	events: state.data.selectedUser.userEvents
+});
+
+const mapDispatchToProps = dispatch => {
+	return bindActionCreators({}, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TabMenu);
