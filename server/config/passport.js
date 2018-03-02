@@ -54,6 +54,7 @@ module.exports = function(passport) {
           return cb(err, null);
         }
         if (user.length > 0) {
+          console.log('User exists!')
           return cb(err, null);
         } else {
           db.addUser(email, password, firstname, lastname, bio, role, location, race, function(err, results) { // add whatever else needs to be added here, like bio
