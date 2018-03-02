@@ -24,6 +24,7 @@ class Sidebar extends React.Component {
         type: 'GET',
         url: `/api/user?${name}`,
         success: user => {
+          console.log(user);
           this.props.setUser(JSON.parse(user));
           this.props.history.push(`/user?${name}`);
         },

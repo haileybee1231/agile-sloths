@@ -44,7 +44,6 @@ const addUser = function(email, password, firstname, lastname, bio, role, locati
 var addEvent = function(title, location, date, time, description, host, cb) { // host should be the email of the logged in user\
   connection.query('INSERT INTO events (title, location, date, time, description, host) VALUES (?, ?, ?, ?, ?, (SELECT id FROM users WHERE email=?))',
     [title, location, date, time, description, host], function(err, result) {
-      console.log(err, result)
       if (err) {
         cb(err, null);
       } else {

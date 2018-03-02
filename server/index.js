@@ -42,7 +42,7 @@ app.get('/api/user*', (req, res) => {
       let userEvents = null;
       if (events) {
         userEvents = events.filter(event => {
-          return event.host = user.id
+          return event.host = user[0].id
         })
       }
       if (err) {

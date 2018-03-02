@@ -37,14 +37,15 @@ export const fetchEvents = newEvents => (
   }
 )
 
-export const setUser = user => (
-  {
+export const setUser = user => {
+  console.log(user);
+  return {
     type: 'SET-USER',
     payload: {
       selectedUser: user
     }
   }
-)
+}
 
 export const createEvent = event => (
   {
