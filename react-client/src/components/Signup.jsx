@@ -20,53 +20,35 @@ class SignUpForm extends React.Component {
             role: '',
             success: false,
             failure: false,
-            raceoptions: []
+            raceoptions: [],
+            header: '',
+            messageContent: ''
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
     handleSubmit(email, password, firstname, lastname, bio, role, zipcode, race) {
-        let data = JSON.stringify({
-            email: email,
-            password: password,
-            role: this.state.role,
-            firstname: firstname,
-            lastname: lastname,
-            zipcode: zipcode,
-            bio: bio,
-            race: race
-        })
-        $.ajax({
-            type: 'POST',
-            url: '/signup',
-            contentType: 'application/json',
-            data: data,
-            success: user => {
-                this.props.signup(user)
-                this.setState({success: true})
-                setTimeout(() => {
-                    this.props.history.push('/login')
-                }, 3000)
-            },
-            error: err => {
-                this.setState({failure: true})
-            }
-        })
       if (email.indexOf('@') < 0 || !email.match('com')) {
-        alert('Please enter a valid email address.');
+        this.setState({failure: true, 
+                       header: 'Please enter a valid email address.',
+                       messageContent: 'We require a .com domain for emails.' })
         return;
       }
       if (!password) {
-        alert('Please enter a password.');
+          this.setState({
+              failure: true,
+              header: 'Please enter a password.',
+              messageContent: 'Use a combination of letters, numbers, and symbols.'
+          })
         return;
       }
-      if (!firstname) {
-        alert('Please enter a first name.');
-        return;
-      }
-      if (!lastname) {
-        alert('Please enter a last name.');
+      if (!firstname || !lastname) {
+        this.setState({
+            failure: true,
+            header: 'Please enter a full name.',
+            messageContent: 'Use a combination of letters, numbers, and symbols.'
+        })
         return;
       }
       let data = JSON.stringify({
@@ -86,28 +68,18 @@ class SignUpForm extends React.Component {
           data: data,
           success: user => {
             this.props.signup(user);
-            let data = JSON.stringify({ username: email, password: password });
-            $.ajax({
-              type: 'POST',
-              url: '/login',
-              contentType: 'application/json',
-              data: data,
-              success: username => {
-                this.props.login(username);
-                this.props.history.push('/');
-              },
-              error: err => {
-                err.responseText === 'Unauthorized' ?
-                  alert('Incorrect email or password, please try again.')
-                  : alert('There was an error on our end, sorry :(')
-              }
+            this.setState({success: true})
+            setTimeout(() => {
+            this.props.history.push('/login')
+            }, 3000)
+            },
+            error: err => {
+            this.setState({
+                failure: true,
+                header: 'That email already exists.',
+                messageContent: 'A user already has signed up using that email. Try logging in!'
             })
-          },
-          error: err => {
-            err === 'Unauthorized' ?
-            alert('That email is taken, please choose a valid email.')
-            : alert('There was an error on our end, sorry :(');
-          }
+            }
       })
     }
 
@@ -173,8 +145,8 @@ class SignUpForm extends React.Component {
                           <Message
                           key='1'
                           negative
-                          header='There was a problem with your submission'
-                          content='The email you entered already exists.  Please use another.'
+                          header={this.state.header}
+                          content={this.state.messageContent}
                         />
                     ]
                     }
