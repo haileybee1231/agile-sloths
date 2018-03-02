@@ -15,7 +15,6 @@ var thisUser = data.users['bororourke@gmail.com'];
 var eventsData = data.events;
 var race = data.races[0];
 
-
 class Profile extends React.Component {
 	constructor(props) {
 		super(props)

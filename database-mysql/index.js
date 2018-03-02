@@ -41,7 +41,7 @@ const addUser = function(email, password, firstname, lastname, bio, role, locati
 })
 }
 
-var addEvent = function(title, location, time, description, host, cb) { // host should be the email of the logged in user
+var addEvent = function(title, location, date, time, description, host, cb) { // host should be the email of the logged in user
   if (err) {
     cb(err, null);
   } else {

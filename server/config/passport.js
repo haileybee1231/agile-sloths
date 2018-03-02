@@ -19,7 +19,6 @@ module.exports = function(passport) {
   passport.use('local-login', new LocalStrategy( // strategy = type of logging in (e.g. fb)
     function(email, password, cb) {
       db.getUserByEmail(email, function(err, user) {
-        console.log(user);
         if (err) {
           return cb(err);
         }
@@ -27,7 +26,6 @@ module.exports = function(passport) {
           return cb(null, false);
         }
         bcrypt.compare(password, user[0].password, function(err, res) {
-          console.log(res);
           if (!res) {
             return cb(null, false);
           }
@@ -56,7 +54,7 @@ module.exports = function(passport) {
           return cb(err, null);
         }
         if (user.length > 0) {
-          return cb(null, false);
+          return cb(err, null);
         } else {
           db.addUser(email, password, firstname, lastname, bio, role, location, race, function(err, results) { // add whatever else needs to be added here, like bio
             if (err) {

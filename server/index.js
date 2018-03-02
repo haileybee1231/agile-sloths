@@ -1,6 +1,6 @@
 let express = require('express');
 let bodyParser = require('body-parser');
-// let db = require('../database-mysql'); // to delete
+let db = require('../database-mysql');
 let session = require('express-session');
 let path = require('path');
 let passport = require('passport');
@@ -22,7 +22,17 @@ app.use(passport.session());
 app.use(flash()); // uses flash connect to allow flash messages in stored session
 app.use(express.static(path.join(__dirname, '../react-client/dist')));
 
+function isLoggedIn(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.status(401).end('You must log in to do that!');
+}
 // This wildcard acts as a catch-all to let react-router redirect instead of using Express to
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'));
+});
+
 app.get('/events/*', (req, res) => {
   // to handle request for new feed events, needs to be filled
   res.end();
@@ -51,21 +61,12 @@ app.get('/user*', (req, res) => {
   });
 });
 
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'))
-});
 
-app.post('/events')
+app.post('/events', isLoggedIn, (req, res) => {
+})
 
 // EVERYTHING BELOW TO BE DELETED?
 
-function isLoggedIn(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-
-  res.code(401).end('You must log in to do that!');
-}
 
 // ///// MAIN PAGE REQUESTS /////
 // app.get('/', function(req, res) {
@@ -125,14 +126,13 @@ function isLoggedIn(req, res, next) {
 
 // ///// USER-RELATED REQUESTS /////
 app.post('/login', passport.authenticate('local-login'), (req, res) => {
+  // let response = {username: req.body.username, sessionID: }
   res.status(201).send(req.body.username);
 });
 
-app.post('/signup', passport.authenticate('local-signup', { // passport middleware authenticates signup
-  successRedirect: '/', // on success, redirect to main feed page
-  failureRedirect: '/fdssdfgfsd', // on failure, keep on signup page
-  failureFlash: true
-}));
+app.post('/signup', passport.authenticate('local-signup'), (req, res) => { // passport middleware authenticates signup
+  res.status(201).send('Signup successful. Logging in.');
+});
 
 app.post('/logout', isLoggedIn, function(req, res) {
   req.logout();
