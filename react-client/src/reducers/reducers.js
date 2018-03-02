@@ -4,11 +4,10 @@ import $ from 'jquery';
 const mainReducer = (state = data, action) => { // reducers are dispatched here
   switch(action.type) { // if their action type matches a case,
     case 'LOGIN': {
-      console.log(action.payload)
-        return {
-          ...state,
-          currentUser: action.payload.username
-        }
+      return {
+        ...state,
+        currentUser: action.payload.username
+      }
       };
     case 'LOGOUT': {
       return {
@@ -22,20 +21,10 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         events: [...events, payload.event]
       }
     case 'FETCH-EVENTS':
-      $.ajax({
-        type: 'GET',
-        url: `EVENTS/${state.events.length - 1}`,
-        success: newEvents => {
-          return {
-            ...state,
-            events: [...state.events, ...newEvents]
-          }
-        },
-        error: () => {
-          console.log('oops')
-        }
-      });
-      break;
+      return {
+        ...state,
+        events: [...state.events, ...payload.newEvents]
+      }
     default: return state;
   }
 }

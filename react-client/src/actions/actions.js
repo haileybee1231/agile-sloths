@@ -28,9 +28,12 @@ export const signup = (email, password, firstName, lastName, bio, role, zipCode,
   }
 )
 
-export const fetchEvents = () => (
+export const fetchEvents = (newEvents) => (
   {
-    type: 'FETCH-EVENTS'
+    type: 'FETCH-EVENTS',
+    payload: {
+      newEvents: newEvents
+    }
   }
 )
 

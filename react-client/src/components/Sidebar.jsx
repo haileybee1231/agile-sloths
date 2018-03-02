@@ -23,8 +23,12 @@ class Sidebar extends React.Component {
       $.ajax({
         type: 'GET',
         url: `/user?${name}`,
-        success: userPage => {
+        success: user => {
+          console.log(user)
           this.props.history.push(`/user?${name}`);
+        },
+        error: err => {
+          console.error(err);
         }
       })
     }

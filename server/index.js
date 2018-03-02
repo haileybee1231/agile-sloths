@@ -29,9 +29,6 @@ function isLoggedIn(req, res, next) {
   res.status(401).end('You must log in to do that!');
 }
 // This wildcard acts as a catch-all to let react-router redirect instead of using Express to
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'));
-});
 
 app.get('/events/*', (req, res) => {
   // to handle request for new feed events, needs to be filled
@@ -40,7 +37,6 @@ app.get('/events/*', (req, res) => {
 
 app.get('/user*', (req, res) => {
   let username = decodeURIComponent(req._parsedOriginalUrl.query).split(' ');
-  res.end();
   db.getUserByName(username[0], username[1], (err, user) => {
     db.getAllEvents((err, events) => {
       let userEvents = null;
@@ -50,21 +46,24 @@ app.get('/user*', (req, res) => {
         })
       }
       if (err) {
-        res.status(500);
+        res.status(500).end();
       }
-      if (!user.length) {
-        res.status(404);
+      if (user && !user.length) {
+        res.status(404).end();
       }
-      let body = {user, userEvents}
-      res.status(201).end(body);
+      let body = JSON.stringify({user, userEvents});
+      res.write(body);
+      res.status(200).end();
     })
   });
 });
 
-
 app.post('/events', isLoggedIn, (req, res) => {
 })
 
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'));
+});
 // EVERYTHING BELOW TO BE DELETED?
 
 
