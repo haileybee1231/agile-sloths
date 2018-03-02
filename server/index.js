@@ -30,9 +30,17 @@ function isLoggedIn(req, res, next) {
 }
 // This wildcard acts as a catch-all to let react-router redirect instead of using Express to
 
-app.get('/api/events/*', (req, res) => {
-  // to handle request for new feed events, needs to be filled
-  res.end();
+app.get('/api/events?*', (req, res) => {
+  let number = req._parsedOriginalUrl.query;
+  db.getNewEvents(0, (err, events) => {
+    // console.log(events);
+    if (err) {
+      res.status(500).end(err);
+    } else {
+      res.write(JSON.stringify(events));
+      res.status(200).end();
+    }
+  })
 });
 
 app.get('/api/user*', (req, res) => {
@@ -66,7 +74,6 @@ app.post('/events/api', isLoggedIn, (req, res) => {
     if (err) {
       res.send(JSON.stringify(err));
     } else {
-      console.log('hi')
       res.status(201).end();
     }
   });

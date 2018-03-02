@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid, Container, Button, Header, Segment, Divider, Feed } from 'semantic-ui-react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { fetchEvents, getUser } from '../../src/actions/actions.js';
+import { fetchEventsAction, getUser } from '../../src/actions/actions.js';
 import Sidebar from './Sidebar.jsx';
 import EventForm from './EventForm.jsx';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -26,9 +26,10 @@ const FeedList = (props) => {
   const fetchEvents = () => {
     $.ajax({
       type: 'GET',
-      url: `events/${props.events.length - 1}`,
+      url: `/api/events?${props.events.length - 1}`,
       success: newEvents => {
-        props.fetchEvents(newEvents);
+        console.log(newEvents)
+        props.fetchEventsAction(newEvents);
       },
       error: (err) => {
         console.error('Could not fetch events: ', err);
@@ -54,7 +55,7 @@ const FeedList = (props) => {
 
         <InfiniteScroll
           height={600}
-          next={props.fetchEvents}
+          next={fetchEvents}
           hasMore={true}
           loader={<h4><img href="https://media1.giphy.com/media/xTk9ZvMnbIiIew7IpW/giphy.gif"></img>Loading...</h4>}
           endMessage={
@@ -94,7 +95,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({ fetchEvents }, dispatch);
+  return bindActionCreators({ fetchEventsAction }, dispatch);
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedList);

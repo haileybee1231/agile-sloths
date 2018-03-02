@@ -79,6 +79,16 @@ var getUserByEmail = function(email, cb) {
   })
 }
 
+var getUserNameById = function(id, cb) {
+  connection.query('SELECT firstname, lastname FROM users WHERE id=?', [id], function(err, user) {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, user);
+    }
+  })
+}
+
 var getUserByName = function(first, last, cb) {
   connection.query('SELECT * FROM users WHERE firstname=? AND lastname=?', [first, last], function(err, user) {
     // need to add query to also get followers/favorites from votercandidate table and send them back too
@@ -100,6 +110,21 @@ var getAllEvents = function(cb) {
   })
 }
 
+var getNewEvents = function(number, cb) {
+  connection.query('SELECT * FROM events WHERE id>=? AND id<? + 10', [number, number], function(err, events) {
+    if (err) {
+      cb(err, null);
+    } else {
+      // events.map(event => {
+      //   return getUserNameById(event.host, (err, name) => {
+      //   });
+      // });
+      // need to map over array here and change host from id to name, not sure why  not working
+      cb(null, events);
+    }
+  })
+}
+
 
 module.exports.selectAllRaces = selectAllRaces;
 module.exports.addUser = addUser;
@@ -108,3 +133,5 @@ module.exports.getUserByName = getUserByName;
 module.exports.getAllEvents = getAllEvents;
 module.exports.addEvent = addEvent;
 module.exports.attendEvent = attendEvent;
+module.exports.getNewEvents = getNewEvents;
+module.exports.getUserByName = getUserByName;

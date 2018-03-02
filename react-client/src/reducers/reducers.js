@@ -16,15 +16,15 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
       }
     }
     case 'CREATE-EVENT':
-      console.log(action.payload)
       return {
         ...state,
         events: [...state.events]
       }
     case 'FETCH-EVENTS':
+      console.log(action.payload)
       return {
         ...state,
-        events: [...state.events, ...payload.newEvents]
+        events: [...state.events, ...action.payload.newEvents]
       }
     case 'SET-USER':
       return {

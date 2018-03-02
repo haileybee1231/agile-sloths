@@ -28,7 +28,7 @@ export const signup = (email, password, firstName, lastName, bio, role, zipCode,
   }
 )
 
-export const fetchEvents = newEvents => (
+export const fetchEventsAction = newEvents => (
   {
     type: 'FETCH-EVENTS',
     payload: {
@@ -38,7 +38,6 @@ export const fetchEvents = newEvents => (
 )
 
 export const setUser = user => {
-  console.log(user);
   return {
     type: 'SET-USER',
     payload: {
