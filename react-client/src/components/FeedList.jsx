@@ -26,7 +26,7 @@ const FeedList = (props) => {
   const fetchEvents = () => {
     $.ajax({
       type: 'GET',
-      url: `EVENTS/${props.events.length - 1}`,
+      url: `events/${props.events.length - 1}`,
       success: newEvents => {
         props.fetchEvents(newEvents);
       },

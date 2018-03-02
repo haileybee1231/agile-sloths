@@ -32,7 +32,7 @@ class Profile extends React.Component {
 								{`${user.firstname} ${user.lastname}`}
 							</Card.Header>
 							<Card.Meta style={{paddingLeft: 15, paddingRight: 15, paddingBottom: 10}}>
-							location goes here?
+								{user.location}
 							</Card.Meta>
 							<Card.Description style={{paddingLeft: 15, paddingRight: 15}}>
 								{user.bio}

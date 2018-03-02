@@ -60,7 +60,16 @@ app.get('/api/user*', (req, res) => {
   });
 });
 
-app.post('/events', isLoggedIn, (req, res) => {
+app.post('/events/api', isLoggedIn, (req, res) => {
+  const event = req.body;
+  db.addEvent(event.title, event.location, event.date, event.time, event.description, event.host, function(err, result) {
+    if (err) {
+      res.send(JSON.stringify(err));
+    } else {
+      console.log('hi')
+      res.status(201).end();
+    }
+  });
 })
 
 app.get('/*', (req, res) => {

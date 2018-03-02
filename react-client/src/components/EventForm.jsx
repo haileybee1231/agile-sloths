@@ -29,20 +29,21 @@ class EventForm extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     const { title, location, date, time, description, host } = this.state;
-    let data = JSON.stringify({
+    let data = {
       title: title,
       location: location,
       date: date,
+      time: time,
       description: description,
       host: host
-    });
+    };
     $.ajax({
       type: 'POST',
-      url: '/events',
+      url: '/events/api',
       contentType: 'application/json',
-      data: data,
+      data: JSON.stringify(data),
       success: response => {
-        this.props.createEvent(JSON.parse(response));
+        this.props.createEvent(data);
       },
       error: err => {
         alert(err.responseText);
