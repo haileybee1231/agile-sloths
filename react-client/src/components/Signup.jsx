@@ -65,6 +65,16 @@ class SignUpForm extends React.Component {
     componentDidMount() {
         //grab all races from database
         //populate the race dropdown with all races
+        $.ajax({
+            type: 'GET',
+            url: '/races',
+            success: races => {
+                console.log(races)
+            },
+            error: err => {
+                console.log(err)
+            }
+        })
     }
 
     render(props) {

@@ -33,6 +33,7 @@ app.get('/*', (req, res) => {
 });
 
 app.get('/races', (req, res) => {
+  console.log('get request for races')
   db.selectAllRaces()
 })
 
