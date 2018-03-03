@@ -49,6 +49,10 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
       return Object.assign({}, state, {
         pollingInfo: action.payload.results
       })
+    case 'SAVE-CANDIDATE-INFO':
+      return Object.assign({}, state, {
+        candidateInfo: action.payload.results
+      })
     default: return state;
   }
 }

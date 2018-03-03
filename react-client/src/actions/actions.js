@@ -86,3 +86,12 @@ export const savePollingInfo = results => (
     }
   }
 )
+
+export const saveCandidateInfo = results => (
+  {
+    type: 'SAVE-CANDIDATE-INFO',
+    payload: {
+      results: results
+    }
+  }
+)

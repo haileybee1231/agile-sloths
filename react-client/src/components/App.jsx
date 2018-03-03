@@ -10,6 +10,7 @@ import Sidebar from './Sidebar.jsx';
 import SignupForm from './Signup.jsx';
 import Profile from './Profile.jsx';
 import VoterInfoTab from './VoterInfoTab.jsx';
+import CandidateInfoTab from './CandidateInfoTab.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -28,6 +29,7 @@ class App extends React.Component {
           <Route path='/signup' component={ SignupForm } />
           <Route path='/user*' component={ Profile } />
           <Route path='/vinfotab' component={ VoterInfoTab } />
+          <Route path='/cinfotab' component={ CandidateInfoTab } />
         </Switch>
       </Router>
     )
