@@ -1,5 +1,5 @@
 import React from 'react'
-import { signup, login } from '../actions/actions.js'
+import { signup, login, saverace } from '../actions/actions.js'
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Form, Grid, Header, Message, Segment, Input, Select, Dropdown, TextArea } from 'semantic-ui-react'
 import { connect } from 'react-redux'
@@ -23,7 +23,7 @@ class SignUpForm extends React.Component {
             raceoptions: undefined,
             header: '',
             messageContent: '',
-            currentValue: ''
+            currentRace: ''
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
@@ -62,9 +62,8 @@ class SignUpForm extends React.Component {
           lastname: lastname,
           zipcode: zipcode,
           bio: bio,
-          race: race.key
+          race: race
       })
-      console.log('DATA.RACE', data.race)
       $.ajax({ // this is the exact function from the login page, we should put it in another file and import it instead of rewriting here
           type: 'POST',
           url: '/signup',
@@ -100,22 +99,23 @@ class SignUpForm extends React.Component {
             type: 'POST',
             url: '/races',
             contentType: 'application/json',
-            success: races => {
-                console.log(races)
+            success: race => {
+                this.props.saverace(race)
+                console.log(value)
+                console.log('POST REQUEST HANDLE ADDITION', race)
             },
             error: err => {
                 console.log(err)
             }
         })
         this.setState({
-          raceoptions: [{ text: value, value: value }, ...this.state.raceoptions],
+          raceoptions: [{ text: value, value: value }, ...this.state.raceoptions], //need to add key here for new values
         })
-        
     }
 
-    handleRaceChange (e, { value }) {
-        this.setState({ currentValue: value }) 
-        console.log('currentValue', this.state.currentValue)
+    handleRaceChange (e, data) {
+        this.setState({ currentRace: data.options }) 
+        console.log(data.options[0].key)
     }
 
     componentDidMount() {
@@ -125,9 +125,16 @@ class SignUpForm extends React.Component {
             url: '/races',
             contentType: 'json',
             success: races => {
-                console.log('races', races)
+                let test = []
+                races.forEach(race => {
+                    test.push({
+                        key: race.id,
+                        text: race.office,
+                        value: race.office
+                    })
+                })
                 this.setState({
-                    raceoptions: races
+                    raceoptions: test, ...this.state.raceoptions
                 })
             },
             error: err => {
@@ -208,9 +215,6 @@ class SignUpForm extends React.Component {
                                             selection 
                                             options={this.state.raceoptions}
                                             control={Dropdown}
-                                            allowAdditions
-                                            value={this.state.currentValue}
-                                            onAddItem={this.handleAddition}
                                             onChange={this.handleRaceChange} 
                                             label='Race' 
                                             placeholder='What office are you running for?'/>
@@ -231,7 +235,7 @@ class SignUpForm extends React.Component {
                                                 $('textArea[name=bio]').val() || null,
                                                 this.state.role,
                                                 $('input[name=zipCode]').val(),
-                                                this.state.currentValue.key || null
+                                                this.state.currentRace.key || null
                                             )}}>Submit</Form.Field>
                         </Segment>
                     </Form>

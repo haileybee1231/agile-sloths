@@ -14,8 +14,19 @@ export const logout = () => ( // no payload or parameters necessary for logout
 
 export const fetchraces = (races) => (
   {
-    type: 'FETCH_RACES',
+    type: 'FETCH-RACES',
     payload: races
+  }
+)
+
+export const saverace = (race) => (
+  {
+    type: 'SAVE-RACE',
+    payload: {
+      key: key,
+      date: date,
+      office: office
+    }
   }
 )
 
