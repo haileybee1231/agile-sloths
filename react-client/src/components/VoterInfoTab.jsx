@@ -36,9 +36,9 @@ class ConnectedVoterInfoTab extends React.Component {
     console.log(this.props)
     return (
       <div>
-        {this.props.data.pollingInfo.map(el => (
+        {/* {this.props.data.pollingInfo.map(el => (
           el
-        ))}
+        ))} */}
       </div>
     )
   }
