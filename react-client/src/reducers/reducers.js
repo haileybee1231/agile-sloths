@@ -15,7 +15,6 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         currentUser: null
       }
     };
-
     case 'SIGNUP': {
       return state
     };
