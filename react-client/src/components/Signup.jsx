@@ -5,6 +5,7 @@ import { Button, Form, Grid, Header, Message, Segment, Input, Select, Dropdown, 
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import $ from 'jquery'
+const uuidv4 = require('uuid/v4');
 
 
 const options = [
@@ -27,8 +28,10 @@ class SignUpForm extends React.Component {
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
-        this.handleAddition = this.handleAddition.bind(this)
+        this.handleRaceAddition = this.handleRaceAddition.bind(this)
         this.handleRaceChange = this.handleRaceChange.bind(this)
+        this.getAllRaces = this.getAllRaces.bind(this)
+        this.handleRaceValue = this.handleRaceValue.bind(this)
     }
 
     handleSubmit(email, password, firstname, lastname, bio, role, zipcode, race) {
@@ -86,6 +89,30 @@ class SignUpForm extends React.Component {
       }) 
     }
 
+    getAllRaces() {
+        $.ajax({
+            type: 'GET',
+            url: '/races',
+            contentType: 'json',
+            success: races => {
+                let list = []
+                races.forEach(race => {
+                    list.push({
+                        key: race.id,
+                        text: race.office,
+                        value: race.office
+                    })
+                })
+                this.setState({
+                    raceoptions: list, ...this.state.raceoptions
+                })
+            },
+            error: err => {
+                console.log(err)
+            }
+        })
+    }
+
     handleChange(e, {value}) {
         if (value === 'voter') {
             this.setState({CandidateTrue: false, role: 'Voter'})
@@ -94,53 +121,42 @@ class SignUpForm extends React.Component {
         }
     }
 
-    handleAddition(e, { value }) {
+    handleRaceAddition(date, location, office) {
+        let data = JSON.stringify({
+            date: date,
+            location: location,
+            office: office
+        })
         $.ajax({
             type: 'POST',
             url: '/races',
             contentType: 'application/json',
+            data: data,
             success: race => {
-                this.props.saverace(/*whatever current value of form field is.  date, location, office*/)
-                console.log(value)
-                console.log('POST REQUEST HANDLE ADDITION', race)
+                this.props.saverace(race)
             },
             error: err => {
                 console.log(err)
             }
         })
-        this.setState({
-          raceoptions: [{ text: value, value: value }, ...this.state.raceoptions], //need to add key here for new values
-        })
+        this.getAllRaces()
+        // this.setState({
+        //   raceoptions: [{ key: uuidv4(), text: value, value: value }, ...this.state.raceoptions], //need to add key here for new values
+        // })
+    }
+
+    handleRaceValue(e, {value}) {
+        this.setState({ currentRace: value})
+        console.log('RACE VALUE', value)
     }
 
     handleRaceChange (e, data) {
-        this.setState({ currentRace: data.options }) 
-        console.log(data.options[0].key)
+    
     }
 
     componentDidMount() {
         //grab all Races from database and populates the race dropdown with them
-        $.ajax({
-            type: 'GET',
-            url: '/races',
-            contentType: 'json',
-            success: races => {
-                let test = []
-                races.forEach(race => {
-                    test.push({
-                        key: race.id,
-                        text: race.office,
-                        value: race.office
-                    })
-                })
-                this.setState({
-                    raceoptions: test, ...this.state.raceoptions
-                })
-            },
-            error: err => {
-                console.log(err)
-            }
-        })
+        this.getAllRaces()
     }
 
     render(props) {
@@ -207,30 +223,28 @@ class SignUpForm extends React.Component {
                         </Form.Group>
 
                         { this.state.CandidateTrue && [
-                            <div key="7">
+                            <div key='candidatediv'>
                                 <Form.Group widths='equal' key="1">
                                     <Form.Field key="2" control={TextArea} type='text' name='bio' label='Bio' placeholder='Tell us about yourself' />
-                                    <Form.Field key="3"
+                                </Form.Group>
+                                <Form.Group widths='equal'>
+                                    <Form.Field key='3'
                                                 fluid  
                                                 search 
-                                                selection 
+                                                selection
+                                                allowAdditions
+                                                onAddItem={() => {this.handleRaceAddition(date, location, office)}} 
                                                 options={this.state.raceoptions}
                                                 control={Dropdown}
-                                                onChange={this.handleRaceChange} 
+                                                onChange={this.handleRaceValue} 
                                                 label='Race' 
                                                 placeholder='What office are you running for?'/>
-                                </Form.Group>
-                                <Form.Group key="4">
-                                    <Form.Field control={Input}
-                                                label='Add new race'
-                                                key="5"/>
-                                    <Form.Field size='mini' 
-                                                content='Add'
-                                                key="6"
-                                                control={Button}
-                                                label=''
-                                                onClick={this.handleAddition}
-                                            />
+                                    <Form.Field key='4'
+                                                label='Date of Race'
+                                                fluid
+                                                control={Input}
+                                                type='date'
+                                                />
                                 </Form.Group>
                             </div>
                             ]
@@ -247,7 +261,7 @@ class SignUpForm extends React.Component {
                                                 $('textArea[name=bio]').val() || null,
                                                 this.state.role,
                                                 $('input[name=zipCode]').val(),
-                                                this.state.currentRace.key || null
+                                                this.state.currentRace || null
                                             )}}>Submit</Form.Field>
                         </Segment>
                     </Form>
