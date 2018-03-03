@@ -36,7 +36,7 @@ class SignUpForm extends React.Component {
 
     handleSubmit(email, password, firstname, lastname, bio, role, zipcode, race) {
       if (email.indexOf('@') < 0 || !email.match('com')) {
-        this.setState({failure: true, 
+        this.setState({failure: true,
                        header: 'Please enter a valid email address.',
                        messageContent: 'We require a .com domain for emails.' })
         return;
@@ -86,7 +86,7 @@ class SignUpForm extends React.Component {
                 messageContent: 'A user already has signed up using that email. Try logging in!'
           })
         }
-      }) 
+      })
     }
 
     getAllRaces() {
@@ -198,7 +198,7 @@ class SignUpForm extends React.Component {
                         />
                     ]
                     }
-                    
+
                     <Header as='h2' color='green' textAlign='center'>
                         {' '}Sign up for an account
                     </Header>
