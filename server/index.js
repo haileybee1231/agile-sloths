@@ -168,6 +168,10 @@ app.post('/logout', isLoggedIn, function(req, res) {
   res.clearCookie('connect.sid').status(200).redirect('/');
 });
 
+app.post('/races', function(req, res) {
+  console.log(req.body)
+})
+
 let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000
 
 app.listen(port, function() {

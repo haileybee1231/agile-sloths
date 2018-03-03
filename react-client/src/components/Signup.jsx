@@ -62,8 +62,9 @@ class SignUpForm extends React.Component {
           lastname: lastname,
           zipcode: zipcode,
           bio: bio,
-          race: race
+          race: race.key
       })
+      console.log('DATA.RACE', data.race)
       $.ajax({ // this is the exact function from the login page, we should put it in another file and import it instead of rewriting here
           type: 'POST',
           url: '/signup',
@@ -81,9 +82,9 @@ class SignUpForm extends React.Component {
                 failure: true,
                 header: 'That email already exists.',
                 messageContent: 'A user already has signed up using that email. Try logging in!'
-            })
-            }
-      })
+          })
+        }
+      }) 
     }
 
     handleChange(e, {value}) {
@@ -95,18 +96,30 @@ class SignUpForm extends React.Component {
     }
 
     handleAddition(e, { value }) {
-        this.setState({
-          raceoptions: [{ text: value, value }, ...this.state.raceoptions],
+        $.ajax({
+            type: 'POST',
+            url: '/races',
+            contentType: 'application/json',
+            success: races => {
+                console.log(races)
+            },
+            error: err => {
+                console.log(err)
+            }
         })
+        this.setState({
+          raceoptions: [{ text: value, value: value }, ...this.state.raceoptions],
+        })
+        
     }
 
     handleRaceChange (e, { value }) {
         this.setState({ currentValue: value }) 
+        console.log('currentValue', this.state.currentValue)
     }
 
     componentDidMount() {
-        //grab all races from database
-        //populate the race dropdown with all races
+        //grab all Races from database and populates the race dropdown with them
         $.ajax({
             type: 'GET',
             url: '/races',
@@ -190,14 +203,15 @@ class SignUpForm extends React.Component {
                             <Form.Group widths='equal' key="1">
                                 <Form.Field key="2" control={TextArea} type='text' name='bio' label='Bio' placeholder='Tell us about yourself' />
                                 <Form.Field key='3'
-                                            fluid multiple search selection 
+                                            fluid  
+                                            search 
+                                            selection 
                                             options={this.state.raceoptions}
                                             control={Dropdown}
                                             allowAdditions
                                             value={this.state.currentValue}
                                             onAddItem={this.handleAddition}
-                                            onChange={this.handleRaceChange}
-                                            name='race' 
+                                            onChange={this.handleRaceChange} 
                                             label='Race' 
                                             placeholder='What office are you running for?'/>
                                 
@@ -217,7 +231,7 @@ class SignUpForm extends React.Component {
                                                 $('textArea[name=bio]').val() || null,
                                                 this.state.role,
                                                 $('input[name=zipCode]').val(),
-                                                this.state.currentValue || null
+                                                this.state.currentValue.key || null
                                             )}}>Submit</Form.Field>
                         </Segment>
                     </Form>

@@ -136,7 +136,7 @@ var getNewEvents = function(number, cb) {
   })
 }
 
-
+module.exports.saveRace = saveRace;
 module.exports.selectAllRaces = selectAllRaces;
 module.exports.addUser = addUser;
 module.exports.getUserByEmail = getUserByEmail;
