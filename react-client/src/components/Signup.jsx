@@ -24,12 +24,12 @@ class SignUpForm extends React.Component {
             raceoptions: undefined,
             header: '',
             messageContent: '',
-            currentRace: ''
+            currentRace: '',
+            raceKey: undefined
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleRaceAddition = this.handleRaceAddition.bind(this)
-        this.handleRaceChange = this.handleRaceChange.bind(this)
         this.getAllRaces = this.getAllRaces.bind(this)
         this.handleRaceValue = this.handleRaceValue.bind(this)
     }
@@ -89,6 +89,7 @@ class SignUpForm extends React.Component {
       })
     }
 
+    //grabs every race from the database and populates the race dropdown with it to select from
     getAllRaces() {
         $.ajax({
             type: 'GET',
@@ -113,6 +114,7 @@ class SignUpForm extends React.Component {
         })
     }
 
+    //handles what role is selected, displays form info accordingly
     handleChange(e, {value}) {
         if (value === 'voter') {
             this.setState({CandidateTrue: false, role: 'Voter'})
@@ -121,6 +123,7 @@ class SignUpForm extends React.Component {
         }
     }
 
+    //this function grabs the value from the race field and adds it to the database, if its not there already
     handleRaceAddition(date, location, office) {
         if (office === '') {
             this.setState({
@@ -157,12 +160,17 @@ class SignUpForm extends React.Component {
         this.getAllRaces()
     }
 
-    handleRaceValue(e, {value}) {
-        this.setState({ currentRace: value})
-    }
-
-    handleRaceChange (e, data) {
-        
+    //each race, when created, is assigned a key which is tied to a user by foriegn key. this function grabs that key for user creation
+    handleRaceValue(e, data) {
+        let races = data.options;
+        let currRaceValue = data.value
+        races.forEach(race => {
+            if (race.value === currRaceValue) {
+                this.setState({
+                    raceKey: race.key
+                })
+            }
+        })  
     }
 
     componentDidMount() {
@@ -277,7 +285,7 @@ class SignUpForm extends React.Component {
                                                 $('textArea[name=bio]').val() || null,
                                                 this.state.role,
                                                 $('input[name=zipCode]').val(),
-                                                this.state.currentRace || null
+                                                this.state.raceKey || null
                                             )}}>Submit</Form.Field>
                         </Segment>
                     </Form>
