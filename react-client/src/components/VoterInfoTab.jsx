@@ -9,9 +9,12 @@ import axios from 'axios'
 class ConnectedVoterInfoTab extends React.Component {
   constructor(props) {
     super(props)
+    this.state = {
+      pollingInfo: []
+    }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     // create conditional to check if user is a voter
     // if so
       this.fetchPollingStations(this.props.savePollingInfo, '800 Brazos St Suite 500, Austin, TX 78701') //replace with currentUser location
@@ -35,9 +38,11 @@ class ConnectedVoterInfoTab extends React.Component {
     console.log(this.props)
     return (
       <div>
-        {/* {this.props.pollingInfo.map(el => (
-          el
-        ))} */}
+        {this.props.pollingInfo && 
+        this.props.pollingInfo.data && 
+        this.props.pollingInfo.data.pollingLocations.slice(0, 10).map(el => (
+          el.address.locationName
+        ))}
       </div>
     )
   }

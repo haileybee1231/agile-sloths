@@ -1,5 +1,6 @@
 const data = {
   currentUser: null,
+  pollingInfo: [],
   races: [
     {
       office: 'senator',
