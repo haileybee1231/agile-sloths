@@ -42,9 +42,15 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         ...state,
         selectedUser: action.payload.selectedUser
       }
+    case 'SAVE_POLLING_INFO':
+      return {
+        ...state,
+        
+      }
 
     default: return state;
   }
 }
+
 
 export default mainReducer;
