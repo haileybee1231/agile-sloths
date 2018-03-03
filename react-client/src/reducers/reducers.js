@@ -15,7 +15,6 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         currentUser: null
       }
     };
-    
     case 'SIGNUP': {
       return state
     };
@@ -29,7 +28,11 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         ...state,
         events: [...state.events]
       }
-
+    case 'ATTEND-EVENT': {
+      return {
+        ...state,
+      }
+    }
     case 'FETCH-EVENTS':
       console.log(action.payload)
       return {

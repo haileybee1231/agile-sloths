@@ -43,6 +43,16 @@ export const fetchEventsAction = newEvents => (
     }
   }
 )
+//
+export const attendEventAction = (event, user) => (
+  {
+    type: 'ATTEND-EVENT',
+    payload: {
+      event: event,
+      user: user
+    }
+  }
+)
 
 export const setUser = user => {
   return {

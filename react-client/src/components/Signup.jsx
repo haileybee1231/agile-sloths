@@ -33,7 +33,7 @@ class SignUpForm extends React.Component {
 
     handleSubmit(email, password, firstname, lastname, bio, role, zipcode, race) {
       if (email.indexOf('@') < 0 || !email.match('com')) {
-        this.setState({failure: true, 
+        this.setState({failure: true,
                        header: 'Please enter a valid email address.',
                        messageContent: 'We require a .com domain for emails.' })
         return;
@@ -62,7 +62,7 @@ class SignUpForm extends React.Component {
           lastname: lastname,
           zipcode: zipcode,
           bio: bio,
-          race: race.key
+          race: race
       })
       console.log('DATA.RACE', data.race)
       $.ajax({ // this is the exact function from the login page, we should put it in another file and import it instead of rewriting here
@@ -84,7 +84,7 @@ class SignUpForm extends React.Component {
                 messageContent: 'A user already has signed up using that email. Try logging in!'
           })
         }
-      }) 
+      })
     }
 
     handleChange(e, {value}) {
@@ -110,11 +110,11 @@ class SignUpForm extends React.Component {
         this.setState({
           raceoptions: [{ text: value, value: value }, ...this.state.raceoptions],
         })
-        
+
     }
 
     handleRaceChange (e, { value }) {
-        this.setState({ currentValue: value }) 
+        this.setState({ currentValue: value })
         console.log('currentValue', this.state.currentValue)
     }
 
@@ -175,7 +175,7 @@ class SignUpForm extends React.Component {
                         />
                     ]
                     }
-                    
+
                     <Header as='h2' color='green' textAlign='center'>
                         {' '}Sign up for an account
                     </Header>
@@ -203,18 +203,18 @@ class SignUpForm extends React.Component {
                             <Form.Group widths='equal' key="1">
                                 <Form.Field key="2" control={TextArea} type='text' name='bio' label='Bio' placeholder='Tell us about yourself' />
                                 <Form.Field key='3'
-                                            fluid  
-                                            search 
-                                            selection 
+                                            fluid
+                                            search
+                                            selection
                                             options={this.state.raceoptions}
                                             control={Dropdown}
                                             allowAdditions
                                             value={this.state.currentValue}
                                             onAddItem={this.handleAddition}
-                                            onChange={this.handleRaceChange} 
-                                            label='Race' 
+                                            onChange={this.handleRaceChange}
+                                            label='Race'
                                             placeholder='What office are you running for?'/>
-                                
+
                             </Form.Group>
 
                             ]
