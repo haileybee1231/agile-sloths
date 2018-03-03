@@ -184,7 +184,13 @@ app.post('/logout', isLoggedIn, function(req, res) {
 });
 
 app.post('/races', function(req, res) {
-  res.status(201).send(req.body);
+  db.saveRace(req.body.date, req.body.location, req.body.office, function(err, results) {
+    if (err) {
+      console.log(err)
+    } else {
+      res.status(201).send(results);
+    }
+  })
 })
 
 let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000
