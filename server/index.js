@@ -50,9 +50,13 @@ app.get('/api/user*', (req, res) => {
       let userEvents = null;
       if (events) {
         userEvents = events.filter(event => {
-          return event.host = user[0].id
+          console.log(event.host, user[0].id)
+          return event.host === user[0].id
         })
       }
+      events.forEach(event => {
+        event.host = username.join(' ');
+      })
       if (err) {
         res.status(500).end();
       }
@@ -93,7 +97,9 @@ app.post('/api/events', isLoggedIn, (req, res) => {
 })
 
 app.post('/attend', isLoggedIn, (req, res) => {
-  console.log(req.body);
+  db.attendEvent(req.body.event, req.body.user, function(err, result) {
+    res.status(201).end();
+  })
 })
 
 app.get('/*', (req, res) => {
