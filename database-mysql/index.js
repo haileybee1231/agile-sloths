@@ -65,14 +65,15 @@ var addEvent = function(title, location, date, time, description, host, cb) { //
         if (err) {
           cb(err, null);
         } else {
-          attendEvent(title, host, function(err, result) { // host will be listed as attendee so they have to attend
-            console.log(host);
-            if (err) {
-              cb(err, null);
-            } else {
-              cb(null, result);
-            }
-          });
+          setTimeout(() => {
+            attendEvent(title, host, function(err, result) { // host will be listed as attendee so they have to attend
+              if (err) {
+                cb(err, null);
+              } else {
+                cb(null, result);
+              }
+            });
+          }, 1500)
         }
       });
     }
@@ -80,7 +81,8 @@ var addEvent = function(title, location, date, time, description, host, cb) { //
 }
 
 var attendEvent = function(title, email, cb) { // query will insert based on userid and eventid so retrieve those first
-  connection.query('INSERT INTO eventsusers (event, user) VALUES ((SELECT id FROM users WHERE email=?), (SELECT id FROM events WHERE title=?))', [email, title], function(err, result) {
+  console.log(title, email);
+  connection.query('INSERT INTO eventsusers (event, user) VALUES ((SELECT id FROM events WHERE title=?), (SELECT id FROM users WHERE email=?))', [title, email], function(err, result) {
     if (err) {
       cb(err, null);
     } else {

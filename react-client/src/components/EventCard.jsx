@@ -15,7 +15,7 @@ const EventCard = props => {
       contentType: 'application/json',
       data: JSON.stringify(data),
       success: () => {
-        props.attendEventAction(event, user);
+        props.attendEventAction(event, data.user);
       }
     })
   }

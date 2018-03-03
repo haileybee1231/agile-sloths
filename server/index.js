@@ -50,7 +50,6 @@ app.get('/api/user*', (req, res) => {
       let userEvents = null;
       if (events) {
         userEvents = events.filter(event => {
-          console.log(event.host, user[0].id)
           return event.host === user[0].id
         })
       }
