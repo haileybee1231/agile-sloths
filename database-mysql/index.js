@@ -27,6 +27,17 @@ const selectAllRaces = function(cb) {
   });
 };
 
+const saveRace = function(race, cb) {
+  connection.query('INSERT INTO races (date, location, office) VALUES (?, ?, ?)',
+  [race.timeStamp, race.location, race.role], function(err, results) {
+    if (err) {
+      cb(err, null)
+    } else {
+      cb(null, results)
+    }
+  })
+}
+
 const addUser = function(email, password, firstname, lastname, bio, role, location, race, cb) {
   bcrypt.hash(password, 10, function(err, hash) {
     connection.query('INSERT INTO users (email, password, firstname, lastname, bio, role, location, race) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
@@ -125,7 +136,7 @@ var getNewEvents = function(number, cb) {
   })
 }
 
-
+module.exports.saveRace = saveRace;
 module.exports.selectAllRaces = selectAllRaces;
 module.exports.addUser = addUser;
 module.exports.getUserByEmail = getUserByEmail;

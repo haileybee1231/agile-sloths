@@ -17,27 +17,41 @@ class SignUpForm extends React.Component {
         super(props)
         this.state = {
             CandidateTrue: undefined,
-            role: ''
+            role: '',
+            success: false,
+            failure: false,
+            raceoptions: undefined,
+            header: '',
+            messageContent: '',
+            currentValue: ''
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.handleAddition = this.handleAddition.bind(this)
+        this.handleRaceChange = this.handleRaceChange.bind(this)
     }
 
     handleSubmit(email, password, firstname, lastname, bio, role, zipcode, race) {
       if (email.indexOf('@') < 0 || !email.match('com')) {
-        alert('Please enter a valid email address.');
+        this.setState({failure: true, 
+                       header: 'Please enter a valid email address.',
+                       messageContent: 'We require a .com domain for emails.' })
         return;
       }
       if (!password) {
-        alert('Please enter a password.');
+          this.setState({
+              failure: true,
+              header: 'Please enter a password.',
+              messageContent: 'Use a combination of letters, numbers, and symbols.'
+          })
         return;
       }
-      if (!firstname) {
-        alert('Please enter a first name.');
-        return;
-      }
-      if (!lastname) {
-        alert('Please enter a last name.');
+      if (!firstname || !lastname) {
+        this.setState({
+            failure: true,
+            header: 'Please enter a full name.',
+            messageContent: 'Use a combination of letters, numbers, and symbols.'
+        })
         return;
       }
       let data = JSON.stringify({
@@ -48,8 +62,9 @@ class SignUpForm extends React.Component {
           lastname: lastname,
           zipcode: zipcode,
           bio: bio,
-          race: race
+          race: race.key
       })
+      console.log('DATA.RACE', data.race)
       $.ajax({ // this is the exact function from the login page, we should put it in another file and import it instead of rewriting here
           type: 'POST',
           url: '/signup',
@@ -57,29 +72,19 @@ class SignUpForm extends React.Component {
           data: data,
           success: user => {
             this.props.signup(user);
-            let data = JSON.stringify({ username: email, password: password });
-            $.ajax({
-              type: 'POST',
-              url: '/login',
-              contentType: 'application/json',
-              data: data,
-              success: username => {
-                this.props.login(username);
-                this.props.history.push('/');
-              },
-              error: err => {
-                err.responseText === 'Unauthorized' ?
-                  alert('Incorrect email or password, please try again.')
-                  : alert('There was an error on our end, sorry :(')
-              }
-            })
-          },
-          error: err => {
-            err === 'Unauthorized' ?
-            alert('That email is taken, please choose a valid email.')
-            : alert('There was an error on our end, sorry :(');
-          }
-      })
+            this.setState({success: true})
+            setTimeout(() => {
+                this.props.history.push('/login')
+            }, 3000)
+            },
+            error: err => {
+            this.setState({
+                failure: true,
+                header: 'That email already exists.',
+                messageContent: 'A user already has signed up using that email. Try logging in!'
+          })
+        }
+      }) 
     }
 
     handleChange(e, {value}) {
@@ -88,6 +93,47 @@ class SignUpForm extends React.Component {
         } else {
             this.setState({CandidateTrue: true, role: 'Candidate'})
         }
+    }
+
+    handleAddition(e, { value }) {
+        $.ajax({
+            type: 'POST',
+            url: '/races',
+            contentType: 'application/json',
+            success: races => {
+                console.log(races)
+            },
+            error: err => {
+                console.log(err)
+            }
+        })
+        this.setState({
+          raceoptions: [{ text: value, value: value }, ...this.state.raceoptions],
+        })
+        
+    }
+
+    handleRaceChange (e, { value }) {
+        this.setState({ currentValue: value }) 
+        console.log('currentValue', this.state.currentValue)
+    }
+
+    componentDidMount() {
+        //grab all Races from database and populates the race dropdown with them
+        $.ajax({
+            type: 'GET',
+            url: '/races',
+            contentType: 'json',
+            success: races => {
+                console.log('races', races)
+                this.setState({
+                    raceoptions: races
+                })
+            },
+            error: err => {
+                console.log(err)
+            }
+        })
     }
 
     render(props) {
@@ -111,6 +157,25 @@ class SignUpForm extends React.Component {
                         GRASSROOTS
                       </Header>
                     </Link>
+                    {this.state.success && [
+                          <Message
+                          key='1'
+                          success
+                          header='Your user registration was successful!'
+                          content='Redirecting you to the login page soon'
+                        />
+                    ]
+                    }
+                    {this.state.failure && [
+                          <Message
+                          key='1'
+                          negative
+                          header={this.state.header}
+                          content={this.state.messageContent}
+                        />
+                    ]
+                    }
+                    
                     <Header as='h2' color='green' textAlign='center'>
                         {' '}Sign up for an account
                     </Header>
@@ -137,7 +202,19 @@ class SignUpForm extends React.Component {
                         { this.state.CandidateTrue && [
                             <Form.Group widths='equal' key="1">
                                 <Form.Field key="2" control={TextArea} type='text' name='bio' label='Bio' placeholder='Tell us about yourself' />
-                                <Form.Field key ="3" control={Input} type='text' name='race' label='Race' placeholder='What office are you running for?'/>
+                                <Form.Field key='3'
+                                            fluid  
+                                            search 
+                                            selection 
+                                            options={this.state.raceoptions}
+                                            control={Dropdown}
+                                            allowAdditions
+                                            value={this.state.currentValue}
+                                            onAddItem={this.handleAddition}
+                                            onChange={this.handleRaceChange} 
+                                            label='Race' 
+                                            placeholder='What office are you running for?'/>
+                                
                             </Form.Group>
 
                             ]
@@ -154,7 +231,7 @@ class SignUpForm extends React.Component {
                                                 $('textArea[name=bio]').val() || null,
                                                 this.state.role,
                                                 $('input[name=zipCode]').val(),
-                                                $('input[name=race]').val() || null
+                                                this.state.currentValue.key || null
                                             )}}>Submit</Form.Field>
                         </Segment>
                     </Form>
