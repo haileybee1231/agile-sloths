@@ -1,10 +1,12 @@
 import React from 'react';
 import { connect, bindActionCreators } from 'react-redux';
+import { Grid } from 'semantic-ui-react';
 import { savePollingInfo } from '../actions/actions.js';
 import helper from '../../../lib/serverHelpers.js';
 import config from '../../../config.js';
 import { withRouter } from 'react-router-dom';
 import axios from 'axios'
+import uuidv1 from 'uuid'
 
 class ConnectedVoterInfoTab extends React.Component {
   constructor(props) {
@@ -38,18 +40,24 @@ class ConnectedVoterInfoTab extends React.Component {
     console.log(this.props)
     return (
       <div>
+      <Grid divided='vertically'>
         {this.props.pollingInfo && 
         this.props.pollingInfo.data && 
         this.props.pollingInfo.data.pollingLocations.slice(0, 10).map(location => (
-          <div>
-            <h2>{location.address.locationName}</h2>
-            {/* <h3>From {location.address.startDate} to {location.address.endDate}</h3>  make this into a pretty format */}
-            <h3>Open from {location.pollingHours}</h3>  {/* make this into a pretty format */}
-            <h4>{location.address.line1}</h4>
-            <h4>{location.address.city}, {location.address.state} </h4>
-            <h4>{location.address.zip}</h4>
-          </div>
+            <Grid.Row columns={1}>
+              <Grid.Column>
+                <div key={ uuidv1() }>
+                  <h2>{location.address.locationName}</h2>
+                  {/* <h3>From {location.address.startDate} to {location.address.endDate}</h3>  make this into a pretty format */}
+                  <h3>Open from {location.pollingHours}</h3>  {/* make this into a pretty format */}
+                  <h4>{location.address.line1}</h4>
+                  <h4>{location.address.city}, {location.address.state} </h4>
+                  <h4>{location.address.zip}</h4>
+                </div>
+              </Grid.Column>
+            </Grid.Row>
         ))}
+        </Grid>
       </div>
     )
   }

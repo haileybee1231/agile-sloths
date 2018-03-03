@@ -27,7 +27,7 @@ class App extends React.Component {
           <Route path='/login' component={ LoginForm } />
           <Route path='/signup' component={ SignupForm } />
           <Route path='/user*' component={ Profile } />
-          <Route path='/vinfotab*' component={ VoterInfoTab } />
+          <Route path='/vinfotab' component={ VoterInfoTab } />
         </Switch>
       </Router>
     )

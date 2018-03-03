@@ -110,9 +110,9 @@ app.post('/attend', isLoggedIn, (req, res) => {
   })
 })
 
-// app.get('/*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'));
-// });
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'));
+});
 // EVERYTHING BELOW TO BE DELETED?
 
 
@@ -192,7 +192,7 @@ app.post('/races', function(req, res) {
   console.log(req.body)
 })
 
-let port = process.env.PORT || 3002; // these process variables are for deployment because Heroku won't use port 3000
+let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000
 
 app.listen(port, function() {
   console.log(`The server is listening on port ${ port }!`);
