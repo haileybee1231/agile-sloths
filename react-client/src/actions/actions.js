@@ -12,6 +12,13 @@ export const logout = () => ( // no payload or parameters necessary for logout
   }
 )
 
+export const fetchraces = (races) => (
+  {
+    type: 'FETCH_RACES',
+    payload: races
+  }
+)
+
 export const signup = (email, password, firstName, lastName, bio, role, zipCode, race) => (
   {
     type: 'SIGNUP',
@@ -33,6 +40,16 @@ export const fetchEventsAction = newEvents => (
     type: 'FETCH-EVENTS',
     payload: {
       newEvents: newEvents
+    }
+  }
+)
+//
+export const attendEventAction = (event, user) => (
+  {
+    type: 'ATTEND-EVENT',
+    payload: {
+      event: event,
+      user: user
     }
   }
 )

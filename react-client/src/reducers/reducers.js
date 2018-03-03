@@ -14,23 +14,38 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         ...state,
         currentUser: null
       }
-    }
+    };
+    case 'SIGNUP': {
+      return state
+    };
+
+    case 'FETCH-RACES': {
+      return state
+    };
+
     case 'CREATE-EVENT':
       return {
         ...state,
         events: [...state.events]
       }
+    case 'ATTEND-EVENT': {
+      return {
+        ...state,
+      }
+    }
     case 'FETCH-EVENTS':
       console.log(action.payload)
       return {
         ...state,
         events: [...state.events, ...action.payload.newEvents]
       }
+
     case 'SET-USER':
       return {
         ...state,
         selectedUser: action.payload.selectedUser
       }
+
     default: return state;
   }
 }
