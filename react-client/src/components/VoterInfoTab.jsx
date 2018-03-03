@@ -14,17 +14,16 @@ class ConnectedVoterInfoTab extends React.Component {
   componentDidMount() {
     // create conditional to check if user is a voter
     // if so
-    this.fetchPollingStations('800 Brazos St Suite 500, Austin, TX 78701') //replace with currentUser location
+      this.fetchPollingStations(this.props.savePollingInfo, '800 Brazos St Suite 500, Austin, TX 78701') //replace with currentUser location
     // else 
     // do nothing
   }
 
-  fetchPollingStations(address) {
+  fetchPollingStations(dispatch, address) {
     let location = helper.encodeRequest(address);
-    let self = this;
     axios.get(`https://www.googleapis.com/civicinfo/v2/voterinfo?key=${config.GOOGLE_API_KEY}&address=${location}`)
       .then(function (response) {
-        self.props.savePollingInfo(response)
+        dispatch(response)
         console.log('Polling info successfully updated', response.data)
       })
       .catch(function (error) {
