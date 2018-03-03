@@ -42,7 +42,8 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         ...state,
         selectedUser: action.payload.selectedUser
       }
-    case 'SAVE_POLLING_INFO':
+    case 'SAVE-POLLING-INFO':
+    console.log('Reducer called', action.payload.results)
       return Object.assign({}, state, {
         pollingInfo: action.payload.results
       })
