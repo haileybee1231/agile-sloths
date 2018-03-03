@@ -24,7 +24,7 @@ class ConnectedVoterInfoTab extends React.Component {
     let self = this;
     axios.get(`https://www.googleapis.com/civicinfo/v2/voterinfo?key=${config.GOOGLE_API_KEY}&address=${location}`)
       .then(function (response) {
-        self.props.savePollingInfo(response.data)
+        self.props.savePollingInfo(response)
         console.log('Polling info successfully updated', response.data)
       })
       .catch(function (error) {
@@ -36,7 +36,7 @@ class ConnectedVoterInfoTab extends React.Component {
     console.log(this.props)
     return (
       <div>
-        {/* {this.props.data.pollingInfo.map(el => (
+        {/* {this.props.pollingInfo.map(el => (
           el
         ))} */}
       </div>
@@ -50,8 +50,8 @@ let mapDispatchToProps = dispatch => {
 
 let mapStateToProps = state => {
   return {
-    pollingInfo: state.pollingInfo,
-    currentUser: state.currentUser
+    pollingInfo: state.data.pollingInfo,
+    currentUser: state.data.currentUser
   };
 }
 
