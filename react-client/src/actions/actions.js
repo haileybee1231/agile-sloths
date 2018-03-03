@@ -67,3 +67,12 @@ export const createEvent = event => (
     }
   }
 )
+
+export const savePollingInfo = results => (
+  {
+    type: 'SAVE-POLLING-INFO',
+    payload: {
+      results: results
+    }
+  }
+)
