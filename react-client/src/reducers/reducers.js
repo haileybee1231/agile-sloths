@@ -34,7 +34,6 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
       }
     }
     case 'FETCH-EVENTS':
-      console.log(action.payload)
       return {
         ...state,
         events: [...state.events, ...action.payload.newEvents]
