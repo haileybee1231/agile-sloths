@@ -1,5 +1,5 @@
 const data = {
-  currentUser: null,
+  currentUser: window.localStorage.user || null,
   selectedUser: null,
   races: [
     {

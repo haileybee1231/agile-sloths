@@ -14,8 +14,12 @@ const EventCard = props => {
       url: '/attend',
       contentType: 'application/json',
       data: JSON.stringify(data),
-      success: () => {
-        props.attendEventAction(event, data.user);
+      success: response => {
+        if (response === 'You are already attending that event') {
+          alert(response);
+        } else {
+          attendEventAction(event, data.user);
+        }
       }
     })
   }

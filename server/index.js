@@ -106,7 +106,8 @@ app.post('/api/events', isLoggedIn, (req, res) => {
 
 app.post('/attend', isLoggedIn, (req, res) => {
   db.attendEvent(req.body.event, req.body.user, function(err, result) {
-    res.status(201).end();
+    console.log(result);
+    res.status(201).end(result);
   })
 })
 
@@ -175,8 +176,8 @@ app.post('/attend', isLoggedIn, (req, res) => {
 
 // ///// USER-RELATED REQUESTS /////
 app.post('/login', passport.authenticate('local-login'), (req, res) => {
-  // let response = {username: req.body.username, sessionID: }
-  res.status(201).send(req.body.username);
+  let response = {username: req.body.username, sessionID: req.sessionID}
+  res.status(201).send(response);
 });
 
 app.post('/signup', passport.authenticate('local-signup'), (req, res) => { // passport middleware authenticates signup

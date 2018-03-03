@@ -79,11 +79,31 @@ var addEvent = function(title, location, date, time, description, host, cb) { //
 }
 
 var attendEvent = function(title, email, cb) { // query will insert based on userid and eventid so retrieve those first
-  connection.query('INSERT INTO eventsusers (event, user) VALUES ((SELECT id FROM events WHERE title=?), (SELECT id FROM users WHERE email=?))', [title, email], function(err, result) {
+  getUserByEmail(email, function(err, user) {
     if (err) {
       cb(err, null);
     } else {
-      cb (null, result);
+      getEventAttendees(title, function(err, attendees) {
+        let found = false;
+        if (err) {
+          cb(err, null);
+        }
+        attendees.forEach(attendee => {
+          if (attendee.user === user.id) {
+            found = true;
+            cb(null, 'You are already attending that event.');
+          }
+        })
+        if (!found) {
+          connection.query('INSERT INTO eventsusers (event, user) VALUES ((SELECT id FROM events WHERE title=?), (SELECT id FROM users WHERE email=?))', [title, email], function(err, result) {
+            if (err) {
+              cb(err, null);
+            } else {
+              cb (null, result);
+            }
+          })
+        }
+      })
     }
   })
 }
@@ -161,6 +181,16 @@ var getAllEventAttendees = function(cb) {
       cb(err, null);
     } else {
       cb(null, attendees);
+    }
+  })
+}
+
+var getEventAttendees = function(event, cb) {
+  connection.query('SELECT * FROM events where title=?', [event], function(err, event) {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, event);
     }
   })
 }
