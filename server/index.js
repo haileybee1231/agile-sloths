@@ -14,11 +14,16 @@ require('../server/config/passport')(passport);
 app.use(bodyParser.json());
 app.use(session({
   secret: process.env.SESSION_PASSWORD || 'supersecretsecret',
-  resave: false,
-  saveUninitialized: false
+  resave: true,
+  saveUninitialized: true
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(function(req, res, next) {
+  console.log(req.isAuthenticated());
+  console.log(req.user);
+  next();
+})
 app.use(flash()); // uses flash connect to allow flash messages in stored session
 app.use(express.static(path.join(__dirname, '../react-client/dist')));
 
@@ -28,7 +33,8 @@ function isLoggedIn(req, res, next) {
   }
   res.status(401).end('You must log in to do that!');
 }
-// This wildcard acts as a catch-all to let react-router redirect instead of using Express to
+
+
 
 app.get('/api/events?*', (req, res) => {
   let number = req._parsedOriginalUrl.query;
@@ -106,7 +112,7 @@ app.post('/api/events', isLoggedIn, (req, res) => {
 
 app.post('/attend', isLoggedIn, (req, res) => {
   db.attendEvent(req.body.event, req.body.user, function(err, result) {
-    res.status(201).end();
+    res.status(201).end(result);
   })
 })
 
@@ -175,8 +181,8 @@ app.get('/*', (req, res) => {
 
 // ///// USER-RELATED REQUESTS /////
 app.post('/login', passport.authenticate('local-login'), (req, res) => {
-  // let response = {username: req.body.username, sessionID: }
-  res.status(201).send(req.body.username);
+  let response = {username: req.body.username, sessionID: req.sessionID}
+  res.status(201).send(response);
 });
 
 app.post('/signup', passport.authenticate('local-signup'), (req, res) => { // passport middleware authenticates signup
