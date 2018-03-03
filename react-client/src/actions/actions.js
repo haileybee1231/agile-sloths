@@ -12,6 +12,13 @@ export const logout = () => ( // no payload or parameters necessary for logout
   }
 )
 
+export const fetchraces = (races) => (
+  {
+    type: 'FETCH_RACES',
+    payload: races
+  }
+)
+
 export const signup = (email, password, firstName, lastName, bio, role, zipCode, race) => (
   {
     type: 'SIGNUP',

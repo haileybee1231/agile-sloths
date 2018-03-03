@@ -68,6 +68,17 @@ app.get('/api/user*', (req, res) => {
   });
 });
 
+app.get('/races', (req, res) => {
+  db.selectAllRaces(function(err, races) {
+    races.forEach(race => {
+      res.json([{key: race.id,
+                text: race.office,
+                value: race.office
+        }])
+    })
+  })
+})
+
 app.post('/events/api', isLoggedIn, (req, res) => {
   const event = req.body;
   db.addEvent(event.title, event.location, event.date, event.time, event.description, event.host, function(err, result) {
@@ -83,6 +94,7 @@ app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'));
 });
 // EVERYTHING BELOW TO BE DELETED?
+
 
 
 // ///// MAIN PAGE REQUESTS /////
@@ -155,6 +167,10 @@ app.post('/logout', isLoggedIn, function(req, res) {
   req.logout();
   res.clearCookie('connect.sid').status(200).redirect('/');
 });
+
+app.post('/races', function(req, res) {
+  console.log(req.body)
+})
 
 let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000
 
