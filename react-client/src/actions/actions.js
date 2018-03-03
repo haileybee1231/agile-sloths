@@ -19,12 +19,12 @@ export const fetchraces = (races) => (
   }
 )
 
-export const saverace = (race) => (
+export const saverace = (date, location, office) => (
   {
     type: 'SAVE-RACE',
     payload: {
-      key: key,
       date: date,
+      location: location,
       office: office
     }
   }

@@ -133,6 +133,7 @@ class SignUpForm extends React.Component {
             contentType: 'application/json',
             data: data,
             success: race => {
+                console.log('TEST', race)
                 this.props.saverace(race)
             },
             error: err => {
@@ -140,14 +141,12 @@ class SignUpForm extends React.Component {
             }
         })
         this.getAllRaces()
-        // this.setState({
-        //   raceoptions: [{ key: uuidv4(), text: value, value: value }, ...this.state.raceoptions], //need to add key here for new values
-        // })
     }
 
     handleRaceValue(e, {value}) {
+        console.log('RACE VALUE', this.state.currentRace)
         this.setState({ currentRace: value})
-        console.log('RACE VALUE', value)
+        console.log('RACE VALUE', this.state.currentRace)
     }
 
     handleRaceChange (e, data) {
@@ -233,7 +232,11 @@ class SignUpForm extends React.Component {
                                                 search 
                                                 selection
                                                 allowAdditions
-                                                onAddItem={() => {this.handleRaceAddition(date, location, office)}} 
+                                                onAddItem={() => {this.handleRaceAddition(
+                                                    $('input[name=date]').val(), 
+                                                    $('input[name=zipCode]').val(), 
+                                                    this.state.currentRace
+                                                )}} 
                                                 options={this.state.raceoptions}
                                                 control={Dropdown}
                                                 onChange={this.handleRaceValue} 
@@ -242,6 +245,7 @@ class SignUpForm extends React.Component {
                                     <Form.Field key='4'
                                                 label='Date of Race'
                                                 fluid
+                                                name='date'
                                                 control={Input}
                                                 type='date'
                                                 />
@@ -273,7 +277,7 @@ class SignUpForm extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({ signup, login }, dispatch)
+    return bindActionCreators({ signup, login, saverace }, dispatch)
 }
 
 export default connect(null, mapDispatchToProps)(withRouter(SignUpForm));

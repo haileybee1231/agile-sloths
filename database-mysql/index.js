@@ -31,8 +31,10 @@ const saveRace = function(date, location, office, cb) {
   connection.query('INSERT INTO races (date, location, office) VALUES (?, ?, ?)',
   [date, location, office], function(err, results) {
     if (err) {
+      console.log(err)
       cb(err, null)
     } else {
+      console.log(results)
       cb(null, results)
     }
   })
