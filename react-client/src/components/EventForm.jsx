@@ -39,10 +39,11 @@ class EventForm extends React.Component {
     };
     $.ajax({
       type: 'POST',
-      url: '/events/api',
+      url: '/api/events',
       contentType: 'application/json',
       data: JSON.stringify(data),
       success: response => {
+        console.log(response, JSON.parse(response));
         this.props.createEvent(data);
       },
       error: err => {

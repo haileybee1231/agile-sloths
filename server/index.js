@@ -79,15 +79,21 @@ app.get('/races', (req, res) => {
   })
 })
 
-app.post('/events/api', isLoggedIn, (req, res) => {
+app.post('/api/events', isLoggedIn, (req, res) => {
   const event = req.body;
   db.addEvent(event.title, event.location, event.date, event.time, event.description, event.host, function(err, result) {
     if (err) {
       res.send(JSON.stringify(err));
+    } else if (result === 'Event already exists') {
+      res.status(500).send(result);
     } else {
       res.status(201).end();
     }
   });
+})
+
+app.post('/attend', isLoggedIn, (req, res) => {
+  console.log(req.body);
 })
 
 app.get('/*', (req, res) => {

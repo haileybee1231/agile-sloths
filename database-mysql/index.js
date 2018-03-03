@@ -52,22 +52,30 @@ const addUser = function(email, password, firstname, lastname, bio, role, locati
 })
 }
 
-var addEvent = function(title, location, date, time, description, host, cb) { // host should be the email of the logged in user\
-  connection.query('INSERT INTO events (title, location, date, time, description, host) VALUES (?, ?, ?, ?, ?, (SELECT id FROM users WHERE email=?))',
-    [title, location, date, time, description, host], function(err, result) {
-      if (err) {
-        cb(err, null);
-      } else {
-        attendEvent(title, host, function(err, result) { // host will be listed as attendee so they have to attend
-          if (err) {
-            cb(err, null);
-          } else {
-            cb(null, result);
-          }
-        });
-      }
+var addEvent = function(title, location, date, time, description, host, cb) { // host should be the email of the logged in user
+  getEventByTitle(title, function(err, event) {
+    if (err) {
+      cb(err, null);
     }
-  )
+    if (event && event.length > 0) {
+      cb(null, 'Event already exists');
+    } else {
+      connection.query('INSERT INTO events (title, location, date, time, description, host) VALUES (?, ?, ?, ?, ?, (SELECT id FROM users WHERE email=?))',
+      [title, location, date, time, description, host], function(err, result) {
+        if (err) {
+          cb(err, null);
+        } else {
+          attendEvent(title, host, function(err, result) { // host will be listed as attendee so they have to attend
+            if (err) {
+              cb(err, null);
+            } else {
+              cb(null, result);
+            }
+          });
+        }
+      });
+    }
+  });
 }
 
 var attendEvent = function(title, email, cb) { // query will insert based on userid and eventid so retrieve those first
@@ -136,6 +144,16 @@ var getNewEvents = function(number, cb) {
   })
 }
 
+var getEventByTitle = function(title, cb) {
+  connection.query('SELECT * FROM events WHERE title=?', [title], function(err, event) {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, event);
+    }
+  })
+}
+
 module.exports.saveRace = saveRace;
 module.exports.selectAllRaces = selectAllRaces;
 module.exports.addUser = addUser;
@@ -146,3 +164,4 @@ module.exports.addEvent = addEvent;
 module.exports.attendEvent = attendEvent;
 module.exports.getNewEvents = getNewEvents;
 module.exports.getUserByName = getUserByName;
+module.exports.getEventByTitle = getEventByTitle;
