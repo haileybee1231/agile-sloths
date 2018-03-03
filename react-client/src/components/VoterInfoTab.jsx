@@ -40,8 +40,15 @@ class ConnectedVoterInfoTab extends React.Component {
       <div>
         {this.props.pollingInfo && 
         this.props.pollingInfo.data && 
-        this.props.pollingInfo.data.pollingLocations.slice(0, 10).map(el => (
-          el.address.locationName
+        this.props.pollingInfo.data.pollingLocations.slice(0, 10).map(location => (
+          <div>
+            <h2>{location.address.locationName}</h2>
+            {/* <h3>From {location.address.startDate} to {location.address.endDate}</h3>  make this into a pretty format */}
+            <h3>Open from {location.pollingHours}</h3>  {/* make this into a pretty format */}
+            <h4>{location.address.line1}</h4>
+            <h4>{location.address.city}, {location.address.state} </h4>
+            <h4>{location.address.zip}</h4>
+          </div>
         ))}
       </div>
     )
