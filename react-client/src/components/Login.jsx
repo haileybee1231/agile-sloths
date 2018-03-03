@@ -24,8 +24,10 @@ const LoginForm = (props) =>  {
       url: '/login',
       contentType: 'application/json',
       data: data,
-      success: username => {
-        props.login(username);
+      success: response => {
+        window.localStorage.sessionID = response.sessionID;
+        window.localStorage.user = response.username;
+        props.login(response.username);
         props.history.push('/');
       },
       error: err => {
