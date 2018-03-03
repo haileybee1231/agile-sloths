@@ -122,6 +122,20 @@ class SignUpForm extends React.Component {
     }
 
     handleRaceAddition(date, location, office) {
+        if (office === '') {
+            this.setState({
+                failure: true,
+                header: 'Please enter a Race.',
+                messageContent: 'To be a candidate you have to run for election!'
+            })
+        }
+        if (!date) {
+            this.setState({
+                failure: true,
+                header: 'Please enter a date.',
+                messageContent: 'The date should be when your election is being held.'
+            })
+        }
         let data = JSON.stringify({
             date: date,
             location: location,
