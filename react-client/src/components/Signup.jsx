@@ -158,13 +158,11 @@ class SignUpForm extends React.Component {
     }
 
     handleRaceValue(e, {value}) {
-        console.log('RACE VALUE', this.state.currentRace)
         this.setState({ currentRace: value})
-        console.log('RACE VALUE', this.state.currentRace)
     }
 
     handleRaceChange (e, data) {
-    
+        
     }
 
     componentDidMount() {
