@@ -46,15 +46,23 @@ app.get('/api/events?*', (req, res) => {
 app.get('/api/user*', (req, res) => {
   let username = decodeURIComponent(req._parsedOriginalUrl.query).split(' ');
   db.getUserByName(username[0], username[1], (err, user) => {
-    db.getAllEvents((err, events) => {
+    db.getAllEvents((err, results) => {
       let userEvents = null;
-      if (events) {
-        userEvents = events.filter(event => {
+      if (results) {
+        userEvents = results.events.filter(event => {
           return event.host === user[0].id
         })
       }
-      events.forEach(event => {
+      results.events.forEach(event => {
         event.host = username.join(' ');
+      })
+      results.events.forEach(event => {
+        event.attendees = [];
+        results.attendees.forEach(attendee => {
+          if (attendee.event === event.id) {
+            event.attendees.push(`${attendee.firstname} ${attendee.lastname}`);
+          }
+        })
       })
       if (err) {
         res.status(500).end();
@@ -85,6 +93,7 @@ app.get('/races', (req, res) => {
 app.post('/api/events', isLoggedIn, (req, res) => {
   const event = req.body;
   db.addEvent(event.title, event.location, event.date, event.time, event.description, event.host, function(err, result) {
+    console.log(err, result);
     if (err) {
       res.send(JSON.stringify(err));
     } else if (result === 'Event already exists') {
@@ -101,9 +110,9 @@ app.post('/attend', isLoggedIn, (req, res) => {
   })
 })
 
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'));
-});
+// app.get('/*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'));
+// });
 // EVERYTHING BELOW TO BE DELETED?
 
 

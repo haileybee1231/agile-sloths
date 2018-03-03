@@ -36,7 +36,7 @@ const EventCard = props => {
         <div><span style={{fontWeight: 700}}>Location:</span> {props.event.location}</div>
       </Item.Description>
       <Item.Extra><span style={{fontWeight: 700}}>Attendees: </span><a href='#'>{props.event.attendees ?
-        props.event.attendees : 0}</a></Item.Extra>
+        props.event.attendees.length : 0}</a></Item.Extra>
     </Item>
   )
 }
