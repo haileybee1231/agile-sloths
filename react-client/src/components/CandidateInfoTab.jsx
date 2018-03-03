@@ -37,11 +37,10 @@ class ConnectedCandidateInfoTab extends React.Component {
   }
 
   render() {
-    console.log(this.props)
-    const searchedLocation = this.props.data.candidateInfo.normalizedInput;
+    // const searchedLocation = this.props.candidateInfo.data.normalizedInput; // returning undefined
     const styles = {
       header: {
-        fontSize: '20px'
+        fontSize: '24px'
       },
       name: {
         fontSize: '16px'
@@ -55,7 +54,8 @@ class ConnectedCandidateInfoTab extends React.Component {
     }
     return (
       <div>
-        <p style={styles.header}>Representatives in { searchedLocation.city }, { searchedLocation.state }</p>
+        <p style={ styles.header }>Your searched representatives</p>
+        {/* <p style={styles.header}>Representatives in { this.props.candidateInfo.data.normalizedInput.city }, { this.props.candidateInfo.data.normalizedInput.state }</p> // returning undefined */}
         <Grid divided='vertically'>
           {this.props.candidateInfo && // checks to see if there is candidateInfo object
             this.props.candidateInfo.data && // checks if that object has  officials before iterating
@@ -63,7 +63,7 @@ class ConnectedCandidateInfoTab extends React.Component {
               <Grid.Row columns={1} key={uuidv1()}>
                 <Grid.Column>
                   <div>
-                    <p style={ styles.name }>{ candidate.name } of the { candidate.party } party</p>
+                    <p style={ styles.name }>{ candidate.name } | { candidate.party }</p>
                     <p style={ styles.address }>{ candidate.address[0].line1 }</p> {/* refactor to accommodate an array of addresses */}
                     <p style={ styles.address }>{ candidate.address[0].city }, { candidate.address[0].state } </p>
                     <p style={ styles.address }>{ candidate.address[0].zip }</p>
