@@ -37,26 +37,39 @@ class ConnectedVoterInfoTab extends React.Component {
   }
 
   render() {
-    console.log(this.props)
+    const styles = {
+      header: {
+        fontSize: '20px'
+      },
+      name: {
+        fontSize: '16px'
+      },
+      hours: {
+        fontSize: '13px'
+      },
+      address: {
+        fontSize: '12px'
+      }
+    }
     return (
       <div>
-      <Grid divided='vertically'>
-        {this.props.pollingInfo && 
-        this.props.pollingInfo.data && 
-        this.props.pollingInfo.data.pollingLocations.slice(0, 10).map(location => (
-            <Grid.Row columns={1}>
-              <Grid.Column>
-                <div key={ uuidv1() }>
-                  <h2>{location.address.locationName}</h2>
-                  {/* <h3>From {location.address.startDate} to {location.address.endDate}</h3>  make this into a pretty format */}
-                  <h3>Open from {location.pollingHours}</h3>  {/* make this into a pretty format */}
-                  <h4>{location.address.line1}</h4>
-                  <h4>{location.address.city}, {location.address.state} </h4>
-                  <h4>{location.address.zip}</h4>
-                </div>
-              </Grid.Column>
-            </Grid.Row>
-        ))}
+        <p style={ styles.header }>10 closest Election Day Polling Stations</p>
+        <Grid divided='vertically'>
+          {this.props.pollingInfo && // checks to see if there is pollingInfo object
+          this.props.pollingInfo.data && // checks if that object has data before iterating
+          this.props.pollingInfo.data.pollingLocations.slice(0, 10).map(location => ( // takes the first 10 (because there are a lot)
+            <Grid.Row columns={1} key={ uuidv1() }>
+                <Grid.Column>
+                  <div>
+                    <p style={ styles.name }>{ location.address.locationName }</p>
+                    <p style={ styles.hours }>Open from { location.pollingHours }</p>  {/* make this into a pretty format */}
+                    <p style={ styles.address }>{ location.address.line1 }</p>
+                    <p style={ styles.address }>{ location.address.city}, {location.address.state } </p>
+                    <p style={ styles.address }>{ location.address.zip }</p>
+                  </div>
+                </Grid.Column>
+              </Grid.Row>
+          ))}
         </Grid>
       </div>
     )
