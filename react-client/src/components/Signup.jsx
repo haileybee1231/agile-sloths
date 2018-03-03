@@ -100,7 +100,7 @@ class SignUpForm extends React.Component {
             url: '/races',
             contentType: 'application/json',
             success: race => {
-                this.props.saverace(race)
+                this.props.saverace(/*whatever current value of form field is.  date, location, office*/)
                 console.log(value)
                 console.log('POST REQUEST HANDLE ADDITION', race)
             },
@@ -207,20 +207,32 @@ class SignUpForm extends React.Component {
                         </Form.Group>
 
                         { this.state.CandidateTrue && [
-                            <Form.Group widths='equal' key="1">
-                                <Form.Field key="2" control={TextArea} type='text' name='bio' label='Bio' placeholder='Tell us about yourself' />
-                                <Form.Field key='3'
-                                            fluid  
-                                            search 
-                                            selection 
-                                            options={this.state.raceoptions}
-                                            control={Dropdown}
-                                            onChange={this.handleRaceChange} 
-                                            label='Race' 
-                                            placeholder='What office are you running for?'/>
-                                
-                            </Form.Group>
-
+                            <div key="7">
+                                <Form.Group widths='equal' key="1">
+                                    <Form.Field key="2" control={TextArea} type='text' name='bio' label='Bio' placeholder='Tell us about yourself' />
+                                    <Form.Field key="3"
+                                                fluid  
+                                                search 
+                                                selection 
+                                                options={this.state.raceoptions}
+                                                control={Dropdown}
+                                                onChange={this.handleRaceChange} 
+                                                label='Race' 
+                                                placeholder='What office are you running for?'/>
+                                </Form.Group>
+                                <Form.Group key="4">
+                                    <Form.Field control={Input}
+                                                label='Add new race'
+                                                key="5"/>
+                                    <Form.Field size='mini' 
+                                                content='Add'
+                                                key="6"
+                                                control={Button}
+                                                label=''
+                                                onClick={this.handleAddition}
+                                            />
+                                </Form.Group>
+                            </div>
                             ]
                         }
                             <Form.Field control={Button}
