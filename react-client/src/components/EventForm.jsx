@@ -16,7 +16,9 @@ class EventForm extends React.Component {
       date: '',
       time: '',
       description: '',
-      host: this.props.currentUser
+      host: this.props.currentUser,
+      success: false,
+      failure: false,
     }
   }
 
@@ -29,6 +31,34 @@ class EventForm extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     const { title, location, date, time, description, host } = this.state;
+    if (!title) {
+      this.setState({
+          failure: true,
+          header: 'Please Enter A Title',
+          messageContent: 'All events must have a title!'
+        })
+    }
+    if (!location) {
+      this.setState({
+          failure: true,
+          header: 'Please Enter A Location',
+          messageContent: 'All events must have a location!'
+        })
+    }
+    if (!date) {
+      this.setState({
+          failure: true,
+          header: 'Please Enter A Date',
+          messageContent: 'All events must have a date!'
+        })
+    }
+    if (!time) {
+      this.setState({
+          failure: true,
+          header: 'Please Enter A Time',
+          messageContent: 'All events must have a time!'
+        })
+    }
     let data = {
       title: title,
       location: location,
@@ -43,19 +73,13 @@ class EventForm extends React.Component {
       contentType: 'application/json',
       data: JSON.stringify(data),
       success: response => {
+        this.setState({success: true})
         this.props.createEvent(data);
       },
       error: err => {
-        alert(err.responseText);
+
       }
     })
-  }
-
-  open() {
-    this.setState({ open: true });
-  }
-  close() {
-    this.setState({ open: false });
   }
 
   render () {
@@ -67,6 +91,24 @@ class EventForm extends React.Component {
         <Modal.Content image>
           <div className='image'>
             <Icon name='calendar' />
+            {this.state.success && [
+              <Message
+                key='1'
+                success
+                header='Your event has been created!'
+                content='You should see it in the feed shortly.'
+                />
+            ]
+          }
+          {this.state.failure && [
+            <Message
+              key='1'
+              negative
+              header={this.state.header}
+              content={this.state.messageContent}
+              />
+          ]
+        }
           </div>
           <Modal.Description>
             <Form size='large' onSubmit={this.handleSubmit.bind(this)}>
@@ -88,6 +130,7 @@ class EventForm extends React.Component {
                     label='Date'
                     name='date'
                     value={date}
+                    type='date'
                     placeholder='mm/dd/yyyy'
                     onChange={this.handleChange.bind(this)}
                   />
@@ -96,6 +139,7 @@ class EventForm extends React.Component {
                     label='Time'
                     name='time'
                     value={time}
+                    type='time'
                     placeholder='Zip code'
                     onChange={this.handleChange.bind(this)}
                   />
@@ -122,8 +166,6 @@ class EventForm extends React.Component {
 
                   <Form.Button content='Submit' />
                 </Segment>
-
-
               </Form>
           </Modal.Description>
         </Modal.Content>

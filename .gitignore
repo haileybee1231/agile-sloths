@@ -3,6 +3,7 @@
 # Our files
 .env
 bundle.js
+config.js
 
 # Logs
 logs

@@ -4,6 +4,7 @@ let db = require('../database-mysql');
 let session = require('express-session');
 let path = require('path');
 let passport = require('passport');
+let moment = require('moment');
 let flash = require('connect-flash');
 // let serverHelpers = require('../lib/serverHelpers.js'); // to delete?
 let app = express();
@@ -19,11 +20,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(function(req, res, next) {
-  console.log(req.isAuthenticated());
-  console.log(req.user);
-  next();
-})
 app.use(flash()); // uses flash connect to allow flash messages in stored session
 app.use(express.static(path.join(__dirname, '../react-client/dist')));
 
@@ -39,7 +35,6 @@ function isLoggedIn(req, res, next) {
 app.get('/api/events?*', (req, res) => {
   let number = req._parsedOriginalUrl.query;
   db.getNewEvents(0, (err, events) => {
-    // console.log(events);
     if (err) {
       res.status(500).end(err);
     } else {
@@ -61,6 +56,15 @@ app.get('/api/user*', (req, res) => {
       }
       results.events.forEach(event => {
         event.host = username.join(' ');
+        event.date = moment(event.date).format('MM/DD/YYYY');
+        // event.time = event.time.slice(0, event.time.length - 3);
+        if (event.time.slice(0, 2) > 12) {
+          event.time = `at ${event.time.slice(0,2) - 12}:${event.time.slice(3, 5)} PM`
+        } else if (event.time.slice(0, 2) === '00') {
+          event.time = `at 12:${event.time.slice(3, 5)} AM`
+        } else {
+          event.time = `at ${event.time.slice(0,2)}:${event.time.slice(3, 4)} AM`
+        }
       })
       results.events.forEach(event => {
         event.attendees = [];
@@ -94,7 +98,6 @@ app.get('/races', (req, res) => {
 app.post('/api/events', isLoggedIn, (req, res) => {
   const event = req.body;
   db.addEvent(event.title, event.location, event.date, event.time, event.description, event.host, function(err, result) {
-    console.log(err, result);
     if (err) {
       res.send(JSON.stringify(err));
     } else if (result === 'Event already exists') {
@@ -107,7 +110,7 @@ app.post('/api/events', isLoggedIn, (req, res) => {
 
 app.post('/attend', isLoggedIn, (req, res) => {
   db.attendEvent(req.body.event, req.body.user, function(err, result) {
-    res.status(201).end(result);
+    res.status(201).end(JSON.stringify(result));
   })
 })
 
@@ -198,7 +201,7 @@ app.post('/login', passport.authenticate('local-login'), (req, res) => {
 });
 
 app.post('/signup', passport.authenticate('local-signup'), (req, res) => { // passport middleware authenticates signup
-  res.status(201).send('Signup successful. Logging in.');
+  res.status(201).send('Signup successful. Redirecting to login.');
 });
 
 app.post('/logout', isLoggedIn, function(req, res) {

@@ -170,7 +170,7 @@ class SignUpForm extends React.Component {
                     raceKey: race.key
                 })
             }
-        })  
+        })
         this.setState({
             currentRace: data.value
         })
@@ -251,19 +251,19 @@ class SignUpForm extends React.Component {
                                 </Form.Group>
                                 <Form.Group widths='equal'>
                                     <Form.Field key='3'
-                                                fluid  
-                                                search 
+                                                fluid
+                                                search
                                                 selection
                                                 allowAdditions
                                                 onAddItem={() => {this.handleRaceAddition(
-                                                    $('input[name=date]').val(), 
-                                                    $('input[name=zipCode]').val(), 
+                                                    $('input[name=date]').val(),
+                                                    $('input[name=zipCode]').val(),
                                                     this.state.currentRace
-                                                )}} 
+                                                )}}
                                                 options={this.state.raceoptions}
                                                 control={Dropdown}
-                                                onChange={this.handleRaceValue} 
-                                                label='Race' 
+                                                onChange={this.handleRaceValue}
+                                                label='Race'
                                                 placeholder='What office are you running for?'/>
                                     <Form.Field key='4'
                                                 label='Date of Race'

@@ -91,7 +91,7 @@ var attendEvent = function(title, email, cb) { // query will insert based on use
           cb(err, null);
         }
         attendees.forEach(attendee => {
-          if (attendee.user === user.id) {
+          if (attendee.user === user[0].id) {
             found = true;
             cb(null, 'You are already attending that event.');
           }
@@ -159,13 +159,16 @@ var getAllEvents = function(cb) {
 }
 
 var getNewEvents = function(number, cb) {
-  connection.query('SELECT * FROM events WHERE id>=? AND id<? + 10', [number, number], function(err, events) {
+  connection.query('SELECT events.id, events.title, events.location, events.date, events.time, events.description, users.firstname, users.lastname FROM events LEFT JOIN users ON events.host=users.id', function(err, events) {
     if (err) {
-      cb(err, null);
+      cb(err, null)
     } else {
       cb(null, events);
     }
   })
+  // connection.query('SELECT * FROM events LEFT JOIN users WHERE id>=? AND id<? + 10', [number, number], function(err, events) {
+  //
+  // })
 }
 
 var getEventByTitle = function(title, cb) {
@@ -189,7 +192,7 @@ var getAllEventAttendees = function(cb) {
 }
 
 var getEventAttendees = function(event, cb) {
-  connection.query('SELECT * FROM events where title=?', [event], function(err, event) {
+  connection.query('SELECT * FROM events e INNER JOIN eventsusers eu WHERE e.id = eu.event AND e.title=?', [event], function(err, event) {
     if (err) {
       cb(err, null);
     } else {
