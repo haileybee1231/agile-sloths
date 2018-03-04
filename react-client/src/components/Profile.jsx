@@ -16,7 +16,7 @@ class Profile extends React.Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			isFollowing: 'Follow', // change to 'following' on click
+			followStatus: null,
 			following: [] // this should be taken out later when we can get followers by querying votercandidate
 		}
 		this.handleFollow = this.handleFollow.bind(this);
@@ -24,41 +24,42 @@ class Profile extends React.Component {
 
 	handleFollow() {
 		console.log('follow click')
-		// tbd
-		if (this.state.isFollowing === 'Follow') {
-			this.setState({isFollowing: 'Following'}); 
-		} else {
-			this.setState({isFollowing: 'Follow'});
-		}
-
 		// ajax post request to add to database
-		// if (isFollowing === 'Follow') { // right now, only submit the post request if not already following
-		// 	// later, if already following, call request to delete that row from the database and change back to 'follow' button?
-		// for now just add name to following list in state
-		//({voter: this.props.currentUser, candidate: this.props.selectedUser}),
-			$.ajax({
-				type: 'POST',
-				url: '/follow', //?
-				//data: JSON.stringify({voter: 'voter'}), 
-				success: () => {
-					console.log('follow POST success');
-					// change following in state to change text of follow button
-					//if (this.state.isFollowing === 'Follow') {
-						//this.setState({isFollowing: 'Following', }); 
-					//}// else {
-						//this.setState({isFollowing: 'Follow', following: this.state.following.concat([this.state.selectedUser])});
-					//}
-				},
-				error: () => {
-					console.log('follow POST error');
+		$.ajax({
+			type: 'POST',
+			url: '/follow',
+			data: JSON.stringify({voter: this.props.currentUser, candidate: this.props.selectedUser.user.id, following: this.state.followStatus}), 
+			contentType: 'application/json',
+			success: () => {
+				// change following in state to change text of follow button
+				var selectedUserName = this.props.selectedUser.user.firstname + ' ' + this.props.selectedUser.user.lastname;
+				if (!this.state.followStatus) {
+					// toggle button and add name to following list
+					this.setState({followStatus: true, following: this.state.following.concat([selectedUserName])});
+				} else {
+					// toggle button
+					var index = this.state.following.indexOf(selectedUserName);
+					// splice out candidate name from following 
+					var updatedFollowing = this.state.following;
+					updatedFollowing.splice(index, 1);
+					this.setState({followStatus: false, following: updatedFollowing});
 				}
-			})
+			},
+			error: () => {
+				console.log('follow POST error');
+			}
+		})
 		
 	}
   
 	render() {
 		const user = this.props.selectedUser.user;
-		console.log('current user: ', this.props.currentUser);
+		var followMessage;
+		if (this.state.followStatus) {
+			followMessage = 'Following';
+		} else { // covers false or null
+			followMessage = 'Follow';
+		}
 
 		return (
 			<Container style={{paddingLeft: 210}}>
@@ -85,7 +86,7 @@ class Profile extends React.Component {
 						</Grid.Row>
 
 						<Grid.Row>
-							<Button style={{marginTop: 20}} onClick={this.handleFollow}> {this.state.isFollowing} </Button>
+							<Button style={{marginTop: 20}} onClick={this.handleFollow}> {followMessage} </Button>
 						</Grid.Row>
 
 					</Grid.Column>
@@ -107,7 +108,9 @@ class Profile extends React.Component {
 const mapStateToProps = state => ({
 	selectedUser: state.data.selectedUser,
 	races: state.data.races,
-	events: state.data.events
+	events: state.data.events,
+	currentUser: state.data.currentUser,
+	selectedUser: state.data.selectedUser
 });
 
 const mapDispatchToProps = dispatch => {

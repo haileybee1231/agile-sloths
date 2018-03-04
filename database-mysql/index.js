@@ -141,9 +141,6 @@ var getUserByName = function(first, last, cb) {
   })
 }
 
-var getFollowers = function(first, last, cb) {
-  
-}
 
 var getAllEvents = function(cb) {
   connection.query('SELECT * FROM events', function(err, events) {
@@ -201,6 +198,32 @@ var getEventAttendees = function(event, cb) {
   })
 }
 
+var followCandidate = function(voter, candidate, cb) {
+  console.log('following!');
+  connection.query('INSERT INTO votercandidate (voter, candidate) VALUES (?, ?)', [voter, candidate], function(err, result) {
+    if (err) {
+      cb(result)
+      console.log('voter candidate insertion query error');
+    } else {
+      console.log('voter candidate insertion query success');
+      cb(result);
+    }
+  })
+}
+
+var unfollowCandidate = function(voter, candidate, cb) {
+  console.log('unfollowing!');
+  connection.query('DELETE FROM votercandidate WHERE voter = ? AND candidate = ?', [voter, candidate], function(err, result) {
+    if (err) {
+      cb(result)
+      //console.log('failed to unfollow :-(');
+    } else {   
+      cb(result); 
+      //console.log('UNFOLLOWED!');
+    }
+  })
+} 
+
 module.exports.saveRace = saveRace;
 module.exports.selectAllRaces = selectAllRaces;
 module.exports.addUser = addUser;
@@ -213,3 +236,5 @@ module.exports.getNewEvents = getNewEvents;
 module.exports.getUserByName = getUserByName;
 module.exports.getEventByTitle = getEventByTitle;
 module.exports.getAllEventAttendees = getAllEventAttendees;
+module.exports.followCandidate = followCandidate;
+module.exports.unfollowCandidate = unfollowCandidate;
