@@ -50,6 +50,7 @@ class Sidebar extends React.Component {
     };
 
     render() {
+      console.log(this.props.currentUser)
         const { activeItem } = this.state || {}
         return (
           <Container style={{paddingLeft: 100}}>

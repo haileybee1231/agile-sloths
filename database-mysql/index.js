@@ -111,6 +111,10 @@ var getUserByName = function(first, last, cb) {
   })
 }
 
+var getFollowers = function(first, last, cb) {
+  
+}
+
 var getAllEvents = function(cb) {
   connection.query('SELECT * FROM events', function(err, results) {
     if (err) {
