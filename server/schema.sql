@@ -83,7 +83,7 @@ ALTER TABLE events ADD FOREIGN KEY (host) REFERENCES users (`id`);
 ALTER TABLE votercandidate ADD FOREIGN KEY (voter) REFERENCES users (`id`);
 ALTER TABLE votercandidate ADD FOREIGN KEY (candidate) REFERENCES users (`id`);
 ALTER TABLE eventsusers ADD FOREIGN KEY (event) REFERENCES events (`id`);
-ALTER TABLE eventsusers ADD FOREIGN KEY (user) REFERENCES events (`id`);
+ALTER TABLE eventsusers ADD FOREIGN KEY (user) REFERENCES users (`id`);
 
 -- Table Properties
 

@@ -14,11 +14,16 @@ require('../server/config/passport')(passport);
 app.use(bodyParser.json());
 app.use(session({
   secret: process.env.SESSION_PASSWORD || 'supersecretsecret',
-  resave: false,
-  saveUninitialized: false
+  resave: true,
+  saveUninitialized: true
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(function(req, res, next) {
+  console.log(req.isAuthenticated());
+  console.log(req.user);
+  next();
+})
 app.use(flash()); // uses flash connect to allow flash messages in stored session
 app.use(express.static(path.join(__dirname, '../react-client/dist')));
 
@@ -28,7 +33,8 @@ function isLoggedIn(req, res, next) {
   }
   res.status(401).end('You must log in to do that!');
 }
-// This wildcard acts as a catch-all to let react-router redirect instead of using Express to
+
+
 
 app.get('/api/events?*', (req, res) => {
   let number = req._parsedOriginalUrl.query;
@@ -46,13 +52,24 @@ app.get('/api/events?*', (req, res) => {
 app.get('/api/user*', (req, res) => {
   let username = decodeURIComponent(req._parsedOriginalUrl.query).split(' ');
   db.getUserByName(username[0], username[1], (err, user) => {
-    db.getAllEvents((err, events) => {
+    db.getAllEvents((err, results) => {
       let userEvents = null;
-      if (events) {
-        userEvents = events.filter(event => {
-          return event.host = user[0].id
+      if (results) {
+        userEvents = results.events.filter(event => {
+          return event.host === user[0].id
         })
       }
+      results.events.forEach(event => {
+        event.host = username.join(' ');
+      })
+      results.events.forEach(event => {
+        event.attendees = [];
+        results.attendees.forEach(attendee => {
+          if (attendee.event === event.id) {
+            event.attendees.push(`${attendee.firstname} ${attendee.lastname}`);
+          }
+        })
+      })
       if (err) {
         res.status(500).end();
       }
@@ -70,29 +87,33 @@ app.get('/api/user*', (req, res) => {
 
 app.get('/races', (req, res) => {
   db.selectAllRaces(function(err, races) {
-    races.forEach(race => {
-      res.json([{key: race.id,
-                text: race.office,
-                value: race.office
-        }])
-    })
+    res.json(races)
   })
 })
 
-app.post('/events/api', isLoggedIn, (req, res) => {
+app.post('/api/events', isLoggedIn, (req, res) => {
   const event = req.body;
   db.addEvent(event.title, event.location, event.date, event.time, event.description, event.host, function(err, result) {
+    console.log(err, result);
     if (err) {
       res.send(JSON.stringify(err));
+    } else if (result === 'Event already exists') {
+      res.status(500).send(result);
     } else {
       res.status(201).end();
     }
   });
 })
 
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'));
-});
+app.post('/attend', isLoggedIn, (req, res) => {
+  db.attendEvent(req.body.event, req.body.user, function(err, result) {
+    res.status(201).end(result);
+  })
+})
+
+// app.get('/*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'));
+// });
 // EVERYTHING BELOW TO BE DELETED?
 
 
@@ -155,8 +176,8 @@ app.get('/*', (req, res) => {
 
 // ///// USER-RELATED REQUESTS /////
 app.post('/login', passport.authenticate('local-login'), (req, res) => {
-  // let response = {username: req.body.username, sessionID: }
-  res.status(201).send(req.body.username);
+  let response = {username: req.body.username, sessionID: req.sessionID}
+  res.status(201).send(response);
 });
 
 app.post('/signup', passport.authenticate('local-signup'), (req, res) => { // passport middleware authenticates signup
@@ -169,7 +190,13 @@ app.post('/logout', isLoggedIn, function(req, res) {
 });
 
 app.post('/races', function(req, res) {
-  console.log(req.body)
+  db.saveRace(req.body.date, req.body.location, req.body.office, function(err, results) {
+    if (err) {
+      console.log(err)
+    } else {
+      res.status(201).send(results);
+    }
+  })
 })
 
 let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000

@@ -14,8 +14,19 @@ export const logout = () => ( // no payload or parameters necessary for logout
 
 export const fetchraces = (races) => (
   {
-    type: 'FETCH_RACES',
+    type: 'FETCH-RACES',
     payload: races
+  }
+)
+
+export const saverace = (date, location, office) => (
+  {
+    type: 'SAVE-RACE',
+    payload: {
+      date: date,
+      location: location,
+      office: office
+    }
   }
 )
 
@@ -40,6 +51,16 @@ export const fetchEventsAction = newEvents => (
     type: 'FETCH-EVENTS',
     payload: {
       newEvents: newEvents
+    }
+  }
+)
+//
+export const attendEventAction = (event, user) => (
+  {
+    type: 'ATTEND-EVENT',
+    payload: {
+      event: event,
+      user: user
     }
   }
 )

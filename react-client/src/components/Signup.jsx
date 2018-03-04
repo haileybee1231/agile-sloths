@@ -1,10 +1,11 @@
 import React from 'react'
-import { signup, login } from '../actions/actions.js'
+import { signup, login, saverace } from '../actions/actions.js'
 import { Link, withRouter } from 'react-router-dom';
 import { Button, Form, Grid, Header, Message, Segment, Input, Select, Dropdown, TextArea } from 'semantic-ui-react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import $ from 'jquery'
+const uuidv4 = require('uuid/v4');
 
 
 const options = [
@@ -23,17 +24,19 @@ class SignUpForm extends React.Component {
             raceoptions: undefined,
             header: '',
             messageContent: '',
-            currentValue: ''
+            currentRace: '',
+            raceKey: undefined
         }
         this.handleChange = this.handleChange.bind(this)
         this.handleSubmit = this.handleSubmit.bind(this)
-        this.handleAddition = this.handleAddition.bind(this)
-        this.handleRaceChange = this.handleRaceChange.bind(this)
+        this.handleRaceAddition = this.handleRaceAddition.bind(this)
+        this.getAllRaces = this.getAllRaces.bind(this)
+        this.handleRaceValue = this.handleRaceValue.bind(this)
     }
 
     handleSubmit(email, password, firstname, lastname, bio, role, zipcode, race) {
       if (email.indexOf('@') < 0 || !email.match('com')) {
-        this.setState({failure: true, 
+        this.setState({failure: true,
                        header: 'Please enter a valid email address.',
                        messageContent: 'We require a .com domain for emails.' })
         return;
@@ -62,9 +65,8 @@ class SignUpForm extends React.Component {
           lastname: lastname,
           zipcode: zipcode,
           bio: bio,
-          race: race.key
+          race: race
       })
-      console.log('DATA.RACE', data.race)
       $.ajax({ // this is the exact function from the login page, we should put it in another file and import it instead of rewriting here
           type: 'POST',
           url: '/signup',
@@ -84,9 +86,35 @@ class SignUpForm extends React.Component {
                 messageContent: 'A user already has signed up using that email. Try logging in!'
           })
         }
-      }) 
+      })
     }
 
+    //grabs every race from the database and populates the race dropdown with it to select from
+    getAllRaces() {
+        $.ajax({
+            type: 'GET',
+            url: '/races',
+            contentType: 'json',
+            success: races => {
+                let list = []
+                races.forEach(race => {
+                    list.push({
+                        key: race.id,
+                        text: race.office,
+                        value: race.office
+                    })
+                })
+                this.setState({
+                    raceoptions: list, ...this.state.raceoptions
+                })
+            },
+            error: err => {
+                console.log(err)
+            }
+        })
+    }
+
+    //handles what role is selected, displays form info accordingly
     handleChange(e, {value}) {
         if (value === 'voter') {
             this.setState({CandidateTrue: false, role: 'Voter'})
@@ -95,45 +123,59 @@ class SignUpForm extends React.Component {
         }
     }
 
-    handleAddition(e, { value }) {
+    //this function grabs the value from the race field and adds it to the database, if its not there already
+    handleRaceAddition(date, location, office) {
+        if (office === '') {
+            this.setState({
+                failure: true,
+                header: 'Please enter a Race.',
+                messageContent: 'To be a candidate you have to run for election!'
+            })
+        }
+        if (!date) {
+            this.setState({
+                failure: true,
+                header: 'Please enter a date.',
+                messageContent: 'The date should be when your election is being held.'
+            })
+        }
+        let data = JSON.stringify({
+            date: date,
+            location: location,
+            office: office
+        })
         $.ajax({
             type: 'POST',
             url: '/races',
             contentType: 'application/json',
-            success: races => {
-                console.log(races)
+            data: data,
+            success: race => {
+                console.log('TEST', race)
+                this.props.saverace(race)
             },
             error: err => {
                 console.log(err)
             }
         })
-        this.setState({
-          raceoptions: [{ text: value, value: value }, ...this.state.raceoptions],
-        })
-        
+        this.getAllRaces()
     }
 
-    handleRaceChange (e, { value }) {
-        this.setState({ currentValue: value }) 
-        console.log('currentValue', this.state.currentValue)
+    //each race, when created, is assigned a key which is tied to a user by foriegn key. this function grabs that key for user creation
+    handleRaceValue(e, data) {
+        let races = data.options;
+        let currRaceValue = data.value
+        races.forEach(race => {
+            if (race.value === currRaceValue) {
+                this.setState({
+                    raceKey: race.key
+                })
+            }
+        })  
     }
 
     componentDidMount() {
         //grab all Races from database and populates the race dropdown with them
-        $.ajax({
-            type: 'GET',
-            url: '/races',
-            contentType: 'json',
-            success: races => {
-                console.log('races', races)
-                this.setState({
-                    raceoptions: races
-                })
-            },
-            error: err => {
-                console.log(err)
-            }
-        })
+        this.getAllRaces()
     }
 
     render(props) {
@@ -175,7 +217,7 @@ class SignUpForm extends React.Component {
                         />
                     ]
                     }
-                    
+
                     <Header as='h2' color='green' textAlign='center'>
                         {' '}Sign up for an account
                     </Header>
@@ -200,23 +242,35 @@ class SignUpForm extends React.Component {
                         </Form.Group>
 
                         { this.state.CandidateTrue && [
-                            <Form.Group widths='equal' key="1">
-                                <Form.Field key="2" control={TextArea} type='text' name='bio' label='Bio' placeholder='Tell us about yourself' />
-                                <Form.Field key='3'
-                                            fluid  
-                                            search 
-                                            selection 
-                                            options={this.state.raceoptions}
-                                            control={Dropdown}
-                                            allowAdditions
-                                            value={this.state.currentValue}
-                                            onAddItem={this.handleAddition}
-                                            onChange={this.handleRaceChange} 
-                                            label='Race' 
-                                            placeholder='What office are you running for?'/>
-                                
-                            </Form.Group>
-
+                            <div key='candidatediv'>
+                                <Form.Group widths='equal' key="1">
+                                    <Form.Field key="2" control={TextArea} type='text' name='bio' label='Bio' placeholder='Tell us about yourself' />
+                                </Form.Group>
+                                <Form.Group widths='equal'>
+                                    <Form.Field key='3'
+                                                fluid  
+                                                search 
+                                                selection
+                                                allowAdditions
+                                                onAddItem={() => {this.handleRaceAddition(
+                                                    $('input[name=date]').val(), 
+                                                    $('input[name=zipCode]').val(), 
+                                                    this.state.currentRace
+                                                )}} 
+                                                options={this.state.raceoptions}
+                                                control={Dropdown}
+                                                onChange={this.handleRaceValue} 
+                                                label='Race' 
+                                                placeholder='What office are you running for?'/>
+                                    <Form.Field key='4'
+                                                label='Date of Race'
+                                                fluid
+                                                name='date'
+                                                control={Input}
+                                                type='date'
+                                                />
+                                </Form.Group>
+                            </div>
                             ]
                         }
                             <Form.Field control={Button}
@@ -231,7 +285,7 @@ class SignUpForm extends React.Component {
                                                 $('textArea[name=bio]').val() || null,
                                                 this.state.role,
                                                 $('input[name=zipCode]').val(),
-                                                this.state.currentValue.key || null
+                                                this.state.raceKey || null
                                             )}}>Submit</Form.Field>
                         </Segment>
                     </Form>
@@ -243,7 +297,7 @@ class SignUpForm extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => {
-    return bindActionCreators({ signup, login }, dispatch)
+    return bindActionCreators({ signup, login, saverace }, dispatch)
 }
 
 export default connect(null, mapDispatchToProps)(withRouter(SignUpForm));
