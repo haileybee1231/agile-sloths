@@ -37,7 +37,6 @@ app.get('/api/events?*', (req, res) => {
     if (err) {
       res.status(500).end(err);
     } else {
-      console.log(events);
       res.write(JSON.stringify(events));
       res.status(200).end();
     }
@@ -82,19 +81,13 @@ app.get('/api/user*', (req, res) => {
 
 app.get('/races', (req, res) => {
   db.selectAllRaces(function(err, races) {
-    races.forEach(race => {
-      res.json([{key: race.id,
-                text: race.office,
-                value: race.office
-        }])
-    })
+    res.json(races)
   })
 })
 
 app.post('/api/events', isLoggedIn, (req, res) => {
   const event = req.body;
   db.addEvent(event.title, event.location, event.date, event.time, event.description, event.host, function(err, result) {
-    console.log(err, result);
     if (err) {
       res.send(JSON.stringify(err));
     } else if (result === 'Event already exists') {
@@ -181,7 +174,7 @@ app.post('/login', passport.authenticate('local-login'), (req, res) => {
 });
 
 app.post('/signup', passport.authenticate('local-signup'), (req, res) => { // passport middleware authenticates signup
-  res.status(201).send('Signup successful. Logging in.');
+  res.status(201).send('Signup successful. Redirecting to login.');
 });
 
 app.post('/logout', isLoggedIn, function(req, res) {
@@ -190,7 +183,13 @@ app.post('/logout', isLoggedIn, function(req, res) {
 });
 
 app.post('/races', function(req, res) {
-  console.log(req.body)
+  db.saveRace(req.body.date, req.body.location, req.body.office, function(err, results) {
+    if (err) {
+      console.log(err)
+    } else {
+      res.status(201).send(results);
+    }
+  })
 })
 
 let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000

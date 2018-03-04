@@ -29,6 +29,18 @@ class EventForm extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     const { title, location, date, time, description, host } = this.state;
+    if (!title) {
+      alert('Please enter a title for your event!')
+    }
+    if (!location) {
+      alert('Please enter a location for your event!')
+    }
+    if (!date) {
+      alert('Please enter a date for your event!')
+    }
+    if (!time) {
+      alert('Please enter a time for your event!')
+    }
     let data = {
       title: title,
       location: location,

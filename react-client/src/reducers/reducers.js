@@ -23,6 +23,10 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
       return state
     };
 
+    case 'SAVE-RACE': {
+      return state;
+    }
+
     case 'CREATE-EVENT':
       return {
         ...state,

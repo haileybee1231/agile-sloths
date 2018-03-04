@@ -27,12 +27,14 @@ const selectAllRaces = function(cb) {
   });
 };
 
-const saveRace = function(race, cb) {
+const saveRace = function(date, location, office, cb) {
   connection.query('INSERT INTO races (date, location, office) VALUES (?, ?, ?)',
-  [race.timeStamp, race.location, race.role], function(err, results) {
+  [date, location, office], function(err, results) {
     if (err) {
+      console.log(err)
       cb(err, null)
     } else {
+      console.log(results)
       cb(null, results)
     }
   })
@@ -89,7 +91,7 @@ var attendEvent = function(title, email, cb) { // query will insert based on use
           cb(err, null);
         }
         attendees.forEach(attendee => {
-          if (attendee.user === user.id) {
+          if (attendee.user === user[0].id) {
             found = true;
             cb(null, 'You are already attending that event.');
           }
@@ -189,7 +191,7 @@ var getAllEventAttendees = function(cb) {
 }
 
 var getEventAttendees = function(event, cb) {
-  connection.query('SELECT * FROM events where title=?', [event], function(err, event) {
+  connection.query('SELECT * FROM events INNER JOIN eventsusers WHERE title=?', [event], function(err, event) {
     if (err) {
       cb(err, null);
     } else {
