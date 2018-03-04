@@ -30,7 +30,7 @@ const TabMenu = (props) => {
 		</Tab.Pane>
 	},
 	{ menuItem: 'Election Info',
-		render: () =>
+		render: () => 
 		<Tab.Pane attached={true}>
 			<Item>
 				<Item.Header> <span style={{fontWeight: 700}}> Office: </span> {race.office} </Item.Header>
@@ -46,7 +46,7 @@ const TabMenu = (props) => {
 		</Tab.Pane>
 	},
 	{ menuItem: 'Followers',
-		render: () =>
+		render: () => 
 		<Tab.Pane attached={true}>
 			<List>
 				{followers.map(follower => (
