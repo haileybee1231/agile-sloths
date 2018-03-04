@@ -128,116 +128,116 @@ const data = {
       followers: ['Jacob Granberry', 'Hailey Bobella']
     }
   },
-  events: [
-    {
-      title: 'Bet-o-rama',
-      location: 'The Capitol Building',
-      time: '12:00PM',
-      date: '10/30/18',
-      description: 'Come see Beto talk! You better bet ol Beto will o\'knock your socks off!',
-      host: 'Beto O\'Rourke',
-      attendees: ['Sean Quillen', 'Shannon Pearson', 'Hailey Bobella']
-    },
-    {
-      title: 'Cruzin',
-      location: 'the city dump',
-      time: '3:00AM',
-      date: '12/25/18',
-      description: 'I am Ted Cruz and my father was the Zodiac killer, I\'m serious you guys.',
-      host: 'Ted Cruz',
-      attendees: ['Jacob Granberry']
-    },
-    {
-      title: 'I love you Ted Cruz!',
-      location: 'my house',
-      time: '12:00PM',
-      date: '10/31/18',
-      description: 'Ted Cruz is the best.',
-      host: 'Jacob Granberry',
-      attendees: []
-    },
-    {
-      title: 'Generic Rally',
-      location: 'Lockhart City Hall',
-      time: '12:00PM',
-      date: '8/20/18',
-      description: 'The city of Lockhart needs a generic mayor. Come see what we\'re all about.',
-      host: 'Jane Doe',
-      attendees: ['Shannon Pearson', 'Hailey Bobella']
-    },
-    {
-      title: 'Generic Rally 2.0',
-      location: 'Lockhart City Hall',
-      time: '12:00PM',
-      date: '8/20/18',
-      description: 'The city of Lockhart needs a generic mayor. Come see what we\'re all about.',
-      host: 'Jane Doe',
-      attendees: ['Shannon Pearson', 'Hailey Bobella']
-    },
-    {
-      title: 'Council Party!',
-      location: 'the park',
-      time: '10:30PM',
-      date: '7/15/18',
-      description: 'A mixer for everybody to meet the council candidates!',
-      host: 'Susana Almanzana',
-      attendees: ['Sean Quillen', 'Jacob Granberry', 'Shannon Pearson', 'Hailey Bobella', 'Sabino Renteria']
-    },
-    {
-      title: 'Bet-o-rama',
-      location: 'The Capitol Building',
-      time: '12:00PM',
-      date: '10/30/18',
-      description: 'Come see Beto talk! You better bet ol Beto will o\'knock your socks off!',
-      host: 'Beto O\'Rourke',
-      attendees: ['Sean Quillen', 'Shannon Pearson', 'Hailey Bobella']
-    },
-    {
-      title: 'Cruzin',
-      location: 'the city dump',
-      time: '3:00AM',
-      date: '12/25/18',
-      description: 'I am Ted Cruz and my father was the Zodiac killer, I\'m serious you guys.',
-      host: 'Ted Cruz',
-      attendees: ['Jacob Granberry']
-    },
-    {
-      title: 'I love you Ted Cruz!',
-      location: 'my house',
-      time: '12:00PM',
-      date: '10/31/18',
-      description: 'Ted Cruz is the best.',
-      host: 'Jacob Granberry',
-      attendees: []
-    },
-    {
-      title: 'Generic Rally',
-      location: 'Lockhart City Hall',
-      time: '12:00PM',
-      date: '8/20/18',
-      description: 'The city of Lockhart needs a generic mayor. Come see what we\'re all about.',
-      host: 'Jane Doe',
-      attendees: ['Shannon Pearson', 'Hailey Bobella']
-    },
-    {
-      title: 'Generic Rally 2.0',
-      location: 'Lockhart City Hall',
-      time: '12:00PM',
-      date: '8/20/18',
-      description: 'The city of Lockhart needs a generic mayor. Come see what we\'re all about.',
-      host: 'Jane Doe',
-      attendees: ['Shannon Pearson', 'Hailey Bobella']
-    },
-    {
-      title: 'Council Party!',
-      location: 'the park',
-      time: '10:30PM',
-      date: '7/15/18',
-      description: 'A mixer for everybody to meet the council candidates!',
-      host: 'Susana Almanzana',
-      attendees: ['Sean Quillen', 'Jacob Granberry', 'Shannon Pearson', 'Hailey Bobella', 'Sabino Renteria']
-    }
-  ]
+  // events: [
+  //   {
+  //     title: 'Bet-o-rama',
+  //     location: 'The Capitol Building',
+  //     time: '12:00PM',
+  //     date: '10/30/18',
+  //     description: 'Come see Beto talk! You better bet ol Beto will o\'knock your socks off!',
+  //     host: 'Beto O\'Rourke',
+  //     attendees: ['Sean Quillen', 'Shannon Pearson', 'Hailey Bobella']
+  //   },
+  //   {
+  //     title: 'Cruzin',
+  //     location: 'the city dump',
+  //     time: '3:00AM',
+  //     date: '12/25/18',
+  //     description: 'I am Ted Cruz and my father was the Zodiac killer, I\'m serious you guys.',
+  //     host: 'Ted Cruz',
+  //     attendees: ['Jacob Granberry']
+  //   },
+  //   {
+  //     title: 'I love you Ted Cruz!',
+  //     location: 'my house',
+  //     time: '12:00PM',
+  //     date: '10/31/18',
+  //     description: 'Ted Cruz is the best.',
+  //     host: 'Jacob Granberry',
+  //     attendees: []
+  //   },
+  //   {
+  //     title: 'Generic Rally',
+  //     location: 'Lockhart City Hall',
+  //     time: '12:00PM',
+  //     date: '8/20/18',
+  //     description: 'The city of Lockhart needs a generic mayor. Come see what we\'re all about.',
+  //     host: 'Jane Doe',
+  //     attendees: ['Shannon Pearson', 'Hailey Bobella']
+  //   },
+  //   {
+  //     title: 'Generic Rally 2.0',
+  //     location: 'Lockhart City Hall',
+  //     time: '12:00PM',
+  //     date: '8/20/18',
+  //     description: 'The city of Lockhart needs a generic mayor. Come see what we\'re all about.',
+  //     host: 'Jane Doe',
+  //     attendees: ['Shannon Pearson', 'Hailey Bobella']
+  //   },
+  //   {
+  //     title: 'Council Party!',
+  //     location: 'the park',
+  //     time: '10:30PM',
+  //     date: '7/15/18',
+  //     description: 'A mixer for everybody to meet the council candidates!',
+  //     host: 'Susana Almanzana',
+  //     attendees: ['Sean Quillen', 'Jacob Granberry', 'Shannon Pearson', 'Hailey Bobella', 'Sabino Renteria']
+  //   },
+  //   {
+  //     title: 'Bet-o-rama',
+  //     location: 'The Capitol Building',
+  //     time: '12:00PM',
+  //     date: '10/30/18',
+  //     description: 'Come see Beto talk! You better bet ol Beto will o\'knock your socks off!',
+  //     host: 'Beto O\'Rourke',
+  //     attendees: ['Sean Quillen', 'Shannon Pearson', 'Hailey Bobella']
+  //   },
+  //   {
+  //     title: 'Cruzin',
+  //     location: 'the city dump',
+  //     time: '3:00AM',
+  //     date: '12/25/18',
+  //     description: 'I am Ted Cruz and my father was the Zodiac killer, I\'m serious you guys.',
+  //     host: 'Ted Cruz',
+  //     attendees: ['Jacob Granberry']
+  //   },
+  //   {
+  //     title: 'I love you Ted Cruz!',
+  //     location: 'my house',
+  //     time: '12:00PM',
+  //     date: '10/31/18',
+  //     description: 'Ted Cruz is the best.',
+  //     host: 'Jacob Granberry',
+  //     attendees: []
+  //   },
+  //   {
+  //     title: 'Generic Rally',
+  //     location: 'Lockhart City Hall',
+  //     time: '12:00PM',
+  //     date: '8/20/18',
+  //     description: 'The city of Lockhart needs a generic mayor. Come see what we\'re all about.',
+  //     host: 'Jane Doe',
+  //     attendees: ['Shannon Pearson', 'Hailey Bobella']
+  //   },
+  //   {
+  //     title: 'Generic Rally 2.0',
+  //     location: 'Lockhart City Hall',
+  //     time: '12:00PM',
+  //     date: '8/20/18',
+  //     description: 'The city of Lockhart needs a generic mayor. Come see what we\'re all about.',
+  //     host: 'Jane Doe',
+  //     attendees: ['Shannon Pearson', 'Hailey Bobella']
+  //   },
+  //   {
+  //     title: 'Council Party!',
+  //     location: 'the park',
+  //     time: '10:30PM',
+  //     date: '7/15/18',
+  //     description: 'A mixer for everybody to meet the council candidates!',
+  //     host: 'Susana Almanzana',
+  //     attendees: ['Sean Quillen', 'Jacob Granberry', 'Shannon Pearson', 'Hailey Bobella', 'Sabino Renteria']
+  //   }
+  // ]
 }
 
 export default data;

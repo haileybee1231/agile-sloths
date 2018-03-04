@@ -19,11 +19,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(function(req, res, next) {
-  console.log(req.isAuthenticated());
-  console.log(req.user);
-  next();
-})
 app.use(flash()); // uses flash connect to allow flash messages in stored session
 app.use(express.static(path.join(__dirname, '../react-client/dist')));
 
@@ -39,10 +34,10 @@ function isLoggedIn(req, res, next) {
 app.get('/api/events?*', (req, res) => {
   let number = req._parsedOriginalUrl.query;
   db.getNewEvents(0, (err, events) => {
-    // console.log(events);
     if (err) {
       res.status(500).end(err);
     } else {
+      console.log(events);
       res.write(JSON.stringify(events));
       res.status(200).end();
     }

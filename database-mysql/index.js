@@ -156,13 +156,16 @@ var getAllEvents = function(cb) {
 }
 
 var getNewEvents = function(number, cb) {
-  connection.query('SELECT * FROM events WHERE id>=? AND id<? + 10', [number, number], function(err, events) {
+  connection.query('SELECT events.id, events.title, events.location, events.date, events.time, events.description, users.firstname, users.lastname FROM events LEFT JOIN users ON events.host=users.id', function(err, events) {
     if (err) {
-      cb(err, null);
+      cb(err, null)
     } else {
       cb(null, events);
     }
   })
+  // connection.query('SELECT * FROM events LEFT JOIN users WHERE id>=? AND id<? + 10', [number, number], function(err, events) {
+  //
+  // })
 }
 
 var getEventByTitle = function(title, cb) {
