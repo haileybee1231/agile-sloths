@@ -17,13 +17,12 @@ class Profile extends React.Component {
 		super(props)
 		this.state = {
 			followStatus: null,
-			following: [] // this should be taken out later when we can get followers by querying votercandidate
 		}
 		this.handleFollow = this.handleFollow.bind(this);
 	}
 
 	handleFollow() {
-		console.log('follow click')
+		//console.log('follow click')
 		// ajax post request to add to database
 		$.ajax({
 			type: 'POST',
@@ -34,18 +33,15 @@ class Profile extends React.Component {
 				// change following in state to change text of follow button
 				var selectedUserName = this.props.selectedUser.user.firstname + ' ' + this.props.selectedUser.user.lastname;
 				if (!this.state.followStatus) {
-					// toggle button and add name to following list
-					this.setState({followStatus: true, following: this.state.following.concat([selectedUserName])});
+					// toggle button 
+					this.setState({followStatus: true}); 
 				} else {
 					// toggle button
-					var index = this.state.following.indexOf(selectedUserName);
-					// splice out candidate name from following 
-					var updatedFollowing = this.state.following;
-					updatedFollowing.splice(index, 1);
-					this.setState({followStatus: false, following: updatedFollowing});
+					this.setState({followStatus: false});
 				}
 			},
 			error: () => {
+				console.log(this.props.selectedUser);
 				console.log('follow POST error');
 			}
 		})
@@ -56,7 +52,7 @@ class Profile extends React.Component {
 		const user = this.props.selectedUser.user;
 		var followMessage;
 		if (this.state.followStatus) {
-			followMessage = 'Following';
+			followMessage = 'Unfollow';
 		} else { // covers false or null
 			followMessage = 'Follow';
 		}

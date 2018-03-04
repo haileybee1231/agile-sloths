@@ -198,28 +198,46 @@ var getEventAttendees = function(event, cb) {
   })
 }
 
-var followCandidate = function(voter, candidate, cb) {
-  console.log('following!');
-  connection.query('INSERT INTO votercandidate (voter, candidate) VALUES (?, ?)', [voter, candidate], function(err, result) {
+var findVoterCandidate = function(voter, candidate, cb) {
+  connection.query('SELECT * FROM votercandidate WHERE voter = ? AND candidate = ?', [voter, candidate], function(err, results) {
     if (err) {
-      cb(result)
-      console.log('voter candidate insertion query error');
+      console.log('something something query error');
     } else {
-      console.log('voter candidate insertion query success');
-      cb(result);
+      cb(results);
     }
   })
 }
 
+var followCandidate = function(voter, candidate, cb) {
+  //console.log('following!');
+  //findVoterCandidate(voter, candidate, function(err, result) {
+  //  if (err) {
+  //    console.log('follow error');
+  //  } else {
+      //if (result.length === 0) {
+        connection.query('INSERT INTO votercandidate (voter, candidate) VALUES (?, ?)', [voter, candidate], function(err, result) {
+          if (err) {
+            console.log(err)
+            cb(result)
+            //console.log('voter candidate insertion query error');
+          } else {
+            cb(result);
+            //console.log('voter candidate insertion query success');
+          }
+        });
+      //}
+  //  }
+  //});
+}
+
 var unfollowCandidate = function(voter, candidate, cb) {
-  console.log('unfollowing!');
+  //console.log('unfollowing!');
   connection.query('DELETE FROM votercandidate WHERE voter = ? AND candidate = ?', [voter, candidate], function(err, result) {
     if (err) {
       cb(result)
-      //console.log('failed to unfollow :-(');
-    } else {   
+    } else { 
+      console.log('unfollowing!')
       cb(result); 
-      //console.log('UNFOLLOWED!');
     }
   })
 } 
@@ -238,3 +256,4 @@ module.exports.getEventByTitle = getEventByTitle;
 module.exports.getAllEventAttendees = getAllEventAttendees;
 module.exports.followCandidate = followCandidate;
 module.exports.unfollowCandidate = unfollowCandidate;
+module.exports.findVoterCandidate = findVoterCandidate;

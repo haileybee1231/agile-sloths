@@ -117,20 +117,15 @@ app.get('/*', (req, res) => {
 
 
 app.post('/follow', (req, res) => {
-  console.log('app get run');
-  console.log('request body: ', req.body.following);
   var userId;
+  //console.log('REQ BODY: ', req.body);
   db.getUserByEmail(req.body.voter, function(err, result) {
-    // if following is true
-      // call helper function to delete votercandidate row with user and candidate ids
     if (req.body.following) { 
       db.unfollowCandidate(result[0].id, req.body.candidate, function(results) {
         res.sendStatus(201);
       })
     } else  
-    // else (if following = false),
-      // call helper function to insert votercandidate row with user and candidate ids
-    db.followCandidate(result[0].id, req.body.candidate, function(results) {
+      db.followCandidate(result[0].id, req.body.candidate, function(results) {
       res.sendStatus(201);
     });
   });
