@@ -61,7 +61,7 @@ const LoginForm = (props) =>  {
           <Header as='h2' color='green' textAlign='center'>
             {' '}Log-in to your account
           </Header>
-
+ 
         <Form size='large'>
           <Segment stacked>
             <Form.Input

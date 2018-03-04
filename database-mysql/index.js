@@ -141,6 +141,7 @@ var getUserByName = function(first, last, cb) {
   })
 }
 
+
 var getAllEvents = function(cb) {
   connection.query('SELECT * FROM events', function(err, events) {
     if (err) {
@@ -200,6 +201,50 @@ var getEventAttendees = function(event, cb) {
   })
 }
 
+var findVoterCandidate = function(voter, candidate, cb) {
+  connection.query('SELECT * FROM votercandidate WHERE voter = ? AND candidate = ?', [voter, candidate], function(err, results) {
+    if (err) {
+      console.log('something something query error');
+    } else {
+      cb(results);
+    }
+  })
+}
+
+var followCandidate = function(voter, candidate, cb) {
+  //console.log('following!');
+  //findVoterCandidate(voter, candidate, function(err, result) {
+  //  if (err) {
+  //    console.log('follow error');
+  //  } else {
+      //if (result.length === 0) {
+        connection.query('INSERT INTO votercandidate (voter, candidate) VALUES (?, ?)', [voter, candidate], function(err, result) {
+          if (err) {
+            console.log(err)
+            cb(result)
+            //console.log('voter candidate insertion query error');
+          } else {
+            cb(result);
+            //console.log('voter candidate insertion query success');
+          }
+        });
+      //}
+  //  }
+  //});
+}
+
+var unfollowCandidate = function(voter, candidate, cb) {
+  //console.log('unfollowing!');
+  connection.query('DELETE FROM votercandidate WHERE voter = ? AND candidate = ?', [voter, candidate], function(err, result) {
+    if (err) {
+      cb(result)
+    } else { 
+      console.log('unfollowing!')
+      cb(result); 
+    }
+  })
+} 
+
 module.exports.saveRace = saveRace;
 module.exports.selectAllRaces = selectAllRaces;
 module.exports.addUser = addUser;
@@ -212,3 +257,6 @@ module.exports.getNewEvents = getNewEvents;
 module.exports.getUserByName = getUserByName;
 module.exports.getEventByTitle = getEventByTitle;
 module.exports.getAllEventAttendees = getAllEventAttendees;
+module.exports.followCandidate = followCandidate;
+module.exports.unfollowCandidate = unfollowCandidate;
+module.exports.findVoterCandidate = findVoterCandidate;
