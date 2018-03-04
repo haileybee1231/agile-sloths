@@ -30,7 +30,7 @@ function isLoggedIn(req, res, next) {
   res.status(401).end('You must log in to do that!');
 }
 
- 
+
 
 app.get('/api/events?*', (req, res) => {
   let number = req._parsedOriginalUrl.query;
@@ -123,11 +123,11 @@ app.post('/follow', (req, res) => {
   var userId;
   //console.log('REQ BODY: ', req.body);
   db.getUserByEmail(req.body.voter, function(err, result) {
-    if (req.body.following) { 
+    if (req.body.following) {
       db.unfollowCandidate(result[0].id, req.body.candidate, function(results) {
         res.sendStatus(201);
       })
-    } else  
+    } else
       db.followCandidate(result[0].id, req.body.candidate, function(results) {
       res.sendStatus(201);
     });
@@ -224,5 +224,3 @@ let port = process.env.PORT || 3000; // these process variables are for deployme
 app.listen(port, function() {
   console.log(`The server is listening on port ${ port }!`);
 });
-
-
