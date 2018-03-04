@@ -87,12 +87,7 @@ app.get('/api/user*', (req, res) => {
 
 app.get('/races', (req, res) => {
   db.selectAllRaces(function(err, races) {
-    races.forEach(race => {
-      res.json([{key: race.id,
-                text: race.office,
-                value: race.office
-        }])
-    })
+    res.json(races)
   })
 })
 
@@ -195,7 +190,13 @@ app.post('/logout', isLoggedIn, function(req, res) {
 });
 
 app.post('/races', function(req, res) {
-  console.log(req.body)
+  db.saveRace(req.body.date, req.body.location, req.body.office, function(err, results) {
+    if (err) {
+      console.log(err)
+    } else {
+      res.status(201).send(results);
+    }
+  })
 })
 
 let port = process.env.PORT || 3000; // these process variables are for deployment because Heroku won't use port 3000
