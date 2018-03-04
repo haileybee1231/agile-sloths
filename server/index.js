@@ -57,6 +57,14 @@ app.get('/api/user*', (req, res) => {
       results.events.forEach(event => {
         event.host = username.join(' ');
         event.date = moment(event.date).format('MM/DD/YYYY');
+        // event.time = event.time.slice(0, event.time.length - 3);
+        if (event.time.slice(0, 2) > 12) {
+          event.time = `at ${event.time.slice(0,2) - 12}:${event.time.slice(3, 5)} PM`
+        } else if (event.time.slice(0, 2) === '00') {
+          event.time = `at 12:${event.time.slice(3, 5)} AM`
+        } else {
+          event.time = `at ${event.time.slice(0,2)}:${event.time.slice(3, 4)} AM`
+        }
       })
       results.events.forEach(event => {
         event.attendees = [];
