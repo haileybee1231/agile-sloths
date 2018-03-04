@@ -76,7 +76,7 @@ class FeedList extends React.Component {
               }
               >
               <Feed>
-                {this.props.events ?
+                {this.props.events && this.props.events.length > 0 ?
                   this.props.events.map((event) => {
                   return (
                     <Feed.Event key={uuidv4()}>

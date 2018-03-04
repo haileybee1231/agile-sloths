@@ -191,7 +191,7 @@ var getAllEventAttendees = function(cb) {
 }
 
 var getEventAttendees = function(event, cb) {
-  connection.query('SELECT * FROM events INNER JOIN eventsusers WHERE title=?', [event], function(err, event) {
+  connection.query('SELECT * FROM events e INNER JOIN eventsusers eu WHERE e.id = eu.event AND e.title=?', [event], function(err, event) {
     if (err) {
       cb(err, null);
     } else {

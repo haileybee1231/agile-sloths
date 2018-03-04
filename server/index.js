@@ -4,6 +4,7 @@ let db = require('../database-mysql');
 let session = require('express-session');
 let path = require('path');
 let passport = require('passport');
+let moment = require('moment');
 let flash = require('connect-flash');
 // let serverHelpers = require('../lib/serverHelpers.js'); // to delete?
 let app = express();
@@ -55,6 +56,7 @@ app.get('/api/user*', (req, res) => {
       }
       results.events.forEach(event => {
         event.host = username.join(' ');
+        event.date = moment(event.date).format('MM/DD/YYYY');
       })
       results.events.forEach(event => {
         event.attendees = [];
@@ -100,7 +102,7 @@ app.post('/api/events', isLoggedIn, (req, res) => {
 
 app.post('/attend', isLoggedIn, (req, res) => {
   db.attendEvent(req.body.event, req.body.user, function(err, result) {
-    res.status(201).end(result);
+    res.status(201).end(JSON.stringify(result));
   })
 })
 
