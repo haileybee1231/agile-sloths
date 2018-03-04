@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import $ from 'jquery'
 const uuidv4 = require('uuid/v4');
+import axios from 'axios'
 
 
 const options = [
@@ -91,26 +92,24 @@ class SignUpForm extends React.Component {
 
     //grabs every race from the database and populates the race dropdown with it to select from
     getAllRaces() {
-        $.ajax({
-            type: 'GET',
-            url: '/races',
-            contentType: 'json',
-            success: races => {
-                let list = []
-                races.forEach(race => {
-                    list.push({
-                        key: race.id,
-                        text: race.office,
-                        value: race.office
-                    })
+        let bound = this;
+        axios.get('/races')
+        .then(function(response) {
+            let list = [];
+            let races = response.data
+            races.forEach(race => {
+                list.push({
+                    key: race.id,
+                    text: race.office,
+                    value: race.office
                 })
-                this.setState({
-                    raceoptions: list, ...this.state.raceoptions
-                })
-            },
-            error: err => {
-                console.log(err)
-            }
+            })
+            bound.setState({
+                raceoptions: list, ...bound.state.raceoptions
+            })
+        })
+        .catch(function(error) {
+            console.log(error)
         })
     }
 
