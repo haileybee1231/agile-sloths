@@ -238,12 +238,40 @@ var unfollowCandidate = function(voter, candidate, cb) {
   connection.query('DELETE FROM votercandidate WHERE voter = ? AND candidate = ?', [voter, candidate], function(err, result) {
     if (err) {
       cb(result)
-    } else { 
+    } else {
       console.log('unfollowing!')
-      cb(result); 
+      cb(result);
     }
   })
-} 
+}
+
+var getFavorites = function(voter, cb) {
+  getUserByEmail(voter, function(err, user) {
+    if (err) {
+      cb(err, null);
+    } else {
+      connection.query('SELECT firstname, lastname FROM users INNER JOIN (SELECT candidate FROM votercandidate INNER JOIN users WHERE voter=users.id AND users.id=?) cs WHERE cs.candidate=users.id', [user], function(err, candidateIds) {
+        if (err) {
+          cb(err, null);
+        } else {
+          connection.query('SELECT firstname, lastname FROM ')
+        }
+      })
+    }
+  })
+}
+
+var getFollowers = function(voter, cb) {
+  getUserByEmail(voter, function(err, user) {
+    if (err) {
+      cb(err, null);
+    } else {
+      connection.query('SELECT firstname, lastname FROM users INNER JOIN (SELECT voter FROM votercandidate INNER JOIN users WHERE candidate=users.id AND users.id=1) cs WHERE cs.voter=users.id;', [candidate], function(err, favorites) {
+        console.log(favorites);
+      })
+    }
+  })
+}
 
 module.exports.saveRace = saveRace;
 module.exports.selectAllRaces = selectAllRaces;
