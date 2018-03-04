@@ -171,6 +171,9 @@ class SignUpForm extends React.Component {
                 })
             }
         })  
+        this.setState({
+            currentRace: data.value
+        })
     }
 
     componentDidMount() {
