@@ -40,6 +40,7 @@ class Sidebar extends React.Component {
         url: '/logout',
         contentType: 'application/json',
         success: () => {
+          window.localStorage.clear();
           this.props.logout();
           alert('You have been successfully logged out')
         },

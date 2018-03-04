@@ -14,8 +14,19 @@ export const logout = () => ( // no payload or parameters necessary for logout
 
 export const fetchraces = (races) => (
   {
-    type: 'FETCH_RACES',
+    type: 'FETCH-RACES',
     payload: races
+  }
+)
+
+export const saverace = (date, location, office) => (
+  {
+    type: 'SAVE-RACE',
+    payload: {
+      date: date,
+      location: location,
+      office: office
+    }
   }
 )
 
@@ -43,6 +54,16 @@ export const fetchEventsAction = newEvents => (
     }
   }
 )
+//
+export const attendEventAction = (event, user) => (
+  {
+    type: 'ATTEND-EVENT',
+    payload: {
+      event: event,
+      user: user
+    }
+  }
+)
 
 export const setUser = user => {
   return {
@@ -64,6 +85,24 @@ export const createEvent = event => (
       time: event.time,
       description: event.description,
       host: event.host
+    }
+  }
+)
+
+export const savePollingInfo = results => (
+  {
+    type: 'SAVE-POLLING-INFO',
+    payload: {
+      results: results
+    }
+  }
+)
+
+export const saveCandidateInfo = results => (
+  {
+    type: 'SAVE-CANDIDATE-INFO',
+    payload: {
+      results: results
     }
   }
 )

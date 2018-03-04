@@ -1,5 +1,7 @@
 const data = {
-  currentUser: null,
+  pollingInfo: [],
+  candidateInfo: [],
+  currentUser: window.localStorage.user || null,
   selectedUser: null,
   races: [
     {

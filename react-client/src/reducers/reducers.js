@@ -15,7 +15,6 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         currentUser: null
       }
     };
-    
     case 'SIGNUP': {
       return state
     };
@@ -24,14 +23,21 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
       return state
     };
 
+    case 'SAVE-RACE': {
+      return state;
+    }
+
     case 'CREATE-EVENT':
       return {
         ...state,
         events: [...state.events]
       }
-
+    case 'ATTEND-EVENT': {
+      return {
+        ...state,
+      }
+    }
     case 'FETCH-EVENTS':
-      console.log(action.payload)
       return {
         ...state,
         events: [...state.events, ...action.payload.newEvents]
@@ -42,9 +48,17 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         ...state,
         selectedUser: action.payload.selectedUser
       }
-
+    case 'SAVE-POLLING-INFO':
+      return Object.assign({}, state, {
+        pollingInfo: action.payload.results
+      })
+    case 'SAVE-CANDIDATE-INFO':
+      return Object.assign({}, state, {
+        candidateInfo: action.payload.results
+      })
     default: return state;
   }
 }
+
 
 export default mainReducer;

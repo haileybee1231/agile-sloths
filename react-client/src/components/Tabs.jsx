@@ -5,8 +5,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
 import Sidebar from './Sidebar.jsx';
+import EventCard from './EventCard.jsx';
 
 const uuidv4 = require('uuid/v4');
+
 
 
 var events = data.events;
@@ -20,15 +22,7 @@ const TabMenu = (props) => {
 			<Tab.Pane attached={true}>
 				{props.events.length ?
 					props.events.map(event => (
-						<Item key={uuidv4()} style={{marginBottom: 12, padding: 5, border: '1px solid #b7b7b7'}}>
-							<Item.Header as='as' style={{fontWeight: 700, color: '#0099ff'}}>{event.title} </Item.Header>
-							<Item.Meta> <span style={{fontWeight: 700}}> {event.date} {event.time} </span> </Item.Meta>
-							<Item.Description>
-								<div> Hosted by {event.host} </div>
-								<div> {event.description} </div>
-							</Item.Description>
-							<Item.Extra> <span style={{fontWeight: 700}}>Location:</span> {event.location} </Item.Extra>
-						</Item>
+						<EventCard key={uuidv4()} event={event} />
 					)
 				)
 				: <h2 style={{textAlign: 'center'}}>No Events Currently Scheduled for This Candidate</h2>
