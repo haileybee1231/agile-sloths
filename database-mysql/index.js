@@ -27,12 +27,14 @@ const selectAllRaces = function(cb) {
   });
 };
 
-const saveRace = function(race, cb) {
+const saveRace = function(date, location, office, cb) {
   connection.query('INSERT INTO races (date, location, office) VALUES (?, ?, ?)',
-  [race.timeStamp, race.location, race.role], function(err, results) {
+  [date, location, office], function(err, results) {
     if (err) {
+      console.log(err)
       cb(err, null)
     } else {
+      console.log(results)
       cb(null, results)
     }
   })
