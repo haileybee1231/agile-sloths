@@ -66,18 +66,18 @@ class Sidebar extends React.Component {
     sendLogoutRequest() {
       let bound = this
       axios.post('/logout')
-      .then(function(response) {
-        window.localStorage.clear()
-      })
-      .then(function(response) {
-        bound.props.logout()
-      })
-      .then(function(response) {
-        alert('You have been successfully logged out')
-      })
-      .catch(function(err) {
-        alert('There was an issue logging you out. Please try again.')
-      })
+        .then(function(response) {
+          window.localStorage.clear()
+        })
+        .then(function(response) {
+          bound.props.logout()
+        })
+        .then(function(response) {
+          alert('You have been successfully logged out')
+        })
+        .catch(function(err) {
+          alert('There was an issue logging you out. Please try again.')
+        })
     };
 
     getRacesAndCandidates() {
