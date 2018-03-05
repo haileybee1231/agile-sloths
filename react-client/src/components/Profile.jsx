@@ -67,7 +67,7 @@ class Profile extends React.Component {
 					<Grid.Column width={6}>
 						<Grid.Row>
 							<Card>
-								<Image src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Beto_O%27Rourke%2C_Official_portrait%2C_113th_Congress.jpg/800px-Beto_O%27Rourke%2C_Official_portrait%2C_113th_Congress.jpg'/>
+								<Image src={user.photo || 'http://lionhallattorneys.com.ng/wp-content/uploads/2015/12/empty-profile.png'}/>
 								<Card.Header style={{paddingLeft: 15, paddingRight: 15, fontSize: 20, paddingTop: 10, fontWeight: 800, paddingBottom: 10}}>
 									{`${user.firstname} ${user.lastname}`}
 								</Card.Header>
