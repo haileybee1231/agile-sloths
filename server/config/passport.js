@@ -49,6 +49,7 @@ module.exports = function(passport) {
       let role = body.role;
       let location = body.zipcode;
       let race = body.race;
+      let photo = body.photo;
       console.log(race);
       db.getUserByEmail(email, function(err, user) {
         if (err) {
@@ -58,7 +59,7 @@ module.exports = function(passport) {
           console.log('User exists!')
           return cb(err, null);
         } else {
-          db.addUser(email, password, firstname, lastname, bio, role, location, race, function(err, results) { // add whatever else needs to be added here, like bio
+          db.addUser(email, password, firstname, lastname, bio, role, location, race, photo, function(err, results) { // add whatever else needs to be added here, like bio
             if (err) {
               return cb(err, null);
             }

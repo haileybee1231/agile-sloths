@@ -19,14 +19,14 @@ class Profile extends React.Component {
 			followStatus: null,
 		}
 		this.handleFollow = this.handleFollow.bind(this);
-	}
+	} 
 
 	componentWillMount() {
 		this.props.favoritesfollowers && this.props.favoritesfollowers.indexOf(`${this.props.selectedUser.user.firstname} ${this.props.selectedUser.user.lastname}`) !== -1 ?
 		this.setState({followStatus: true}) : this.setState({followStatus: false});
 	}
 
-	handleFollow() {
+	handleFollow() {    
 		// ajax post request to add to database
 		$.ajax({
 			type: 'POST',
@@ -67,7 +67,7 @@ class Profile extends React.Component {
 					<Grid.Column width={6}>
 						<Grid.Row>
 							<Card>
-								<Image src='https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Beto_O%27Rourke%2C_Official_portrait%2C_113th_Congress.jpg/800px-Beto_O%27Rourke%2C_Official_portrait%2C_113th_Congress.jpg'/>
+								<Image src={user.photo || 'http://lionhallattorneys.com.ng/wp-content/uploads/2015/12/empty-profile.png'}/>
 								<Card.Header style={{paddingLeft: 15, paddingRight: 15, fontSize: 20, paddingTop: 10, fontWeight: 800, paddingBottom: 10}}>
 									{`${user.firstname} ${user.lastname}`}
 								</Card.Header>
