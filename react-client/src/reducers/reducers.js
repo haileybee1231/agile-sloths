@@ -33,7 +33,7 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
     case 'CREATE-EVENT':
       return {
         ...state,
-        events: [...state.events]
+        events: [...state.data.events]
       }
     case 'ATTEND-EVENT': {
       return {
@@ -50,6 +50,19 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
       return {
         ...state,
         selectedUser: action.payload.selectedUser
+      }
+    case 'HANDLE-FOLLOW':
+    console.log(action.payload.user)
+      if (state.favoritesfollowers.indexOf(action.payload.user) < 0) {
+        return {
+          ...state,
+          favoritesfollowers: [...state.favoritesfollowers, action.payload.user]
+        }
+      } else {
+        return {
+          ...state,
+          favoritesfollowers: state.favoritesfollowers.filter(favoritefollower => favoritefollower !== action.payload.user)
+        }
       }
     case 'SET-FAVORITES-FOLLOWERS':
       return {

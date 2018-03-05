@@ -255,6 +255,7 @@ var getFavoritesFollowers = function(voter, cb) {
     }
     if (user[0].role === 'Voter') {
       connection.query('SELECT firstname, lastname FROM users INNER JOIN (SELECT candidate FROM votercandidate INNER JOIN users WHERE voter=users.id AND users.id=?) cs WHERE cs.candidate=users.id', [user[0].id], function(err, candidates) {
+        console.log(err, candidates);
         if (err) {
           cb(err, null);
         } else {

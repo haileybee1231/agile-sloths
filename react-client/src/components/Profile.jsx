@@ -1,6 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
-
+import { handleFollowAction } from '../../src/actions/actions.js';
 
 import { Icon, List, Card, Grid, Header, Container, Image, Button } from 'semantic-ui-react';
 
@@ -21,20 +21,26 @@ class Profile extends React.Component {
 		this.handleFollow = this.handleFollow.bind(this);
 	}
 
+	componentDidMount() {
+		this.props.favoritesfollowers && this.props.favoritesfollowers.indexOf(`${this.props.selectedUser.user.firstname} ${this.props.selectedUser.user.lastname}`) !== -1 ?
+		this.setState({followStatus: true}) : this.setState({followStatus: false})
+	}
+
 	handleFollow() {
 		//console.log('follow click')
 		// ajax post request to add to database
 		$.ajax({
 			type: 'POST',
 			url: '/follow',
-			data: JSON.stringify({voter: this.props.currentUser, candidate: this.props.selectedUser.user.id, following: this.state.followStatus}), 
+			data: JSON.stringify({voter: this.props.currentUser, candidate: this.props.selectedUser.user.id, following: this.state.followStatus}),
 			contentType: 'application/json',
 			success: () => {
 				// change following in state to change text of follow button
+				this.props.handleFollowAction(`${this.props.selectedUser.user.firstname} ${this.props.selectedUser.user.lastname}`)
 				var selectedUserName = this.props.selectedUser.user.firstname + ' ' + this.props.selectedUser.user.lastname;
 				if (!this.state.followStatus) {
-					// toggle button 
-					this.setState({followStatus: true}); 
+					// toggle button
+					this.setState({followStatus: true});
 				} else {
 					// toggle button
 					this.setState({followStatus: false});
@@ -45,9 +51,9 @@ class Profile extends React.Component {
 				console.log('follow POST error');
 			}
 		})
-		
+
 	}
-  
+
 	render() {
 		const user = this.props.selectedUser.user;
 		var followMessage;
@@ -82,7 +88,10 @@ class Profile extends React.Component {
 						</Grid.Row>
 
 						<Grid.Row>
-							<Button style={{marginTop: 20}} onClick={this.handleFollow}> {followMessage} </Button>
+							{ this.props.currentUser ?
+								<Button style={{marginTop: 20}} onClick={this.handleFollow}> {followMessage} </Button> :
+								null
+							}
 						</Grid.Row>
 
 					</Grid.Column>
@@ -106,11 +115,12 @@ const mapStateToProps = state => ({
 	races: state.data.races,
 	events: state.data.events,
 	currentUser: state.data.currentUser,
-	selectedUser: state.data.selectedUser
+	selectedUser: state.data.selectedUser,
+	favoritesfollowers: state.data.favoritesfollowers
 });
 
 const mapDispatchToProps = dispatch => {
-	return {};
+	return bindActionCreators({handleFollowAction}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

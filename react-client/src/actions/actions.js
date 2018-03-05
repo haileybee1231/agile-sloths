@@ -108,6 +108,15 @@ export const saveCandidateInfo = results => (
   }
 )
 
+export const handleFollowAction = user => {
+  return {
+    type: 'HANDLE-FOLLOW',
+    payload: {
+      user: user
+    }
+  }
+}
+
 export const setFavoritesFollowers = (fftype, favoritesfollowers) => (
   {
     type: 'SET-FAVORITES-FOLLOWERS',
