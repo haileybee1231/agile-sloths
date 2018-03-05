@@ -62,7 +62,15 @@ class FeedList extends React.Component {
         let eventIds = [];
         if (newEvents && newEvents.events.length > 0) {
           newEvents.events.forEach(event => {
-            eventIds.push(event.id)
+            eventIds.push(event.id);
+            event.time = event.time.slice(0, event.time.length - 3);
+            if (+event.time.substr(0, 2) > 12) {
+              event.time = `${+event.time.slice(0, 2) - 12}:${event.time.slice(3, 5)} PM`
+            } else if (event.time.substr(0, 2) === '00') {
+              event.time = `12:${event.time.slice(3, 5)} AM`
+            } else {
+              event.time = `${+event.time.slice(0, 2)}:${event.time.slice(3, 5)} AM`
+            }
           })
         }
         this.props.fetchEventsAction(newEvents.events, eventIds, newEvents.fetchedCount);
@@ -93,6 +101,14 @@ class FeedList extends React.Component {
         if (newEvents && newEvents.events.length > 0) {
           newEvents.events.forEach(event => {
             eventIds.push(event.id)
+            event.time = event.time.slice(0, event.time.length - 3);
+            if (+event.time.substr(0, 2) > 12) {
+              event.time = `${+event.time.slice(0, 2) - 12}:${event.time.slice(3, 5)} PM`
+            } else if (event.time.substr(0, 2) === '00') {
+              event.time = `12:${event.time.slice(3, 5)} AM`
+            } else {
+              event.time = `${+event.time.slice(0, 2)}:${event.time.slice(3, 5)} AM`
+            }
           })
         }
         this.props.fetchEventsAction(newEvents.events, eventIds, newEvents.fetchedCount);
@@ -156,13 +172,6 @@ class FeedList extends React.Component {
               <Feed>
                 {this.props.events && this.props.events.length > 0 ?
                   this.props.events.slice().reverse().map((event) => {
-                    if (event.time.slice(0, 2) > 12) {
-                      event.time = `${event.time.slice(0,2) - 12}:${event.time.slice(3, 5)} PM`
-                    } else if (event.time.slice(0, 2) === '00') {
-                      event.time = `12:${event.time.slice(3, 5)} AM`
-                    } else {
-                      event.time = `${event.time.slice(0,2)}:${event.time.slice(3, 4)} AM`
-                    }
                   return (
                     <Feed.Event key={uuidv4()}>
                       <Feed.Label image='https://react.semantic-ui.com/assets/images/avatar/small/laura.jpg' />

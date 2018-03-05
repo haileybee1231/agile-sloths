@@ -83,7 +83,9 @@ export const createEvent = event => (
     payload: {
       title: event.title,
       host: event.host,
-      location: event.location,
+      state: event.state,
+      city: event.city,
+      streetAddress: event.streetAddress,
       date: event.date,
       time: event.time,
       description: event.description,
