@@ -30,7 +30,7 @@ function isLoggedIn(req, res, next) {
   res.status(401).end('You must log in to do that!');
 }
 
- 
+
 
 app.get('/api/events?*', (req, res) => {
   let number = req._parsedOriginalUrl.query;
@@ -42,6 +42,17 @@ app.get('/api/events?*', (req, res) => {
       res.status(200).end();
     }
   })
+});
+
+app.get('/api/favoritesfollowers?*', isLoggedIn, (req, res) => {
+  db.getFavoritesFollowers(req._parsedOriginalUrl.query, function(err, favoritesfollowers) {
+    if (err) {
+      cb(err, null);
+    } else {
+      res.write(JSON.stringify(favoritesfollowers));
+      res.status(200).end();
+    }
+  });
 });
 
 app.get('/api/user*', (req, res) => {
@@ -113,21 +124,21 @@ app.post('/attend', isLoggedIn, (req, res) => {
     res.status(201).end(JSON.stringify(result));
   })
 })
+//
+// app.get('/*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'));
+// });
 
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'));
-});
 
-
-app.post('/follow', (req, res) => {
+app.post('/follow', isLoggedIn, (req, res) => {
   var userId;
   //console.log('REQ BODY: ', req.body);
   db.getUserByEmail(req.body.voter, function(err, result) {
-    if (req.body.following) { 
+    if (req.body.following) {
       db.unfollowCandidate(result[0].id, req.body.candidate, function(results) {
         res.sendStatus(201);
       })
-    } else  
+    } else
       db.followCandidate(result[0].id, req.body.candidate, function(results) {
       res.sendStatus(201);
     });
@@ -196,7 +207,7 @@ app.post('/follow', (req, res) => {
 
 // ///// USER-RELATED REQUESTS /////
 app.post('/login', passport.authenticate('local-login'), (req, res) => {
-  let response = {username: req.body.username, sessionID: req.sessionID}
+  let response = {username: req.body.username, sessionID: req.sessionID, firstname: req.user[0].firstname}
   res.status(201).send(response);
 });
 
@@ -234,5 +245,3 @@ let port = process.env.PORT || 3000; // these process variables are for deployme
 app.listen(port, function() {
   console.log(`The server is listening on port ${ port }!`);
 });
-
-

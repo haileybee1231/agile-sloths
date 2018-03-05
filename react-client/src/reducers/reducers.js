@@ -6,13 +6,16 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
     case 'LOGIN': {
       return {
         ...state,
-        currentUser: action.payload.username
+        currentUser: action.payload.username,
+        firstname: action.payload.firstname
       }
       };
     case 'LOGOUT': {
       return {
         ...state,
-        currentUser: null
+        currentUser: null,
+        favoritesfollowers: null,
+        fftype: null
       }
     };
     case 'SIGNUP': {
@@ -48,14 +51,22 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         ...state,
         selectedUser: action.payload.selectedUser
       }
+    case 'SET-FAVORITES-FOLLOWERS':
+      return {
+        ...state,
+        fftype: action.payload.fftype,
+        favoritesfollowers: action.payload.favoritesfollowers
+      }
     case 'SAVE-POLLING-INFO':
-      return Object.assign({}, state, {
+      return {
+        ...state,
         pollingInfo: action.payload.results
-      })
+      }
     case 'SAVE-CANDIDATE-INFO':
-      return Object.assign({}, state, {
+      return {
+        ...state,
         candidateInfo: action.payload.results
-      })
+      }
     default: return state;
   }
 }

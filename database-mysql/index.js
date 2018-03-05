@@ -204,46 +204,74 @@ var getEventAttendees = function(event, cb) {
 var findVoterCandidate = function(voter, candidate, cb) {
   connection.query('SELECT * FROM votercandidate WHERE voter = ? AND candidate = ?', [voter, candidate], function(err, results) {
     if (err) {
-      console.log('something something query error');
+      cb(err, null)
     } else {
-      cb(results);
+      cb(null, results);
     }
   })
 }
 
 var followCandidate = function(voter, candidate, cb) {
-  //console.log('following!');
-  //findVoterCandidate(voter, candidate, function(err, result) {
-  //  if (err) {
-  //    console.log('follow error');
-  //  } else {
-      //if (result.length === 0) {
-        connection.query('INSERT INTO votercandidate (voter, candidate) VALUES (?, ?)', [voter, candidate], function(err, result) {
-          if (err) {
-            console.log(err)
-            cb(result)
-            //console.log('voter candidate insertion query error');
-          } else {
-            cb(result);
-            //console.log('voter candidate insertion query success');
-          }
-        });
-      //}
-  //  }
-  //});
+  findVoterCandidate(voter, candidate, function(err, result) {
+   if (err, null) {
+     cb(null, result)
+   } else if (result.length > 0) {
+     cb(null, 'You already follow that user.')
+   } else {
+    if (result.length === 0) {
+      connection.query('INSERT INTO votercandidate (voter, candidate) VALUES (?, ?)', [voter, candidate], function(err, result) {
+        if (err) {
+          cb(err)
+        } else {
+          cb(result);
+        }
+      });
+    }
+  }});
 }
 
 var unfollowCandidate = function(voter, candidate, cb) {
-  //console.log('unfollowing!');
-  connection.query('DELETE FROM votercandidate WHERE voter = ? AND candidate = ?', [voter, candidate], function(err, result) {
+  findVoterCandidate(voter, candidate, function(err, result) {
     if (err) {
-      cb(result)
-    } else { 
-      console.log('unfollowing!')
-      cb(result); 
+      cb(err, null);
+    } else if (!result.length) {
+      cb(null, 'You don\'t follow this candidate.')
+    } else {
+      connection.query('DELETE FROM votercandidate WHERE voter = ? AND candidate = ?', [voter, candidate], function(err, result) {
+        if (err) {
+          cb(result)
+        } else {
+          cb(result);
+        }
+      })
     }
   })
-} 
+}
+
+var getFavoritesFollowers = function(voter, cb) {
+  getUserByEmail(voter, function(err, user) {
+    if (err) {
+      cb(err, null);
+    }
+    if (user[0].role === 'Voter') {
+      connection.query('SELECT firstname, lastname FROM users INNER JOIN (SELECT candidate FROM votercandidate INNER JOIN users WHERE voter=users.id AND users.id=?) cs WHERE cs.candidate=users.id', [user[0].id], function(err, candidates) {
+        if (err) {
+          cb(err, null);
+        } else {
+          cb(null, ['favorites', candidates]);
+        }
+      })
+    } else {
+      connection.query('SELECT firstname, lastname FROM users INNER JOIN (SELECT voter FROM votercandidate INNER JOIN users WHERE candidate=users.id AND users.id=1) cs WHERE cs.voter=users.id;', [user[0].id], function(err, voters) {
+        if (err) {
+          cb(err, null);
+        } else {
+          cb(null, ['followers', voters])
+        }
+      })
+    }
+  })
+}
 
 module.exports.saveRace = saveRace;
 module.exports.selectAllRaces = selectAllRaces;
@@ -260,3 +288,4 @@ module.exports.getAllEventAttendees = getAllEventAttendees;
 module.exports.followCandidate = followCandidate;
 module.exports.unfollowCandidate = unfollowCandidate;
 module.exports.findVoterCandidate = findVoterCandidate;
+module.exports.getFavoritesFollowers = getFavoritesFollowers;
