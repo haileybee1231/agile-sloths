@@ -47,9 +47,11 @@ class TabMenu extends React.Component {
 			<Tab.Pane attached={true}>
 				<List>
 					<h3>Followers</h3>
-					{this.props.selectedUser.followers.map(follower => (
-						<List.Item key={uuidv4()}> {follower} </List.Item>
-					))}
+					{this.props.selectedUser.followers && this.props.selectedUser.followers.length > 0 ?
+						this.props.selectedUser.followers.map(follower => (
+							<List.Item key={uuidv4()}> {follower} </List.Item>
+						)) : null
+					}
 				</List>
 			</Tab.Pane>
 		}

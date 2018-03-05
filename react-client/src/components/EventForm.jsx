@@ -91,7 +91,14 @@ class EventForm extends React.Component {
       contentType: 'application/json',
       data: JSON.stringify(data),
       success: response => {
-        this.setState({success: true})
+        this.setState({success: true});
+        if (+data.time.substr(0, 2) > 12) {
+          data.time = `${+data.time.slice(0, 2) - 12}:${data.time.slice(3, 5)} PM`
+        } else if (data.time.substr(0, 2) === '00') {
+          data.time = `12:${data.time.slice(3, 5)} AM`
+        } else {
+          data.time = `${+data.time.slice(0, 2)}:${data.time.slice(3, 5)} AM`
+        }
         this.props.createEvent({...data, firstname: window.localStorage.firstname, lastname: window.localStorage.lastname});
       },
       error: err => {
