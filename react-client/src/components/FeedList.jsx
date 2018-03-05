@@ -169,7 +169,7 @@ class FeedList extends React.Component {
                 </p>
               }
               >
-              <Feed>
+              <Feed style={{ width: 900 }}>
                 {this.props.events && this.props.events.length > 0 ?
                   this.props.events.slice().reverse().map((event) => {
                   return (
@@ -189,11 +189,12 @@ class FeedList extends React.Component {
                           <Feed.Extra text>
                             <span style={{fontWeight: 'bold'}}>Where:</span> {`${event.streetAddress}, ${event.city}, ${event.state}`}
                           </Feed.Extra>
-                          <Feed.Extra>
-                            <Button positive size='mini' floated='right'>
+                          <Feed.Extra style={{ paddingRight: 50, paddingBottom: 35 }}>
+                            <Button positive size='mini' floated='right' >
                               Attend Event
                             </Button>
                           </Feed.Extra>
+                          <Divider/>
                         </Feed.Content>
                       </Feed.Event>
                     )
