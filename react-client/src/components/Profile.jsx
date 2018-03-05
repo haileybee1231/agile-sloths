@@ -21,13 +21,12 @@ class Profile extends React.Component {
 		this.handleFollow = this.handleFollow.bind(this);
 	}
 
-	componentDidMount() {
+	componentWillMount() {
 		this.props.favoritesfollowers && this.props.favoritesfollowers.indexOf(`${this.props.selectedUser.user.firstname} ${this.props.selectedUser.user.lastname}`) !== -1 ?
-		this.setState({followStatus: true}) : this.setState({followStatus: false})
+		this.setState({followStatus: true}) : this.setState({followStatus: false});
 	}
 
 	handleFollow() {
-		//console.log('follow click')
 		// ajax post request to add to database
 		$.ajax({
 			type: 'POST',
@@ -57,11 +56,8 @@ class Profile extends React.Component {
 	render() {
 		const user = this.props.selectedUser.user;
 		var followMessage;
-		if (this.state.followStatus) {
-			followMessage = 'Unfollow';
-		} else { // covers false or null
-			followMessage = 'Follow';
-		}
+		this.props.favoritesfollowers && this.props.favoritesfollowers.indexOf(`${this.props.selectedUser.user.firstname} ${this.props.selectedUser.user.lastname}`) !== -1 ?
+		followMessage = 'Unfollow' : followMessage = 'Follow';
 
 		return (
 			<Container style={{paddingLeft: 210}}>
@@ -82,14 +78,15 @@ class Profile extends React.Component {
 									{user.bio}
 								</Card.Description>
 								<Card.Content extra>
-									10 followers
+									{this.props.selectedUser.followers && this.props.selectedUser.followers.length ?
+										this.props.selectedUser.followers.length : 0} followers
 								</Card.Content>
 							</Card>
 						</Grid.Row>
 
 						<Grid.Row>
 							{ this.props.currentUser ?
-								<Button style={{marginTop: 20}} onClick={this.handleFollow}> {followMessage} </Button> :
+								<Button style={{marginTop: 20}} onClick={this.handleFollow}> {`${followMessage} ${this.props.selectedUser.user.firstname}`}</Button> :
 								null
 							}
 						</Grid.Row>

@@ -3,7 +3,7 @@ import { Menu, Input, Header, Container, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { logout, setUser, setFavoritesFollowers } from '../../src/actions/actions.js';
+import { logout, setUser, setFavoritesFollowers, setRacesAndCandidates, setCandidateFollowers } from '../../src/actions/actions.js';
 import { bindActionCreators } from 'redux';
 import $ from 'jquery';
 const uuidv4 = require('uuid/v4');
@@ -17,7 +17,7 @@ class Sidebar extends React.Component {
         this.handleItemClick = this.handleItemClick.bind(this)
     }
 
-    componentDidMount() {
+    componentWillMount() {
       let email = window.localStorage.user;
       if (email) {
         $.ajax({
@@ -34,10 +34,13 @@ class Sidebar extends React.Component {
           }
         })
       }
+      this.getRacesAndCandidates();
     }
 
     handleItemClick(e){
       let name = e.target.innerHTML.split('-->')[1].split('<!--')[0]; // Jacob, this wasn't targeting correclty and I had to come up with this... we should find a more elegant solution
+      name = name.replace("'", '%60');
+      console.log(name);
       this.setState({ activeItem: name });
       $.ajax({
         type: 'GET',
@@ -48,6 +51,13 @@ class Sidebar extends React.Component {
         },
         error: err => {
           console.error('Error retrieving user: ', err);
+        }
+      })
+      $.ajax({
+        type: 'GET',
+        url: `/api/candidatefollowers?${name}`,
+        success: followers => {
+          this.props.setCandidateFollowers(followers);
         }
       })
     }
@@ -68,12 +78,36 @@ class Sidebar extends React.Component {
       })
     };
 
+    getRacesAndCandidates() {
+      $.ajax({
+        type: 'GET',
+        url: '/racescandidates',
+        success: racesCandidates => {
+          let elections = this.props.races;
+          let candidates = [];
+          racesCandidates = JSON.parse(racesCandidates);
+          racesCandidates.forEach(combination => {
+            elections.indexOf(combination.office) < 0 ?
+              elections.push(combination.office) : null;
+            combination.role === 'Candidate' ? candidates.push({
+              email: combination.email,
+              bio: combination.bio,
+              firstname: combination.firstname,
+              lastname: combination.lastname,
+              role: combination.role,
+              race: combination.race,
+            }) : null;
+          })
+          this.props.setRacesAndCandidates(elections, candidates);
+        }
+      })
+    }
+
     render() {
-      //console.log('props sidebar:', this.props)
         const { activeItem } = this.state || {}
         return (
           <Container style={{paddingLeft: 100}}>
-          <Menu vertical fixed = 'left' style={{overflowY: 'scroll'}} size = 'large'>
+          <Menu vertical fixed = 'left' style={{overflowY: 'scroll', textAlign: 'center'}} size = 'large'>
           <Menu.Item>
             <Link to='/'>
               <Header as='h2' textAlign='center' size='huge'>
@@ -89,7 +123,7 @@ class Sidebar extends React.Component {
                   <Menu.Menu>
                       {this.props.races.map((race) => {
                           return (
-                              <Menu.Item name={race.office} active={activeItem === race.office} onClick={this.handleItemClick} key={uuidv4()}/>
+                              <Menu.Item name={race} active={activeItem === race} key={uuidv4()}/>
                           )
                       })}
                   </Menu.Menu>
@@ -98,12 +132,10 @@ class Sidebar extends React.Component {
               <Menu.Item>
                   <Menu.Header>Candidates</Menu.Header>
                   <Menu.Menu>
-                      {this.props.races.map((race) => {
-                          return race.candidates.map((candidate) => {
-                              return (
-                                  <Menu.Item name={candidate} active={activeItem === candidate} onClick={this.handleItemClick}/>
-                              )
-                          })
+                      {this.props.users.map((user) => {
+                        return (
+                          <Menu.Item name={`${user.firstname} ${user.lastname}`} key={uuidv4()} active={activeItem === user} onClick={this.handleItemClick}/>
+                        )
                       })}
                   </Menu.Menu>
               </Menu.Item>
@@ -153,6 +185,16 @@ class Sidebar extends React.Component {
                   </Link>
               }
               </Menu.Item>
+              <Menu.Item>
+                { this.props.currentUser
+                  ?
+                  <Link to="/vinfotab">
+                    <Button size='small'>Get Polling Information In Your Area</Button>
+                  </Link>
+                  :
+                  null
+                }
+              </Menu.Item>
 
           </Menu>
           </Container>
@@ -163,6 +205,7 @@ class Sidebar extends React.Component {
 
 const mapStateToProps = (state) => ({
   races: state.data.races,
+  users: state.data.users,
   currentUser: state.data.currentUser,
   fftype: state.data.fftype,
   favoritesfollowers: state.data.favoritesfollowers,
@@ -170,7 +213,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({logout, setUser, setFavoritesFollowers}, dispatch);
+  return bindActionCreators({logout, setUser, setFavoritesFollowers, setRacesAndCandidates, setCandidateFollowers}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Sidebar));

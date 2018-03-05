@@ -27,9 +27,9 @@ const selectAllRaces = function(cb) {
   });
 };
 
-const saveRace = function(date, location, office, cb) {
-  connection.query('INSERT INTO races (date, location, office) VALUES (?, ?, ?)',
-  [date, location, office], function(err, results) {
+const saveRace = function(date, state, city, district, office, cb) {
+  connection.query('INSERT INTO races (date, state, city, district, office) VALUES (?, ?, ?, ?, ?)',
+  [date, state, city, district, office], function(err, results) {
     if (err) {
       console.log(err)
       cb(err, null)
@@ -54,7 +54,17 @@ const addUser = function(email, password, firstname, lastname, bio, role, locati
 })
 }
 
-var addEvent = function(title, location, date, time, description, host, cb) { // host should be the email of the logged in user
+var getAllRacesAndCandidates = function(cb) {
+  connection.query('SELECT * FROM users LEFT JOIN races ON users.race=races.id', function(err, racesCandidates) {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, racesCandidates);
+    }
+  })
+}
+
+var addEvent = function(title, state, city, streetAddress, date, time, description, host, cb) { // host should be the email of the logged in user
   getEventByTitle(title, function(err, event) {
     if (err) {
       cb(err, null);
@@ -62,8 +72,8 @@ var addEvent = function(title, location, date, time, description, host, cb) { //
     if (event.length > 0) {
       cb(null, 'Event already exists');
     } else {
-      connection.query('INSERT INTO events (title, location, date, time, description, host) VALUES (?, ?, ?, ?, ?, (SELECT id FROM users WHERE email=?))',
-      [title, location, date, time, description, host], function(err, result) {
+      connection.query('INSERT INTO events (title, state, city, streetAddress, date, time, description, host) VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM users WHERE email=?))',
+      [title, state, city, streetAddress, date, time, description, host], function(err, result) {
         if (err) {
           cb(err, null);
         } else {
@@ -158,8 +168,8 @@ var getAllEvents = function(cb) {
   })
 }
 
-var getNewEvents = function(number, cb) {
-  connection.query('SELECT events.id, events.title, events.location, events.date, events.time, events.description, users.firstname, users.lastname FROM events LEFT JOIN users ON events.host=users.id', function(err, events) {
+var getNewEvents = function(number, offset, cb) {
+  connection.query('SELECT events.id, events.title, events.state, events.city, events.streetAddress, events.date, events.time, events.description, events.created, users.firstname, users.lastname FROM events LEFT JOIN users ON events.host=users.id LIMIT ? OFFSET ?', [number, offset], function(err, events) {
     if (err) {
       cb(err, null)
     } else {
@@ -248,8 +258,8 @@ var unfollowCandidate = function(voter, candidate, cb) {
   })
 }
 
-var getFavoritesFollowers = function(voter, cb) {
-  getUserByEmail(voter, function(err, user) {
+var getFavoritesFollowers = function(user, cb) {
+  getUserByEmail(user, function(err, user) {
     if (err) {
       cb(err, null);
     }
@@ -274,6 +284,22 @@ var getFavoritesFollowers = function(voter, cb) {
   })
 }
 
+var getCandidateFollowers = function(first, last, cb) {
+  getUserByName(first, last, function(err, user) {
+    if (err) {
+      cb(err, null);
+    } else {
+      connection.query('SELECT firstname, lastname FROM users INNER JOIN votercandidate WHERE users.id=voter AND candidate=?', [user[0].id], function(err, followers) {
+        if (err) {
+          cb(err, null);
+        } else {
+          cb(null, followers);
+        }
+      });
+    }
+  })
+}
+
 module.exports.saveRace = saveRace;
 module.exports.selectAllRaces = selectAllRaces;
 module.exports.addUser = addUser;
@@ -283,10 +309,11 @@ module.exports.getAllEvents = getAllEvents;
 module.exports.addEvent = addEvent;
 module.exports.attendEvent = attendEvent;
 module.exports.getNewEvents = getNewEvents;
-module.exports.getUserByName = getUserByName;
 module.exports.getEventByTitle = getEventByTitle;
 module.exports.getAllEventAttendees = getAllEventAttendees;
 module.exports.followCandidate = followCandidate;
 module.exports.unfollowCandidate = unfollowCandidate;
 module.exports.findVoterCandidate = findVoterCandidate;
 module.exports.getFavoritesFollowers = getFavoritesFollowers;
+module.exports.getAllRacesAndCandidates = getAllRacesAndCandidates;
+module.exports.getCandidateFollowers = getCandidateFollowers;

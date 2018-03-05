@@ -125,13 +125,14 @@ class SignUpForm extends React.Component {
     }
 
     //this function grabs the value from the race field and adds it to the database, if its not there already
-    handleRaceAddition(date, location, office) {
+    handleRaceAddition(date, state, city, district, office) {
         if (office === '') {
             this.setState({
                 failure: true,
                 header: 'Please enter a Race.',
                 messageContent: 'To be a candidate you have to run for election!'
             })
+            return;
         }
         if (!date) {
             this.setState({
@@ -140,16 +141,18 @@ class SignUpForm extends React.Component {
                 messageContent: 'The date should be when your election is being held.'
             })
         }
-        if (!location) {
+        if (!state) {
             this.setState({
                 failure: true,
-                header: 'Please enter your location.',
+                header: 'Please enter your state.',
                 messageContent: 'Before adding a new race, we need to know where it will be!'
             })
         }
         let data = {
             date: date,
-            location: location,
+            state: state,
+            city: city,
+            district: district,
             office: office
         }
         let bound = this;
@@ -252,21 +255,51 @@ class SignUpForm extends React.Component {
                                 <Form.Group widths='equal' key="1">
                                     <Form.Field key="2"
                                                 required
-                                                control={TextArea} 
-                                                type='text' 
-                                                name='bio' 
-                                                label='Bio' 
+                                                control={TextArea}
+                                                type='text'
+                                                name='bio'
+                                                label='Bio'
                                                 placeholder='Tell us about yourself' />
                                 </Form.Group>
                                 <Form.Group widths='equal'>
                                     <Form.Field key='3'
+                                                required
+                                                label='Date of Race'
+                                                fluid
+                                                name='date'
+                                                control={Input}
+                                                type='date'/>
+                                    <Form.Field key='4'
+                                                required
+                                                label='State of Race'
+                                                fluid
+                                                name='state'
+                                                control={Input}
+                                                type='state'/>
+                                    <Form.Field key='5'
+                                                label='City of Race'
+                                                fluid
+                                                name='city'
+                                                control={Input}
+                                                type='city'/>
+                                </Form.Group>
+                                <Form.Group widths='equal'>
+                                    <Form.Field key='5'
+                                                label='District of Race'
+                                                fluid
+                                                name='district'
+                                                control={Input}
+                                                type='city'/>
+                                    <Form.Field key='7'
                                                 fluid
                                                 search
                                                 selection
                                                 allowAdditions
                                                 onAddItem={() => {this.handleRaceAddition(
                                                     $('input[name=date]').val(),
-                                                    $('input[name=zipCode]').val(),
+                                                    $('input[name=state]').val(),
+                                                    $('input[name=city]').val(),
+                                                    $('input[name=district]').val(),
                                                     this.state.currentRace
                                                 )}}
                                                 required
@@ -275,14 +308,6 @@ class SignUpForm extends React.Component {
                                                 onChange={this.handleRaceValue}
                                                 label='Race'
                                                 placeholder='What office are you running for?'/>
-                                    <Form.Field key='4'
-                                                required
-                                                label='Date of Race'
-                                                fluid
-                                                name='date'
-                                                control={Input}
-                                                type='date'
-                                                />
                                 </Form.Group>
                             </div>
                             ]

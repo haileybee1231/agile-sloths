@@ -12,7 +12,9 @@ class EventForm extends React.Component {
 
     this.state = {
       title: '',
-      location: '',
+      state: '',
+      city: '',
+      streetAddress: '',
       date: '',
       time: '',
       description: '',
@@ -30,7 +32,7 @@ class EventForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const { title, location, date, time, description, host } = this.state;
+    const { title, state, city, streetAddress, date, time, description, host } = this.state;
     if (!title) {
       this.setState({
           failure: true,
@@ -38,11 +40,25 @@ class EventForm extends React.Component {
           messageContent: 'All events must have a title!'
         })
     }
-    if (!location) {
+    if (!state) {
       this.setState({
           failure: true,
-          header: 'Please Enter A Location',
-          messageContent: 'All events must have a location!'
+          header: 'Please Enter A State',
+          messageContent: 'All events must have a state!'
+        })
+    }
+    if (!city) {
+      this.setState({
+          failure: true,
+          header: 'Please Enter A City',
+          messageContent: 'All events must have a city!'
+        })
+    }
+    if (!streetAddress) {
+      this.setState({
+          failure: true,
+          header: 'Please Enter An Address',
+          messageContent: 'All events must have a street address!'
         })
     }
     if (!date) {
@@ -61,7 +77,9 @@ class EventForm extends React.Component {
     }
     let data = {
       title: title,
-      location: location,
+      state: state,
+      city: city,
+      streetAddress: streetAddress,
       date: date,
       time: time,
       description: description,
@@ -74,7 +92,7 @@ class EventForm extends React.Component {
       data: JSON.stringify(data),
       success: response => {
         this.setState({success: true})
-        this.props.createEvent(data);
+        this.props.createEvent({...data, firstname: window.localStorage.firstname, lastname: window.localStorage.lastname});
       },
       error: err => {
 
@@ -83,7 +101,7 @@ class EventForm extends React.Component {
   }
 
   render () {
-    const { open, title, date, time, location, description} = this.state;
+    const { open, title, date, time, state, city, streetAddress, description} = this.state;
 
     return (
       <Modal trigger={<Button>Host An Event</Button>}>
@@ -143,12 +161,30 @@ class EventForm extends React.Component {
                     placeholder='Zip code'
                     onChange={this.handleChange.bind(this)}
                   />
+              </Form.Group>
+                <Form.Group widths='equal'>
                   <Form.Field
                     required control={Input}
-                    label='Zip code'
-                    name='location'
-                    value={location}
-                    placeholder='Zip code'
+                    label='State'
+                    name='state'
+                    value={state}
+                    placeholder='State'
+                    onChange={this.handleChange.bind(this)}
+                  />
+                  <Form.Field
+                    required control={Input}
+                    label='City'
+                    name='city'
+                    value={city}
+                    placeholder='City'
+                    onChange={this.handleChange.bind(this)}
+                  />
+                  <Form.Field
+                    required control={Input}
+                    label='Street Address'
+                    name='streetAddress'
+                    value={streetAddress}
+                    placeholder='Street Address'
                     onChange={this.handleChange.bind(this)}
                   />
               </Form.Group>
