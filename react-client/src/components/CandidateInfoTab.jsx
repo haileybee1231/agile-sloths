@@ -5,8 +5,8 @@ import { saveCandidateInfo } from '../actions/actions.js';
 import helper from '../../../lib/serverHelpers.js';
 import config from '../../../config.js';
 import { withRouter } from 'react-router-dom';
-import axios from 'axios'
-import uuidv1 from 'uuid'
+import axios from 'axios';
+import uuidv1 from 'uuid';
 
 class ConnectedCandidateInfoTab extends React.Component {
   constructor(props) {

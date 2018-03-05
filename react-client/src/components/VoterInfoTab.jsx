@@ -5,8 +5,10 @@ import { savePollingInfo } from '../actions/actions.js';
 import helper from '../../../lib/serverHelpers.js';
 import config from '../../../config.js';
 import { withRouter, Link } from 'react-router-dom';
-import axios from 'axios'
-import uuidv4 from 'uuid'
+import axios from 'axios';
+import uuidv4 from 'uuid';
+import moment from 'moment';
+
 
 class ConnectedVoterInfoTab extends React.Component {
   constructor(props) {
@@ -44,7 +46,7 @@ class ConnectedVoterInfoTab extends React.Component {
         fontSize: '16px'
       },
       stations: {
-        fontSize: '<14> </14>px'
+        fontSize: '15px'
       },
       locationName: {
         fontSize: '16px',
@@ -75,17 +77,17 @@ class ConnectedVoterInfoTab extends React.Component {
         ? <div> 
             <Menu.Header>
               <span style={ styles.header }>The <span style={ styles.biggerAndBolder }>{ location.election.name }</span> is the next election in <span style={ styles.biggerAndBolder }>{ location.normalizedInput.zip }</span>.</span>
-              <p>Voting occurs on <span style={ styles.biggerAndBolder }>{ location.election.electionDay }</span>.</p>
+              <p>Polls open <span style={ styles.biggerAndBolder }>{ moment(location.election.electionDay).endOf('day').fromNow() }</span> from now on <span style={ styles.biggerAndBolder }>{ moment(location.election.electionDay).format('LL') }</span>.</p>
               <p style={ styles.stations }> Here are your <span style={ styles.biggerAndBolder }>{ numberOfPollingStations }</span> closest voting stations:</p>
             </Menu.Header>
             <Divider hidden />
             <Menu.Menu>
-              {this.props.pollingInfo.data.pollingLocations.slice(0, numberOfPollingStations).map(location => ( // only takes in x number because there are a lot...
+              {location.pollingLocations.slice(0, numberOfPollingStations).map(location => ( // only takes in x number because there are a lot...
                 <Menu.Item key={ uuidv4() }>
                   <Menu.Item style={ styles.locationName }>{ location.address.locationName }</Menu.Item>
-                  <Menu.Item style={ styles.address }>Open from <span style={ styles.bold }>{ helper.separateTimes(location.pollingHours)[0] }</span> to <span style={ styles.bold }>{ helper.separateTimes(location.pollingHours)[1].split('(')[0] }</span></Menu.Item>  {/* removes '(Election Day)'*/}
+                  <Menu.Item style={ styles.address }>Open from <span style={ styles.bold }>{ helper.separateTimes(location.pollingHours)[0] }</span> to <span style={ styles.bold }>{ helper.separateTimes(location.pollingHours)[1].split('(')[0] }</span></Menu.Item>  
                   <Menu.Item style={ styles.address }>{ location.address.line1 }</Menu.Item>
-                  <Menu.Item style={ styles.address }>{ location.address.city}, {location.address.state } { location.address.zip } </Menu.Item>
+                  <Menu.Item style={ styles.address }>{ location.address.city}, {location.address.state } { location.address.zip }</Menu.Item>
                   <Divider fitted />
                 </Menu.Item>
               ))}  
