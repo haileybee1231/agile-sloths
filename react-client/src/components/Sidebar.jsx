@@ -7,6 +7,7 @@ import { logout, setUser, setFavoritesFollowers, setRacesAndCandidates, setCandi
 import { bindActionCreators } from 'redux';
 import $ from 'jquery';
 const uuidv4 = require('uuid/v4');
+import axios from 'axios'
 
 class Sidebar extends React.Component {
     constructor(props){
@@ -63,18 +64,19 @@ class Sidebar extends React.Component {
     }
 
     sendLogoutRequest() {
-      $.ajax({
-        type: 'POST',
-        url: '/logout',
-        contentType: 'application/json',
-        success: () => {
-          window.localStorage.clear();
-          this.props.logout();
-          alert('You have been successfully logged out')
-        },
-        error: () => {
-          alert('There was an issue logging you out. Please try again.')
-        }
+      let bound = this
+      axios.post('/logout')
+      .then(function(response) {
+        window.localStorage.clear()
+      })
+      .then(function(response) {
+        bound.props.logout()
+      })
+      .then(function(response) {
+        alert('You have been successfully logged out')
+      })
+      .catch(function(err) {
+        alert('There was an issue logging you out. Please try again.')
       })
     };
 
