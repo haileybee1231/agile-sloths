@@ -106,3 +106,21 @@ export const saveCandidateInfo = results => (
     }
   }
 )
+
+export const setFavorites = favorites => (
+  {
+    type: 'SET-FAVORITES',
+    payload: {
+      favorites: favorites
+    }
+  }
+)
+
+export const setFollowers = followers => (
+  {
+    type: 'SET-FAVORITES',
+    payload: {
+      followers: followers
+    }
+  }
+)

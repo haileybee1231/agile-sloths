@@ -3,7 +3,7 @@ import { Menu, Input, Header, Container, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { logout, setUser } from '../../src/actions/actions.js';
+import { logout, setUser, setFavorites, setFollowers } from '../../src/actions/actions.js';
 import { bindActionCreators } from 'redux';
 import $ from 'jquery';
 const uuidv4 = require('uuid/v4');
@@ -15,6 +15,27 @@ class Sidebar extends React.Component {
           activeItem: '',
         }
         this.handleItemClick = this.handleItemClick.bind(this)
+    }
+
+    componentDidMount() {
+      let email = window.localStorage.user;
+      if (email) {
+        $.ajax({
+          type: 'GET',
+          url: `/api/favoritesfollowers?${email}`,
+          success: favoritesfollowers => {
+            favoritesfollowers = JSON.parse(favoritesfollowers);
+            let type = favoritesfollowers[0];
+            let output = [];
+            favoritesfollowers = favoritesfollowers[1].forEach(item => {
+              output.push(`${item.firstname} ${item.lastname}`);
+            })
+            type === 'voters' ?
+              this.props.setFollowers(output) :
+              this.props.setFavorites(output)
+          }
+        })
+      }
     }
 
     handleItemClick(e){
@@ -108,11 +129,13 @@ class Sidebar extends React.Component {
 
 const mapStateToProps = (state) => ({
   races: state.data.races,
-  currentUser: state.data.currentUser
+  currentUser: state.data.currentUser,
+  favorites: state.data.favorites,
+  followers: state.data.followers
 });
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({logout, setUser}, dispatch);
+  return bindActionCreators({logout, setUser, setFavorites, setFollowers}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Sidebar));

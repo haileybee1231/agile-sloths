@@ -48,14 +48,28 @@ const mainReducer = (state = data, action) => { // reducers are dispatched here
         ...state,
         selectedUser: action.payload.selectedUser
       }
+    case 'SET-FAVORITES':
+    console.log(action.payload)
+      return {
+        ...state,
+        favorites: action.payload.favorites
+      }
+    case 'SET-FOLLOWERS':
+    console.log(action.payload)
+      return {
+        ...state,
+        followers: action.payload.followers
+      }
     case 'SAVE-POLLING-INFO':
-      return Object.assign({}, state, {
+      return {
+        ...state,
         pollingInfo: action.payload.results
-      })
+      }
     case 'SAVE-CANDIDATE-INFO':
-      return Object.assign({}, state, {
+      return {
+        ...state,
         candidateInfo: action.payload.results
-      })
+      }
     default: return state;
   }
 }

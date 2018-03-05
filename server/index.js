@@ -44,6 +44,17 @@ app.get('/api/events?*', (req, res) => {
   })
 });
 
+app.get('/api/favoritesfollowers?*', isLoggedIn, (req, res) => {
+  db.getFavoritesFollowers(req._parsedOriginalUrl.query, function(err, favoritesfollowers) {
+    if (err) {
+      cb(err, null);
+    } else {
+      res.write(JSON.stringify(favoritesfollowers));
+      res.status(200).end();
+    }
+  });
+});
+
 app.get('/api/user*', (req, res) => {
   let username = decodeURIComponent(req._parsedOriginalUrl.query).split(' ');
   db.getUserByName(username[0], username[1], (err, user) => {
@@ -113,13 +124,13 @@ app.post('/attend', isLoggedIn, (req, res) => {
     res.status(201).end(JSON.stringify(result));
   })
 })
+//
+// app.get('/*', (req, res) => {
+//   res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'));
+// });
 
-app.get('/*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'));
-});
 
-
-app.post('/follow', (req, res) => {
+app.post('/follow', isLoggedIn, (req, res) => {
   var userId;
   //console.log('REQ BODY: ', req.body);
   db.getUserByEmail(req.body.voter, function(err, result) {

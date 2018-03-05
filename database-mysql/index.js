@@ -245,29 +245,26 @@ var unfollowCandidate = function(voter, candidate, cb) {
   })
 }
 
-var getFavorites = function(voter, cb) {
+var getFavoritesFollowers = function(voter, cb) {
   getUserByEmail(voter, function(err, user) {
     if (err) {
       cb(err, null);
-    } else {
-      connection.query('SELECT firstname, lastname FROM users INNER JOIN (SELECT candidate FROM votercandidate INNER JOIN users WHERE voter=users.id AND users.id=?) cs WHERE cs.candidate=users.id', [user], function(err, candidateIds) {
+    }
+    if (user.role === 'candidate') {
+      connection.query('SELECT firstname, lastname FROM users INNER JOIN (SELECT candidate FROM votercandidate INNER JOIN users WHERE voter=users.id AND users.id=?) cs WHERE cs.candidate=users.id', [user.id], function(err, candidateIds) {
         if (err) {
           cb(err, null);
         } else {
-          connection.query('SELECT firstname, lastname FROM ')
+          cb(null, ['candidates', candidateIds]);
         }
       })
-    }
-  })
-}
-
-var getFollowers = function(voter, cb) {
-  getUserByEmail(voter, function(err, user) {
-    if (err) {
-      cb(err, null);
     } else {
-      connection.query('SELECT firstname, lastname FROM users INNER JOIN (SELECT voter FROM votercandidate INNER JOIN users WHERE candidate=users.id AND users.id=1) cs WHERE cs.voter=users.id;', [candidate], function(err, favorites) {
-        console.log(favorites);
+      connection.query('SELECT firstname, lastname FROM users INNER JOIN (SELECT voter FROM votercandidate INNER JOIN users WHERE candidate=users.id AND users.id=1) cs WHERE cs.voter=users.id;', [user.id], function(err, voterIds) {
+        if (err) {
+          cb(err, null);
+        } else {
+          cb(null, ['voters', voterIds])
+        }
       })
     }
   })
@@ -288,3 +285,4 @@ module.exports.getAllEventAttendees = getAllEventAttendees;
 module.exports.followCandidate = followCandidate;
 module.exports.unfollowCandidate = unfollowCandidate;
 module.exports.findVoterCandidate = findVoterCandidate;
+module.exports.getFavoritesFollowers = getFavoritesFollowers;
