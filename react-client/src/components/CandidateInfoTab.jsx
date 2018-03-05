@@ -17,6 +17,7 @@ class ConnectedCandidateInfoTab extends React.Component {
   }
 
   componentWillMount() {
+    console.log(this.props)
     // create conditional to check if user is a voter
     // if so
     this.fetchCandidateInfo(this.props.saveCandidateInfo, window.localStorage.zipCode || '78701') //replace with currentUser zip (can take any address though)
@@ -37,7 +38,7 @@ class ConnectedCandidateInfoTab extends React.Component {
   }
 
   render() {
-    // const searchedLocation = this.props.candidateInfo.data.normalizedInput; // returning undefined
+    const searchedLocation = this.props.candidateInfo.data ? this.props.candidateInfo.data.normalizedInput : undefined;
     const styles = {
       header: {
         fontSize: '24px'
@@ -54,24 +55,32 @@ class ConnectedCandidateInfoTab extends React.Component {
     }
     return (
       <div>
-        {/* <p style={styles.header}>Representatives in { this.props.candidateInfo.data.normalizedInput.city }, { this.props.candidateInfo.data.normalizedInput.state }</p> // returning undefined */}
-        <p style={ styles.header }>Other Representatives in Your Area</p>{/* would rather specify based on searched location like above */}
-        <Grid divided='vertically'>
-          {this.props.candidateInfo && // checks to see if there is candidateInfo object
-            this.props.candidateInfo.data && // checks if that object has  officials before iterating
-            this.props.candidateInfo.data.officials.map(candidate => ( // takes the first 10 (because there are a lot)
-              <Grid.Row columns={1} key={uuidv1()}>
-                <Grid.Column>
-                  <div>
-                    <p style={ styles.name }>{ candidate.name } | { candidate.party }</p>
-                    <p style={ styles.address }>{ candidate.address[0].line1 }</p> {/* refactor to accommodate an array of addresses */}
-                    <p style={ styles.address }>{ candidate.address[0].city }, { candidate.address[0].state } </p>
-                    <p style={ styles.address }>{ candidate.address[0].zip }</p>
-                  </div>
-                </Grid.Column>
-              </Grid.Row>
-            ))}
-        </Grid>
+        {this.props.candidateInfo.data !== undefined 
+          ? <div>
+              <p style={styles.header}>Representatives in { searchedLocation.city }, { searchedLocation.state }</p>
+              <Grid divided='vertically'>
+                {this.props.candidateInfo && // checks to see if there is candidateInfo object
+                  this.props.candidateInfo.data && // checks if that object has  officials before iterating
+                  this.props.candidateInfo.data.officials.map(candidate => ( // takes the first 10 (because there are a lot)
+                    <Grid.Row columns={1} key={ uuidv1() }>
+                      <Grid.Column>
+                        <div>
+                          <p style={ styles.name }>{ candidate.name } | { candidate.party }</p>
+                          <p style={ styles.address }>{ candidate.address[0].line1 }</p> {/* refactor to accommodate an array of addresses */}
+                          <p style={ styles.address }>{ candidate.address[0].city }, { candidate.address[0].state } </p>
+                          <p style={ styles.address }>{ candidate.address[0].zip }</p>
+                        </div>
+                      </Grid.Column>
+                    </Grid.Row> 
+                  ))}
+              </Grid>
+            </div> 
+          :  <div>
+              <Grid>
+                ...loading
+                </Grid>
+            </div>
+      }
       </div>
     )
   }
