@@ -47,16 +47,16 @@ class Sidebar extends React.Component {
         success: user => {
           this.props.setUser(JSON.parse(user));
           this.props.history.push(`/user?${name}`);
+          $.ajax({
+            type: 'GET',
+            url: `/api/candidatefollowers?${name}`,
+            success: followers => {
+              this.props.setCandidateFollowers(followers);
+            }
+          })
         },
         error: err => {
           console.error('Error retrieving user: ', err);
-        }
-      })
-      $.ajax({
-        type: 'GET',
-        url: `/api/candidatefollowers?${name}`,
-        success: followers => {
-          this.props.setCandidateFollowers(followers);
         }
       })
     }
