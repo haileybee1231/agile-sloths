@@ -49,6 +49,7 @@ module.exports = function(passport) {
       let role = body.role;
       let location = body.zipcode;
       let race = body.race;
+      console.log(race);
       db.getUserByEmail(email, function(err, user) {
         if (err) {
           return cb(err, null);

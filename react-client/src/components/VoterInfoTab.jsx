@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect, bindActionCreators } from 'react-redux';
-import { Grid } from 'semantic-ui-react';
+import { Grid, Menu, Item, Header, Container } from 'semantic-ui-react';
 import { savePollingInfo } from '../actions/actions.js';
 import helper from '../../../lib/serverHelpers.js';
 import config from '../../../config.js';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import axios from 'axios'
-import uuidv1 from 'uuid'
+import uuidv4 from 'uuid'
 
 class ConnectedVoterInfoTab extends React.Component {
   constructor(props) {
@@ -20,7 +20,7 @@ class ConnectedVoterInfoTab extends React.Component {
     // create conditional to check if user is a voter
     // if so
       this.fetchPollingStations(this.props.savePollingInfo, '800 Brazos St Suite 500, Austin, TX 78701') //replace with currentUser location
-    // else 
+    // else
     // do nothing
   }
 
@@ -37,41 +37,32 @@ class ConnectedVoterInfoTab extends React.Component {
   }
 
   render() {
-    const styles = {
-      header: {
-        fontSize: '20px'
-      },
-      name: {
-        fontSize: '16px'
-      },
-      hours: {
-        fontSize: '13px'
-      },
-      address: {
-        fontSize: '12px'
-      }
-    }
     return (
-      <div>
-        <p style={ styles.header }>10 closest Election Day Polling Stations</p>
-        <Grid divided='vertically'>
-          {this.props.pollingInfo && // checks to see if there is pollingInfo object
-          this.props.pollingInfo.data && // checks if that object has data before iterating
-          this.props.pollingInfo.data.pollingLocations.slice(0, 10).map(location => ( // takes the first 10 (because there are a lot)
-            <Grid.Row columns={1} key={ uuidv1() }>
-                <Grid.Column>
-                  <div>
-                    <p style={ styles.name }>{ location.address.locationName }</p>
-                    <p style={ styles.hours }>Open from { location.pollingHours }</p>  {/* make this into a pretty format */}
-                    <p style={ styles.address }>{ location.address.line1 }</p>
-                    <p style={ styles.address }>{ location.address.city}, {location.address.state } </p>
-                    <p style={ styles.address }>{ location.address.zip }</p>
-                  </div>
-                </Grid.Column>
-              </Grid.Row>
-          ))}
-        </Grid>
-      </div>
+      <Container>
+      <Menu vertical fluid style={{overflowY: 'scroll', textAlign: 'center'}} size = 'huge'>
+      <Menu.Item>
+        <Link to='/'>
+          <Header as='h2' textAlign='center' size='huge'>
+            GRASSROOTS
+          </Header>
+        </Link>
+      </Menu.Item>
+      <Menu.Header>10 closest Election Day Polling Stations</Menu.Header>
+      <Menu.Menu>
+        {this.props.pollingInfo && // checks to see if there is pollingInfo object
+        this.props.pollingInfo.data && // checks if that object has data before iterating
+        this.props.pollingInfo.data.pollingLocations.slice(0, 10).map(location => ( // takes the first 10 (because there are a lot)
+            <Menu.Item key={uuidv4()}>
+              <Menu.Item>{ location.address.locationName }</Menu.Item>
+              <Menu.Item>Open from { location.pollingHours }</Menu.Item>  {/* make this into a pretty format */}
+              <Menu.Item>{ location.address.line1 }</Menu.Item>
+              <Menu.Item>{ location.address.city}, {location.address.state } </Menu.Item>
+              <Menu.Item>{ location.address.zip }</Menu.Item>
+            </Menu.Item>
+        ))}
+      </Menu.Menu>
+      </Menu>
+      </Container>
     )
   }
 }

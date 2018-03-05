@@ -38,7 +38,7 @@ const EventCard = props => {
       <Item.Description>
         <div> Hosted by {props.event.host} </div>
         <div> {props.event.description} </div>
-        <div><span style={{fontWeight: 700}}>Location:</span> {props.event.location}</div>
+        <div><span style={{fontWeight: 700}}>Location:</span> {`${props.event.streetAddress}, ${props.event.city}, ${props.event.state}`}</div>
       </Item.Description>
       <Item.Extra><span style={{fontWeight: 700}}>Attendees: </span><a href='#'>{props.event.attendees ?
         props.event.attendees.length : 0}</a></Item.Extra>

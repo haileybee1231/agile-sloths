@@ -27,6 +27,8 @@ const LoginForm = (props) =>  {
       success: response => {
         window.localStorage.sessionID = response.sessionID;
         window.localStorage.user = response.username;
+        window.localStorage.firstname = response.firstname;
+        window.localStorage.lastname = response.lastname;
         props.login(response.username, response.firstname);
         props.history.push('/');
       },

@@ -33,12 +33,13 @@ function isLoggedIn(req, res, next) {
 
 
 app.get('/api/events?*', (req, res) => {
-  let number = req._parsedOriginalUrl.query;
-  db.getNewEvents(0, (err, events) => {
+  let number = +req._parsedOriginalUrl.query || 0;
+  db.getNewEvents(10, number, (err, events) => {
     if (err) {
       res.status(500).end(err);
     } else {
-      res.write(JSON.stringify(events));
+      let fetchedCount = events.length;
+      res.write(JSON.stringify({events, fetchedCount}));
       res.status(200).end();
     }
   })
@@ -57,6 +58,7 @@ app.get('/api/favoritesfollowers?*', isLoggedIn, (req, res) => {
 
 app.get('/api/user*', (req, res) => {
   let username = decodeURIComponent(req._parsedOriginalUrl.query).split(' ');
+  console.log(username);
   db.getUserByName(username[0], username[1], (err, user) => {
     db.getAllEvents((err, results) => {
       let userEvents = null;
@@ -106,9 +108,32 @@ app.get('/races', (req, res) => {
   })
 })
 
+app.get('/racescandidates', (req, res) => {
+  db.getAllRacesAndCandidates((err, racesCandidates) => {
+    res.status(200).end(JSON.stringify(racesCandidates));
+  })
+})
+
+app.get('/api/candidatefollowers?*', (req, res) => {
+  let name = decodeURIComponent(req._parsedOriginalUrl.query).split(' ');
+  first = name[0];
+  last = name[1];
+  db.getCandidateFollowers(first, last, (err, followers) => {
+    if (err) {
+      res.status(404).end();
+    } else {
+      let output = [];
+      followers.forEach(follower => {
+        output.push(`${follower.firstname} ${follower.lastname}`);
+      })
+      res.status(200).json(output);
+    }
+  });
+})
+
 app.post('/api/events', isLoggedIn, (req, res) => {
   const event = req.body;
-  db.addEvent(event.title, event.location, event.date, event.time, event.description, event.host, function(err, result) {
+  db.addEvent(event.title, event.state, event.city, event.streetAddress, event.date, event.time, event.description, event.host, function(err, result) {
     if (err) {
       res.send(JSON.stringify(err));
     } else if (result === 'Event already exists') {
@@ -124,10 +149,10 @@ app.post('/attend', isLoggedIn, (req, res) => {
     res.status(201).end(JSON.stringify(result));
   })
 })
-//
-// app.get('/*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'));
-// });
+
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../react-client/dist', '/index.html'));
+});
 
 
 app.post('/follow', isLoggedIn, (req, res) => {
@@ -207,7 +232,7 @@ app.post('/follow', isLoggedIn, (req, res) => {
 
 // ///// USER-RELATED REQUESTS /////
 app.post('/login', passport.authenticate('local-login'), (req, res) => {
-  let response = {username: req.body.username, sessionID: req.sessionID, firstname: req.user[0].firstname}
+  let response = {username: req.body.username, sessionID: req.sessionID, firstname: req.user[0].firstname, lastname: req.user[0].lastname}
   res.status(201).send(response);
 });
 
@@ -231,7 +256,7 @@ app.post('/logout', isLoggedIn, function(req, res) {
 });
 
 app.post('/races', function(req, res) {
-  db.saveRace(req.body.date, req.body.location, req.body.office, function(err, results) {
+  db.saveRace(req.body.date, req.body.state, req.body.city, req.body.district, req.body.office, function(err, results) {
     if (err) {
       console.log(err)
     } else {
