@@ -58,9 +58,7 @@ class ConnectedCandidateInfoTab extends React.Component {
           ? <div>
               <p style={styles.header}>Representatives in { searchedLocation.city }, { searchedLocation.state }</p>
               <Grid divided='vertically'>
-                {this.props.candidateInfo && // checks to see if there is candidateInfo object
-                  this.props.candidateInfo.data && // checks if that object has  officials before iterating
-                  this.props.candidateInfo.data.officials.map(candidate => ( // takes the first 10 (because there are a lot)
+                {this.props.candidateInfo.data.officials.map(candidate => ( // takes the first 10 (because there are a lot)
                     <Grid.Row columns={1} key={ uuidv1() }>
                       <Grid.Column>
                         <div>
