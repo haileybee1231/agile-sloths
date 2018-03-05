@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import $ from 'jquery'
 const uuidv4 = require('uuid/v4');
+import axios from 'axios'
 
 
 const options = [
@@ -57,7 +58,7 @@ class SignUpForm extends React.Component {
         })
         return;
       }
-      let data = JSON.stringify({
+      let data = {
           email: email,
           password: password,
           role: this.state.role,
@@ -66,51 +67,51 @@ class SignUpForm extends React.Component {
           zipcode: zipcode,
           bio: bio,
           race: race
-      })
-      $.ajax({ // this is the exact function from the login page, we should put it in another file and import it instead of rewriting here
-          type: 'POST',
-          url: '/signup',
-          contentType: 'application/json',
-          data: data,
-          success: user => {
-            this.props.signup(user);
-            this.setState({success: true})
-            setTimeout(() => {
-                this.props.history.push('/login')
-            }, 3000)
-            },
-            error: err => {
-            this.setState({
-                failure: true,
-                header: 'That email already exists.',
-                messageContent: 'A user already has signed up using that email. Try logging in!'
-          })
-        }
-      })
+      }
+      let bound = this;
+         axios.post('/signup', data)
+         .then(function(response) {
+             bound.props.signup(response)
+         })
+         .then(function(response) {
+             bound.setState({success: true})
+         })
+         .then(function(response) {
+             setTimeout(() => {
+                 bound.props.history.push('/login')
+             }, 3000)
+         })
+         .catch(function(error) {
+             bound.setState({
+                 failure: true,
+                 header: 'That email already exists.',
+                 messageContent: 'A user already has signed up using that email.  Try logging in!'
+             })
+         })
     }
 
     //grabs every race from the database and populates the race dropdown with it to select from
     getAllRaces() {
-        $.ajax({
-            type: 'GET',
-            url: '/races',
-            contentType: 'json',
-            success: races => {
-                let list = []
-                races.forEach(race => {
-                    list.push({
-                        key: race.id,
-                        text: race.office,
-                        value: race.office
-                    })
+        let bound = this;
+        let list = [];
+        axios.get('/races')
+        .then(function(response) {
+            let races = response.data
+            races.forEach(race => {
+                list.push({
+                    key: race.id,
+                    text: race.office,
+                    value: race.office
                 })
-                this.setState({
-                    raceoptions: list, ...this.state.raceoptions
-                })
-            },
-            error: err => {
-                console.log(err)
-            }
+            })
+        })
+        .then(function(response) {
+            bound.setState({
+                raceoptions: list, ...bound.state.raceoptions
+            })
+        })
+        .catch(function(error) {
+            console.log(error)
         })
     }
 
@@ -139,23 +140,25 @@ class SignUpForm extends React.Component {
                 messageContent: 'The date should be when your election is being held.'
             })
         }
-        let data = JSON.stringify({
+        if (!location) {
+            this.setState({
+                failure: true,
+                header: 'Please enter your location.',
+                messageContent: 'Before adding a new race, we need to know where it will be!'
+            })
+        }
+        let data = {
             date: date,
             location: location,
             office: office
+        }
+        let bound = this;
+        axios.post('/races', data)
+        .then(function(race) {
+            bound.props.saverace(race)
         })
-        $.ajax({
-            type: 'POST',
-            url: '/races',
-            contentType: 'application/json',
-            data: data,
-            success: race => {
-                console.log('TEST', race)
-                this.props.saverace(race)
-            },
-            error: err => {
-                console.log(err)
-            }
+        .catch(function(error) {
+            console.log(error)
         })
         this.getAllRaces()
     }
@@ -247,7 +250,13 @@ class SignUpForm extends React.Component {
                         { this.state.CandidateTrue && [
                             <div key='candidatediv'>
                                 <Form.Group widths='equal' key="1">
-                                    <Form.Field key="2" control={TextArea} type='text' name='bio' label='Bio' placeholder='Tell us about yourself' />
+                                    <Form.Field key="2"
+                                                required
+                                                control={TextArea} 
+                                                type='text' 
+                                                name='bio' 
+                                                label='Bio' 
+                                                placeholder='Tell us about yourself' />
                                 </Form.Group>
                                 <Form.Group widths='equal'>
                                     <Form.Field key='3'
@@ -260,12 +269,14 @@ class SignUpForm extends React.Component {
                                                     $('input[name=zipCode]').val(),
                                                     this.state.currentRace
                                                 )}}
+                                                required
                                                 options={this.state.raceoptions}
                                                 control={Dropdown}
                                                 onChange={this.handleRaceValue}
                                                 label='Race'
                                                 placeholder='What office are you running for?'/>
                                     <Form.Field key='4'
+                                                required
                                                 label='Date of Race'
                                                 fluid
                                                 name='date'

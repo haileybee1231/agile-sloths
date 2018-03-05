@@ -201,7 +201,17 @@ app.post('/login', passport.authenticate('local-login'), (req, res) => {
 });
 
 app.post('/signup', passport.authenticate('local-signup'), (req, res) => { // passport middleware authenticates signup
-  res.status(201).send('Signup successful. Redirecting to login.');
+  let response = {
+          email: req.body.email,
+          password: req.body.password,
+          role: req.body.role,
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
+          zipcode: req.body.zipcode,
+          bio: req.body.bio,
+          race: req.body.race
+  }
+  res.status(201).send(response);
 });
 
 app.post('/logout', isLoggedIn, function(req, res) {
