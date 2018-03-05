@@ -63,7 +63,6 @@ class ConnectedCandidateInfoTab extends React.Component {
                     <Grid.Row columns={1} key={ uuidv1() }>
                       <Grid.Column>
                         <div>
-
                           <p style={ styles.name }> <a href={ candidate.urls[0] } target="_blank">{ candidate.name }</a> | { candidate.party }</p>
                           <p style={ styles.address }>{ candidate.address[0].line1 }</p> {/* refactor to accommodate an array of addresses */}
                           <p style={ styles.address }>{ candidate.address[0].city }, { candidate.address[0].state } </p>
@@ -75,9 +74,9 @@ class ConnectedCandidateInfoTab extends React.Component {
               </Grid>
             </div> 
           :  <div>
-              <Grid>
+              <Container>
                 loading representatives
-              </Grid>
+              </Container>
             </div>
       }
       </div>
