@@ -19,14 +19,14 @@ class Profile extends React.Component {
 			followStatus: null,
 		}
 		this.handleFollow = this.handleFollow.bind(this);
-	}
+	} 
 
 	componentWillMount() {
 		this.props.favoritesfollowers && this.props.favoritesfollowers.indexOf(`${this.props.selectedUser.user.firstname} ${this.props.selectedUser.user.lastname}`) !== -1 ?
 		this.setState({followStatus: true}) : this.setState({followStatus: false});
 	}
 
-	handleFollow() {
+	handleFollow() {    
 		// ajax post request to add to database
 		$.ajax({
 			type: 'POST',

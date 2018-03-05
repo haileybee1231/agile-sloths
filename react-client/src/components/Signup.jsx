@@ -162,7 +162,7 @@ class SignUpForm extends React.Component {
             bound.props.saverace(race)
         })
         .catch(function(error) {
-            console.log(error)
+            console.log(error)   
         })
         this.getAllRaces()
     }
