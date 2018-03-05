@@ -169,65 +169,6 @@ app.post('/follow', isLoggedIn, (req, res) => {
   });
 });
 
-// EVERYTHING BELOW TO BE DELETED?
-
-
-
-// ///// MAIN PAGE REQUESTS /////
-// app.get('/', function(req, res) {
-//   // will render index page regardless of logged in or not
-//   // but only those logged in will be able to create/save
-//   res.render('index');
-// });
-
-// // get request for specific candidate
-// app.get('/candidates/:id', function(req, res) {
-  //   // retreive candidate information from DB
-  //   db.getCandidateById(function(err, data) { // this function doesn't actually exist yet
-  //     if(err) {
-    //       console.log('Error finding candidate');
-    //       res.status(500).end();
-//     } else {
-  //       console.log('Successfully retreived candidate');
-  //       res.status(200).send(JSON.stringify(data));
-  //     }
-//   });
-// });
-
-// // a post request adds to the list of candidates
-// // or should this be a request to the API??
-// app.post('/candidates', function(req, res) {
-  //   // receives post request upon new candidate form submission
-  //   // parse out all of the information from the req.body
-//   // check if that candidate exists in the database
-//   // save to the database
-//   // res.status(201).end()
-// });
-
-// // get request for specific event
-// app.get('/events/:id', function(req, res) {
-  //   // retreive event information from DB
-//   db.getEventById(function (err, data) { // this function doesn't actually exist yet
-//     if (err) {
-  //       console.log('Error finding event');
-  //       res.status(500).end();
-  //     } else {
-    //       console.log('Successfully retreived event');
-//       res.status(200).send(JSON.stringify(data));
-//     }
-//   });
-// });
-
-// // a post request adds to the list of events
-// // or should this be a request to the API??
-// app.post('/events', function(req, res) {
-  //   // receives post request upon new candidate form submission
-//   // parse out all of the information from the req.body
-//   // check if that candidate exists in the database
-//   // save to the database
-//   // res.status(201).end()
-// });
-
 
 // ///// USER-RELATED REQUESTS /////
 app.post('/login', passport.authenticate('local-login'), (req, res) => {

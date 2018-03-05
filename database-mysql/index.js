@@ -40,10 +40,10 @@ const saveRace = function(date, state, city, district, office, cb) {
   })
 }
 
-const addUser = function(email, password, firstname, lastname, bio, role, location, race, cb) {
+const addUser = function(email, password, firstname, lastname, bio, role, location, race, photo, cb) {
   bcrypt.hash(password, 10, function(err, hash) {
-    connection.query('INSERT INTO users (email, password, firstname, lastname, bio, role, location, race) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-    [email, hash, firstname, lastname, bio, role, location, race], function(err, results) {
+    connection.query('INSERT INTO users (email, password, firstname, lastname, bio, role, location, race, photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [email, hash, firstname, lastname, bio, role, location, race, photo], function(err, results) {
       if (err) {
         cb(err, null);
       } else {
