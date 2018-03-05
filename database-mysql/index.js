@@ -265,7 +265,6 @@ var getFavoritesFollowers = function(user, cb) {
     }
     if (user[0].role === 'Voter') {
       connection.query('SELECT firstname, lastname FROM users INNER JOIN (SELECT candidate FROM votercandidate INNER JOIN users WHERE voter=users.id AND users.id=?) cs WHERE cs.candidate=users.id', [user[0].id], function(err, candidates) {
-        console.log(err, candidates);
         if (err) {
           cb(err, null);
         } else {
@@ -273,7 +272,7 @@ var getFavoritesFollowers = function(user, cb) {
         }
       })
     } else {
-      connection.query('SELECT firstname, lastname FROM users INNER JOIN (SELECT voter FROM votercandidate INNER JOIN users WHERE candidate=users.id AND users.id=1) cs WHERE cs.voter=users.id;', [user[0].id], function(err, voters) {
+      connection.query('SELECT firstname, lastname FROM users INNER JOIN (SELECT voter FROM votercandidate INNER JOIN users WHERE candidate=users.id AND users.id=?) cs WHERE cs.voter=users.id;', [user[0].id], function(err, voters) {
         if (err) {
           cb(err, null);
         } else {

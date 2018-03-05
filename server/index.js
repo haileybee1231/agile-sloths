@@ -58,7 +58,6 @@ app.get('/api/favoritesfollowers?*', isLoggedIn, (req, res) => {
 
 app.get('/api/user*', (req, res) => {
   let username = decodeURIComponent(req._parsedOriginalUrl.query).split(' ');
-  console.log(username);
   db.getUserByName(username[0], username[1], (err, user) => {
     db.getAllEvents((err, results) => {
       let userEvents = null;
@@ -76,7 +75,7 @@ app.get('/api/user*', (req, res) => {
         } else if (event.time.slice(0, 2) === '00') {
           event.time = `at 12:${event.time.slice(3, 5)} AM`
         } else {
-          event.time = `at ${event.time.slice(0,2)}:${event.time.slice(3, 4)} AM`
+          event.time = `at ${event.time.slice(0,2)}:${event.time.slice(3, 5)} AM`
         }
       })
       results.events.forEach(event => {
