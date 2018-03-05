@@ -35,7 +35,7 @@ class SignUpForm extends React.Component {
         this.handleRaceValue = this.handleRaceValue.bind(this)
     }
 
-    handleSubmit(email, password, firstname, lastname, bio, role, zipcode, race) {
+    handleSubmit(email, password, firstname, lastname, bio, role, zipcode, race, photo) {
       if (email.indexOf('@') < 0 || !email.match('com')) {
         this.setState({failure: true,
                        header: 'Please enter a valid email address.',
@@ -66,7 +66,8 @@ class SignUpForm extends React.Component {
           lastname: lastname,
           zipcode: zipcode,
           bio: bio,
-          race: race
+          race: race,
+          photo: photo
       }
       let bound = this;
          axios.post('/signup', data)
@@ -309,6 +310,14 @@ class SignUpForm extends React.Component {
                                                 label='Race'
                                                 placeholder='What office are you running for?'/>
                                 </Form.Group>
+                                <Form.Group widths='equal'>
+                                    <Form.Field key='8'
+                                    label='Photo URL'
+                                    fluid
+                                    name='photo'
+                                    control={Input}
+                                    type='photo' />
+                                </Form.Group>
                             </div>
                             ]
                         }
@@ -324,7 +333,8 @@ class SignUpForm extends React.Component {
                                                 $('textArea[name=bio]').val() || null,
                                                 this.state.role,
                                                 $('input[name=zipCode]').val(),
-                                                this.state.raceKey || null
+                                                this.state.raceKey || null,
+                                                $('input[name=photo]').val() || null
                                             )}}>Submit</Form.Field>
                         </Segment>
                     </Form>
