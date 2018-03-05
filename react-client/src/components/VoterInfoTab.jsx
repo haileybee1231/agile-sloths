@@ -1,12 +1,14 @@
 import React from 'react';
 import { connect, bindActionCreators } from 'react-redux';
-import { Grid, Menu, Item, Header, Container } from 'semantic-ui-react';
+import { Grid, Divider, Menu, Item, Header, Container, Segment } from 'semantic-ui-react';
 import { savePollingInfo } from '../actions/actions.js';
 import helper from '../../../lib/serverHelpers.js';
 import config from '../../../config.js';
 import { withRouter, Link } from 'react-router-dom';
-import axios from 'axios'
-import uuidv4 from 'uuid'
+import axios from 'axios';
+import uuidv4 from 'uuid';
+import moment from 'moment';
+
 
 class ConnectedVoterInfoTab extends React.Component {
   constructor(props) {
@@ -17,11 +19,11 @@ class ConnectedVoterInfoTab extends React.Component {
   }
 
   componentWillMount() {
-    // create conditional to check if user is a voter
+    // create conditional to check if user is a voter -- THAT INFO IS NOT CURRENTLY STORED IN CURRENTUSER INFO
     // if so
-      this.fetchPollingStations(this.props.savePollingInfo, '800 Brazos St Suite 500, Austin, TX 78701') //replace with currentUser location
+      this.fetchPollingStations(this.props.savePollingInfo, '800 Brazos St Suite 500, Austin, TX 78701') //replace with currentUser location -- MUST TAKE IN AN ENTIRE ADDRESS, WHICH IS NOT CURRENTLY STORED IN CURRENTUSER INFO
     // else
-    // do nothing
+      // do nothing
   }
 
   fetchPollingStations(dispatch, address) {
@@ -37,6 +39,30 @@ class ConnectedVoterInfoTab extends React.Component {
   }
 
   render() {
+    const numberOfPollingStations = 10;
+    const location = this.props.pollingInfo.data ? this.props.pollingInfo.data : undefined;
+    const styles = {
+      header: {
+        fontSize: '16px'
+      },
+      stations: {
+        fontSize: '15px'
+      },
+      locationName: {
+        fontSize: '16px',
+        fontWeight: 'bold'
+      },
+      address: {
+        fontSize: '14px'
+      },
+      biggerAndBolder: {
+        fontWeight: 'bold',
+        fontSize: '17px'
+      },
+      bold: {
+        fontWeight: 'bold'
+      }
+    }
     return (
       <Container>
       <Menu vertical fluid style={{overflowY: 'scroll', textAlign: 'center'}} size = 'huge'>
@@ -47,20 +73,30 @@ class ConnectedVoterInfoTab extends React.Component {
           </Header>
         </Link>
       </Menu.Item>
-      <Menu.Header>10 closest Election Day Polling Stations</Menu.Header>
-      <Menu.Menu>
-        {this.props.pollingInfo && // checks to see if there is pollingInfo object
-        this.props.pollingInfo.data && // checks if that object has data before iterating
-        this.props.pollingInfo.data.pollingLocations.slice(0, 10).map(location => ( // takes the first 10 (because there are a lot)
-            <Menu.Item key={uuidv4()}>
-              <Menu.Item>{ location.address.locationName }</Menu.Item>
-              <Menu.Item>Open from { location.pollingHours }</Menu.Item>  {/* make this into a pretty format */}
-              <Menu.Item>{ location.address.line1 }</Menu.Item>
-              <Menu.Item>{ location.address.city}, {location.address.state } </Menu.Item>
-              <Menu.Item>{ location.address.zip }</Menu.Item>
-            </Menu.Item>
-        ))}
-      </Menu.Menu>
+      {this.props.pollingInfo.data 
+        ? <div> 
+            <Menu.Header>
+              <span style={ styles.header }>The <span style={ styles.biggerAndBolder }>{ location.election.name }</span> is the next election in <span style={ styles.biggerAndBolder }>{ location.normalizedInput.zip }</span>.</span>
+              <p>Polls open <span style={ styles.biggerAndBolder }>{ moment(location.election.electionDay).endOf('day').fromNow() }</span> from now on <span style={ styles.biggerAndBolder }>{ moment(location.election.electionDay).format('LL') }</span>.</p>
+              <p style={ styles.stations }> Here are your <span style={ styles.biggerAndBolder }>{ numberOfPollingStations }</span> closest voting stations:</p>
+            </Menu.Header>
+            <Divider hidden />
+            <Menu.Menu>
+              {location.pollingLocations.slice(0, numberOfPollingStations).map(location => ( // only takes in x number because there are a lot...
+                <Menu.Item key={ uuidv4() }>
+                  <Menu.Item style={ styles.locationName }>{ location.address.locationName }</Menu.Item>
+                  <Menu.Item style={ styles.address }>Open from <span style={ styles.bold }>{ helper.separateTimes(location.pollingHours)[0] }</span> to <span style={ styles.bold }>{ helper.separateTimes(location.pollingHours)[1].split('(')[0] }</span></Menu.Item>  
+                  <Menu.Item style={ styles.address }>{ location.address.line1 }</Menu.Item>
+                  <Menu.Item style={ styles.address }>{ location.address.city}, {location.address.state } { location.address.zip }</Menu.Item>
+                  <Divider fitted />
+                </Menu.Item>
+              ))}  
+            </Menu.Menu>
+          </div>
+        : <div>
+            <p>...loading your polling stations</p>
+          </div>
+      }   
       </Menu>
       </Container>
     )
