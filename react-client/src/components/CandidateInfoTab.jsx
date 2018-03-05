@@ -17,12 +17,11 @@ class ConnectedCandidateInfoTab extends React.Component {
   }
 
   componentWillMount() {
-    console.log(this.props)
-    // create conditional to check if user is a voter
+    // create conditional to check if user is a voter--THAT INFO IS NOT CURRENTLY STORED IN CURRENTUSER INFO
     // if so
-    this.fetchCandidateInfo(this.props.saveCandidateInfo, window.localStorage.zipCode || '78701') //replace with currentUser zip (can take any address though)
+      this.fetchCandidateInfo(this.props.saveCandidateInfo, window.localStorage.zipCode || '78701') //replace with currentUser zip (can take any address though) -- THAT INFO IS NOT CURRENTLY STORED IN CURRENTUSER INFO
     // else
-    // do nothing
+      // do nothing
   }
 
   fetchCandidateInfo(dispatch, address) {
@@ -77,8 +76,8 @@ class ConnectedCandidateInfoTab extends React.Component {
             </div> 
           :  <div>
               <Grid>
-                ...loading
-                </Grid>
+                loading representatives
+              </Grid>
             </div>
       }
       </div>
