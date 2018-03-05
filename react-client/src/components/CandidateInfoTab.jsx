@@ -19,8 +19,8 @@ class ConnectedCandidateInfoTab extends React.Component {
   componentWillMount() {
     // create conditional to check if user is a voter
     // if so
-    this.fetchCandidateInfo(this.props.saveCandidateInfo, '78701') //replace with currentUser zip (can take any address though)
-    // else 
+    this.fetchCandidateInfo(this.props.saveCandidateInfo, window.localStorage.zipCode || '78701') //replace with currentUser zip (can take any address though)
+    // else
     // do nothing
   }
 
@@ -55,7 +55,7 @@ class ConnectedCandidateInfoTab extends React.Component {
     return (
       <div>
         {/* <p style={styles.header}>Representatives in { this.props.candidateInfo.data.normalizedInput.city }, { this.props.candidateInfo.data.normalizedInput.state }</p> // returning undefined */}
-        <p style={ styles.header }>Your searched representatives</p> {/* would rather specify based on searched location like above */}
+        <p style={ styles.header }>Other Representatives in Your Area</p>{/* would rather specify based on searched location like above */}
         <Grid divided='vertically'>
           {this.props.candidateInfo && // checks to see if there is candidateInfo object
             this.props.candidateInfo.data && // checks if that object has  officials before iterating

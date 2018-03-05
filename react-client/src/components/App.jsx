@@ -11,10 +11,24 @@ import SignupForm from './Signup.jsx';
 import Profile from './Profile.jsx';
 import VoterInfoTab from './VoterInfoTab.jsx';
 import CandidateInfoTab from './CandidateInfoTab.jsx';
+import $ from 'jquery';
 
 class App extends React.Component {
   constructor(props) {
     super(props)
+  }
+
+  componentWillMount() {
+    window.navigator.geolocation.getCurrentPosition(function(pos){
+      $.ajax({
+        type: 'GET',
+        url: 'http://maps.googleapis.com/maps/api/geocode/json?latlng='+pos.coords.latitude+','+pos.coords.longitude+'&sensor=true',
+        success: data => {
+          window.localStorage.zipCode = data.results[0].address_components[7].short_name;
+          // window.localStorage.address = data.results[0].formatted_address;
+        }
+      })
+    });
   }
 
   // App component handles all redirections based on path options below

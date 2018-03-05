@@ -27,9 +27,9 @@ const selectAllRaces = function(cb) {
   });
 };
 
-const saveRace = function(date, location, office, cb) {
-  connection.query('INSERT INTO races (date, location, office) VALUES (?, ?, ?)',
-  [date, location, office], function(err, results) {
+const saveRace = function(date, state, city, district, office, cb) {
+  connection.query('INSERT INTO races (date, state, city, district, office) VALUES (?, ?, ?, ?, ?)',
+  [date, state, city, district, office], function(err, results) {
     if (err) {
       console.log(err)
       cb(err, null)
@@ -54,7 +54,17 @@ const addUser = function(email, password, firstname, lastname, bio, role, locati
 })
 }
 
-var addEvent = function(title, location, date, time, description, host, cb) { // host should be the email of the logged in user
+var getAllRacesAndCandidates = function(cb) {
+  connection.query('SELECT * FROM users LEFT JOIN races ON users.race=races.id', function(err, racesCandidates) {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, racesCandidates);
+    }
+  })
+}
+
+var addEvent = function(title, state, city, streetAddress, date, time, description, host, cb) { // host should be the email of the logged in user
   getEventByTitle(title, function(err, event) {
     if (err) {
       cb(err, null);
@@ -62,8 +72,8 @@ var addEvent = function(title, location, date, time, description, host, cb) { //
     if (event.length > 0) {
       cb(null, 'Event already exists');
     } else {
-      connection.query('INSERT INTO events (title, location, date, time, description, host) VALUES (?, ?, ?, ?, ?, (SELECT id FROM users WHERE email=?))',
-      [title, location, date, time, description, host], function(err, result) {
+      connection.query('INSERT INTO events (title, state, city, streetAddress, date, time, description, host) VALUES (?, ?, ?, ?, ?, ?, ?, (SELECT id FROM users WHERE email=?))',
+      [title, state, city, streetAddress, date, time, description, host], function(err, result) {
         if (err) {
           cb(err, null);
         } else {
@@ -158,8 +168,8 @@ var getAllEvents = function(cb) {
   })
 }
 
-var getNewEvents = function(number, cb) {
-  connection.query('SELECT events.id, events.title, events.location, events.date, events.time, events.description, users.firstname, users.lastname FROM events LEFT JOIN users ON events.host=users.id', function(err, events) {
+var getNewEvents = function(number, offset, cb) {
+  connection.query('SELECT events.id, events.title, events.state, events.city, events.streetAddress, events.date, events.time, events.description, events.created, users.firstname, users.lastname FROM events LEFT JOIN users ON events.host=users.id LIMIT ? OFFSET ?', [number, offset], function(err, events) {
     if (err) {
       cb(err, null)
     } else {
@@ -204,46 +214,91 @@ var getEventAttendees = function(event, cb) {
 var findVoterCandidate = function(voter, candidate, cb) {
   connection.query('SELECT * FROM votercandidate WHERE voter = ? AND candidate = ?', [voter, candidate], function(err, results) {
     if (err) {
-      console.log('something something query error');
+      cb(err, null)
     } else {
-      cb(results);
+      cb(null, results);
     }
   })
 }
 
 var followCandidate = function(voter, candidate, cb) {
-  //console.log('following!');
-  //findVoterCandidate(voter, candidate, function(err, result) {
-  //  if (err) {
-  //    console.log('follow error');
-  //  } else {
-      //if (result.length === 0) {
-        connection.query('INSERT INTO votercandidate (voter, candidate) VALUES (?, ?)', [voter, candidate], function(err, result) {
-          if (err) {
-            console.log(err)
-            cb(result)
-            //console.log('voter candidate insertion query error');
-          } else {
-            cb(result);
-            //console.log('voter candidate insertion query success');
-          }
-        });
-      //}
-  //  }
-  //});
+  findVoterCandidate(voter, candidate, function(err, result) {
+   if (err, null) {
+     cb(null, result)
+   } else if (result.length > 0) {
+     cb(null, 'You already follow that user.')
+   } else {
+    if (result.length === 0) {
+      connection.query('INSERT INTO votercandidate (voter, candidate) VALUES (?, ?)', [voter, candidate], function(err, result) {
+        if (err) {
+          cb(err)
+        } else {
+          cb(result);
+        }
+      });
+    }
+  }});
 }
 
 var unfollowCandidate = function(voter, candidate, cb) {
-  //console.log('unfollowing!');
-  connection.query('DELETE FROM votercandidate WHERE voter = ? AND candidate = ?', [voter, candidate], function(err, result) {
+  findVoterCandidate(voter, candidate, function(err, result) {
     if (err) {
-      cb(result)
-    } else { 
-      console.log('unfollowing!')
-      cb(result); 
+      cb(err, null);
+    } else if (!result.length) {
+      cb(null, 'You don\'t follow this candidate.')
+    } else {
+      connection.query('DELETE FROM votercandidate WHERE voter = ? AND candidate = ?', [voter, candidate], function(err, result) {
+        if (err) {
+          cb(result)
+        } else {
+          cb(result);
+        }
+      })
     }
   })
-} 
+}
+
+var getFavoritesFollowers = function(user, cb) {
+  getUserByEmail(user, function(err, user) {
+    if (err) {
+      cb(err, null);
+    }
+    if (user[0].role === 'Voter') {
+      connection.query('SELECT firstname, lastname FROM users INNER JOIN (SELECT candidate FROM votercandidate INNER JOIN users WHERE voter=users.id AND users.id=?) cs WHERE cs.candidate=users.id', [user[0].id], function(err, candidates) {
+        console.log(err, candidates);
+        if (err) {
+          cb(err, null);
+        } else {
+          cb(null, ['favorites', candidates]);
+        }
+      })
+    } else {
+      connection.query('SELECT firstname, lastname FROM users INNER JOIN (SELECT voter FROM votercandidate INNER JOIN users WHERE candidate=users.id AND users.id=1) cs WHERE cs.voter=users.id;', [user[0].id], function(err, voters) {
+        if (err) {
+          cb(err, null);
+        } else {
+          cb(null, ['followers', voters])
+        }
+      })
+    }
+  })
+}
+
+var getCandidateFollowers = function(first, last, cb) {
+  getUserByName(first, last, function(err, user) {
+    if (err) {
+      cb(err, null);
+    } else {
+      connection.query('SELECT firstname, lastname FROM users INNER JOIN votercandidate WHERE users.id=voter AND candidate=?', [user[0].id], function(err, followers) {
+        if (err) {
+          cb(err, null);
+        } else {
+          cb(null, followers);
+        }
+      });
+    }
+  })
+}
 
 module.exports.saveRace = saveRace;
 module.exports.selectAllRaces = selectAllRaces;
@@ -254,9 +309,11 @@ module.exports.getAllEvents = getAllEvents;
 module.exports.addEvent = addEvent;
 module.exports.attendEvent = attendEvent;
 module.exports.getNewEvents = getNewEvents;
-module.exports.getUserByName = getUserByName;
 module.exports.getEventByTitle = getEventByTitle;
 module.exports.getAllEventAttendees = getAllEventAttendees;
 module.exports.followCandidate = followCandidate;
 module.exports.unfollowCandidate = unfollowCandidate;
 module.exports.findVoterCandidate = findVoterCandidate;
+module.exports.getFavoritesFollowers = getFavoritesFollowers;
+module.exports.getAllRacesAndCandidates = getAllRacesAndCandidates;
+module.exports.getCandidateFollowers = getCandidateFollowers;

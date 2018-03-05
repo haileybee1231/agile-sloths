@@ -1,8 +1,9 @@
-export const login = username => ( // actions return a plain object with a type and payload
+export const login = (username, firstname) => ( // actions return a plain object with a type and payload
   {
     type: 'LOGIN',
     payload: {
-      username: username
+      username: username,
+      firstname: firstname
     }
   }
 )
@@ -46,15 +47,17 @@ export const signup = (email, password, firstName, lastName, bio, role, zipCode,
   }
 )
 
-export const fetchEventsAction = newEvents => (
-  {
+export const fetchEventsAction = (newEvents, eventIds, fetchedCount) => {
+  return {
     type: 'FETCH-EVENTS',
     payload: {
-      newEvents: newEvents
+      newEvents: newEvents,
+      eventIds: eventIds,
+      fetchedCount: fetchedCount
     }
   }
-)
-//
+}
+
 export const attendEventAction = (event, user) => (
   {
     type: 'ATTEND-EVENT',
@@ -84,7 +87,9 @@ export const createEvent = event => (
       date: event.date,
       time: event.time,
       description: event.description,
-      host: event.host
+      host: event.host,
+      firstname: window.localStorage.firstname,
+      lastname: window.localStorage.lastname,
     }
   }
 )
@@ -103,6 +108,44 @@ export const saveCandidateInfo = results => (
     type: 'SAVE-CANDIDATE-INFO',
     payload: {
       results: results
+    }
+  }
+)
+
+export const setRacesAndCandidates = (races, candidates) => (
+  {
+    type: 'SET-RACES-CANDIDATES',
+    payload: {
+      races: races,
+      candidates: candidates
+    }
+  }
+)
+
+export const setCandidateFollowers =  followers => (
+  {
+    type: 'SET-CANDIDATE-FOLLOWERS',
+    payload: {
+      followers: followers
+    }
+  }
+)
+
+export const handleFollowAction = user => {
+  return {
+    type: 'HANDLE-FOLLOW',
+    payload: {
+      user: user
+    }
+  }
+}
+
+export const setFavoritesFollowers = (fftype, favoritesfollowers) => (
+  {
+    type: 'SET-FAVORITES-FOLLOWERS',
+    payload: {
+      fftype: fftype,
+      favoritesfollowers: favoritesfollowers
     }
   }
 )
