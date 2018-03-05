@@ -3,7 +3,7 @@ import { Menu, Input, Header, Container, Button } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
-import { logout, setUser, setFavorites, setFollowers } from '../../src/actions/actions.js';
+import { logout, setUser, setFavoritesFollowers } from '../../src/actions/actions.js';
 import { bindActionCreators } from 'redux';
 import $ from 'jquery';
 const uuidv4 = require('uuid/v4');
@@ -30,9 +30,7 @@ class Sidebar extends React.Component {
             favoritesfollowers = favoritesfollowers[1].forEach(item => {
               output.push(`${item.firstname} ${item.lastname}`);
             })
-            type === 'voters' ?
-              this.props.setFollowers(output) :
-              this.props.setFavorites(output)
+            this.props.setFavoritesFollowers(type, output);
           }
         })
       }
@@ -110,6 +108,41 @@ class Sidebar extends React.Component {
                   </Menu.Menu>
               </Menu.Item>
               <Menu.Item>
+                { this.props.fftype && this.props.fftype === 'favorites' ?
+                  <Menu.Item>
+                    <Menu.Header>Welcome, {this.props.firstname}!</Menu.Header>
+                    <Menu.Item>Total Favorites: {this.props.favoritesfollowers.length}</Menu.Item>
+                    <Menu.Menu>
+                      {this.props.favoritesfollowers.map(favorite => {
+                        return (
+                          <Menu.Item
+                            key={uuidv4()}
+                            name={favorite}
+                            active={activeItem === favorite}
+                            onClick={this.handleItemClick}/>
+                        )
+                      })}
+                    </Menu.Menu>
+                  </Menu.Item>
+                  : null
+                }
+                { this.props.fftype && this.props.fftype === 'followers' ?
+                  <Menu.Item>
+                    <Menu.Header>Welcome, {this.props.firstname}!</Menu.Header>
+                    <Menu.Item>Total Followers: {this.props.favoritesfollowers.length}</Menu.Item>
+                    <Menu.Menu>
+                      {this.props.favoritesfollowers.map(follower => {
+                        return (
+                          <Menu.Item
+                            key={uuidv4()}
+                            name={follower}
+                            active={activeItem === follower}
+                          />)
+                        })}
+                    </Menu.Menu>
+                  </Menu.Item>
+                  : null
+                }
               { this.props.currentUser
                 ? <Button onClick={this.sendLogoutRequest.bind(this)} size='small'>Logout</Button>
                 :
@@ -120,6 +153,7 @@ class Sidebar extends React.Component {
                   </Link>
               }
               </Menu.Item>
+
           </Menu>
           </Container>
 
@@ -130,12 +164,13 @@ class Sidebar extends React.Component {
 const mapStateToProps = (state) => ({
   races: state.data.races,
   currentUser: state.data.currentUser,
-  favorites: state.data.favorites,
-  followers: state.data.followers
+  fftype: state.data.fftype,
+  favoritesfollowers: state.data.favoritesfollowers,
+  firstname: state.data.firstname
 });
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({logout, setUser, setFavorites, setFollowers}, dispatch);
+  return bindActionCreators({logout, setUser, setFavoritesFollowers}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Sidebar));

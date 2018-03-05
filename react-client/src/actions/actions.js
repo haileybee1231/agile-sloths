@@ -1,8 +1,9 @@
-export const login = username => ( // actions return a plain object with a type and payload
+export const login = (username, firstname) => ( // actions return a plain object with a type and payload
   {
     type: 'LOGIN',
     payload: {
-      username: username
+      username: username,
+      firstname: firstname
     }
   }
 )
@@ -107,20 +108,12 @@ export const saveCandidateInfo = results => (
   }
 )
 
-export const setFavorites = favorites => (
+export const setFavoritesFollowers = (fftype, favoritesfollowers) => (
   {
-    type: 'SET-FAVORITES',
+    type: 'SET-FAVORITES-FOLLOWERS',
     payload: {
-      favorites: favorites
-    }
-  }
-)
-
-export const setFollowers = followers => (
-  {
-    type: 'SET-FAVORITES',
-    payload: {
-      followers: followers
+      fftype: fftype,
+      favoritesfollowers: favoritesfollowers
     }
   }
 )

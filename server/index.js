@@ -207,7 +207,7 @@ app.post('/follow', isLoggedIn, (req, res) => {
 
 // ///// USER-RELATED REQUESTS /////
 app.post('/login', passport.authenticate('local-login'), (req, res) => {
-  let response = {username: req.body.username, sessionID: req.sessionID}
+  let response = {username: req.body.username, sessionID: req.sessionID, firstname: req.user[0].firstname}
   res.status(201).send(response);
 });
 

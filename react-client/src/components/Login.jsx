@@ -27,7 +27,7 @@ const LoginForm = (props) =>  {
       success: response => {
         window.localStorage.sessionID = response.sessionID;
         window.localStorage.user = response.username;
-        props.login(response.username);
+        props.login(response.username, response.firstname);
         props.history.push('/');
       },
       error: err => {
@@ -61,7 +61,7 @@ const LoginForm = (props) =>  {
           <Header as='h2' color='green' textAlign='center'>
             {' '}Log-in to your account
           </Header>
- 
+
         <Form size='large'>
           <Segment stacked>
             <Form.Input
