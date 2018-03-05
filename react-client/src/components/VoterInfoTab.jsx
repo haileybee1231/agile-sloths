@@ -38,13 +38,27 @@ class ConnectedVoterInfoTab extends React.Component {
 
   render() {
     const numberOfPollingStations = 10;
+    const location = this.props.pollingInfo.data ? this.props.pollingInfo.data : undefined;
     const styles = {
+      header: {
+        fontSize: '16px'
+      },
+      stations: {
+        fontSize: '<14> </14>px'
+      },
       locationName: {
         fontSize: '16px',
         fontWeight: 'bold'
       },
       address: {
         fontSize: '14px'
+      },
+      biggerAndBolder: {
+        fontWeight: 'bold',
+        fontSize: '17px'
+      },
+      bold: {
+        fontWeight: 'bold'
       }
     }
     return (
@@ -59,19 +73,22 @@ class ConnectedVoterInfoTab extends React.Component {
       </Menu.Item>
       {this.props.pollingInfo.data 
         ? <div> 
-            <Menu.Header> {`${ numberOfPollingStations } closest Election Day Polling Stations`}</Menu.Header>
+            <Menu.Header>
+              <span style={ styles.header }>The <span style={ styles.biggerAndBolder }>{ location.election.name }</span> is the next election in <span style={ styles.biggerAndBolder }>{ location.normalizedInput.zip }</span>.</span>
+              <p>Voting occurs on <span style={ styles.biggerAndBolder }>{ location.election.electionDay }</span>.</p>
+              <p style={ styles.stations }> Here are your <span style={ styles.biggerAndBolder }>{ numberOfPollingStations }</span> closest voting stations:</p>
+            </Menu.Header>
             <Divider hidden />
             <Menu.Menu>
               {this.props.pollingInfo.data.pollingLocations.slice(0, numberOfPollingStations).map(location => ( // only takes in x number because there are a lot...
                 <Menu.Item key={ uuidv4() }>
                   <Menu.Item style={ styles.locationName }>{ location.address.locationName }</Menu.Item>
-                  <Menu.Item style={ styles.address }>Open from { location.pollingHours.split(' (')[0] }</Menu.Item>  {/* removes '(Election Day)'*/}
+                  <Menu.Item style={ styles.address }>Open from <span style={ styles.bold }>{ helper.separateTimes(location.pollingHours)[0] }</span> to <span style={ styles.bold }>{ helper.separateTimes(location.pollingHours)[1].split('(')[0] }</span></Menu.Item>  {/* removes '(Election Day)'*/}
                   <Menu.Item style={ styles.address }>{ location.address.line1 }</Menu.Item>
                   <Menu.Item style={ styles.address }>{ location.address.city}, {location.address.state } { location.address.zip } </Menu.Item>
                   <Divider fitted />
                 </Menu.Item>
-              ))}
-              
+              ))}  
             </Menu.Menu>
           </div>
         : <div>
