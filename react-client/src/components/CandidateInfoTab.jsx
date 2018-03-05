@@ -40,10 +40,11 @@ class ConnectedCandidateInfoTab extends React.Component {
     const searchedLocation = this.props.candidateInfo.data ? this.props.candidateInfo.data.normalizedInput : undefined;
     const styles = {
       header: {
-        fontSize: '24px'
+        fontSize: '20px'
       },
       name: {
-        fontSize: '16px'
+        fontSize: '16px',
+        fontWeight: 'bold'
       },
       hours: {
         fontSize: '13px'
@@ -62,7 +63,8 @@ class ConnectedCandidateInfoTab extends React.Component {
                     <Grid.Row columns={1} key={ uuidv1() }>
                       <Grid.Column>
                         <div>
-                          <p style={ styles.name }>{ candidate.name } | { candidate.party }</p>
+
+                          <p style={ styles.name }> <a href={ candidate.urls[0] } target="_blank">{ candidate.name }</a> | { candidate.party }</p>
                           <p style={ styles.address }>{ candidate.address[0].line1 }</p> {/* refactor to accommodate an array of addresses */}
                           <p style={ styles.address }>{ candidate.address[0].city }, { candidate.address[0].state } </p>
                           <p style={ styles.address }>{ candidate.address[0].zip }</p>
