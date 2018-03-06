@@ -18,7 +18,7 @@ class Sidebar extends React.Component {
         this.handleItemClick = this.handleItemClick.bind(this)
     }
 
-    componentWillMount() {
+    componentWillMount() { // as soon as component mounts, it gets the logged in user's favorites or followers based on their role
       let email = window.localStorage.user;
       if (email) {
         $.ajax({
@@ -35,14 +35,13 @@ class Sidebar extends React.Component {
           }
         })
       }
-      this.getRacesAndCandidates();
+      this.getRacesAndCandidates(); // it then also gets all the races and candidates currently in the database so it can render them
     }
 
     handleItemClick(e){
-      let name = e.target.innerHTML.split('-->')[1].split('<!--')[0]; // Jacob, this wasn't targeting correclty and I had to come up with this... we should find a more elegant solution
-      name = name.replace("'", '%60');
-      this.setState({ activeItem: name });
-      $.ajax({
+      let name = e.target.innerHTML.split('-->')[1].split('<!--')[0]; // grabs selected name from JSX
+      this.setState({ activeItem: name }); // sets it to active state so it appears bolded
+      $.ajax({ // then gets that user's profile info
         type: 'GET',
         url: `/api/user?${name}`,
         success: user => {
@@ -52,7 +51,7 @@ class Sidebar extends React.Component {
             type: 'GET',
             url: `/api/candidatefollowers?${name}`,
             success: followers => {
-              this.props.setCandidateFollowers(followers);
+              this.props.setCandidateFollowers(followers); // and then makes an async call to get that user's candidates and followers
             }
           })
         },
@@ -63,19 +62,19 @@ class Sidebar extends React.Component {
     }
 
     sendLogoutRequest() {
-      let bound = this
+      let bound = this; // to keep context
       axios.post('/logout')
         .then(function(response) {
-          window.localStorage.clear()
+          window.localStorage.clear();
         })
         .then(function(response) {
           bound.props.logout()
         })
         .then(function(response) {
-          alert('You have been successfully logged out')
+          alert('You have been successfully logged out');
         })
         .catch(function(err) {
-          alert('There was an issue logging you out. Please try again.')
+          alert('There was an issue logging you out. Please try again.');
         })
     };
 
@@ -83,14 +82,14 @@ class Sidebar extends React.Component {
       $.ajax({
         type: 'GET',
         url: '/racescandidates',
-        success: racesCandidates => {
+        success: racesCandidates => { // get races and candidates will output to arrays
           let elections = this.props.races;
           let candidates = [];
           racesCandidates = JSON.parse(racesCandidates);
-          racesCandidates.forEach(combination => {
-            elections.indexOf(combination.office) < 0 ?
-              elections.push(combination.office) : null;
-            combination.role === 'Candidate' ? candidates.push({
+          racesCandidates.forEach(combination => { // for each result,
+            elections.indexOf(combination.office) < 0 ? // if it hasn't already been added to the list of races,
+              elections.push(combination.office) : null; // gets added
+            combination.role === 'Candidate' ? candidates.push({ // then, if the user in a given result is a candidate, it pulls all of their info to set them for the sidebar
               email: combination.email,
               bio: combination.bio,
               firstname: combination.firstname,

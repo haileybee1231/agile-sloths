@@ -19,15 +19,14 @@ class Profile extends React.Component {
 			followStatus: null,
 		}
 		this.handleFollow = this.handleFollow.bind(this);
-	} 
-
-	componentWillMount() {
-		this.props.favoritesfollowers && this.props.favoritesfollowers.indexOf(`${this.props.selectedUser.user.firstname} ${this.props.selectedUser.user.lastname}`) !== -1 ?
-		this.setState({followStatus: true}) : this.setState({followStatus: false});
 	}
 
-	handleFollow() {    
-		// ajax post request to add to database
+	componentWillMount() { // to check if button should say follow vs unfollow,
+		this.props.favoritesfollowers && this.props.favoritesfollowers.indexOf(`${this.props.selectedUser.user.firstname} ${this.props.selectedUser.user.lastname}`) !== -1 ? // check if the user has favorites/followers and if selectedUser is in that list
+		this.setState({followStatus: true}) : this.setState({followStatus: false}); // set state accordingly
+	}
+
+	handleFollow() {
 		$.ajax({
 			type: 'POST',
 			url: '/follow',
@@ -38,10 +37,8 @@ class Profile extends React.Component {
 				this.props.handleFollowAction(`${this.props.selectedUser.user.firstname} ${this.props.selectedUser.user.lastname}`)
 				var selectedUserName = this.props.selectedUser.user.firstname + ' ' + this.props.selectedUser.user.lastname;
 				if (!this.state.followStatus) {
-					// toggle button
 					this.setState({followStatus: true});
 				} else {
-					// toggle button
 					this.setState({followStatus: false});
 				}
 			},
@@ -56,7 +53,7 @@ class Profile extends React.Component {
 	render() {
 		const user = this.props.selectedUser.user;
 		var followMessage;
-		this.props.favoritesfollowers && this.props.favoritesfollowers.indexOf(`${this.props.selectedUser.user.firstname} ${this.props.selectedUser.user.lastname}`) !== -1 ?
+		this.props.favoritesfollowers && this.props.favoritesfollowers.indexOf(`${this.props.selectedUser.user.firstname} ${this.props.selectedUser.user.lastname}`) !== -1 ? // determine text of follow button as above
 		followMessage = 'Unfollow' : followMessage = 'Follow';
 
 		return (

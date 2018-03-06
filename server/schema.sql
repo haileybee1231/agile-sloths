@@ -25,7 +25,7 @@ CREATE TABLE races (
 );
 
 -- Table 'Users'
-   
+
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users (
@@ -38,7 +38,7 @@ CREATE TABLE users (
   `role` VARCHAR(50) NULL DEFAULT NULL,
   `location` VARCHAR(100) NOT NULL,
   `race` INTEGER NULL DEFAULT NULL,
-  `photo` VARCHAR(150) NULL DEFAULT NULL,
+  `photo` VARCHAR(500) NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 );
 

@@ -1,8 +1,8 @@
-var mysql = require('mysql');
-var bcrypt = require('bcrypt');
+const mysql = require('mysql');
+const bcrypt = require('bcrypt');
 
 
-var connection = mysql.createConnection({
+const connection = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
   password : '',
@@ -16,6 +16,8 @@ connection.connect(err => {
     console.log('Database connected!');
   }
 });
+
+/* ==============RACES============== */
 
 const selectAllRaces = function(cb) {
   connection.query('SELECT * FROM races', function(err, results) {
@@ -40,21 +42,7 @@ const saveRace = function(date, state, city, district, office, cb) {
   })
 }
 
-const addUser = function(email, password, firstname, lastname, bio, role, location, race, photo, cb) {
-  bcrypt.hash(password, 10, function(err, hash) {
-    connection.query('INSERT INTO users (email, password, firstname, lastname, bio, role, location, race, photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-    [email, hash, firstname, lastname, bio, role, location, race, photo], function(err, results) {
-      if (err) {
-        cb(err, null);
-      } else {
-        cb(null, results);
-      }
-    }
-  )
-})
-}
-
-var getAllRacesAndCandidates = function(cb) {
+const getAllRacesAndCandidates = function(cb) {
   connection.query('SELECT * FROM users LEFT JOIN races ON users.race=races.id', function(err, racesCandidates) {
     if (err) {
       cb(err, null);
@@ -64,7 +52,141 @@ var getAllRacesAndCandidates = function(cb) {
   })
 }
 
-var addEvent = function(title, state, city, streetAddress, date, time, description, host, cb) { // host should be the email of the logged in user
+/* ==============USERS============== */
+const addUser = function(email, password, firstname, lastname, bio, role, location, race, photo, cb) {
+  bcrypt.hash(password, 10, function(err, hash) {
+    connection.query('INSERT INTO users (email, password, firstname, lastname, bio, role, location, race, photo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    [email, hash, firstname, lastname, bio, role, location, race, photo], function(err, results) {
+      if (err) {
+        cb(err, null);
+      } else {
+        cb(null, results);
+      }
+    })
+  })
+}
+
+const getUserByEmail = function(email, cb) {
+  connection.query('SELECT * FROM users WHERE email=?', [email], function(err, user) {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, user);
+    }
+  })
+}
+
+const getUserNameById = function(id, cb) {
+  connection.query('SELECT firstname, lastname FROM users WHERE id=?', [id], function(err, user) {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, user);
+    }
+  })
+}
+
+const getUserByName = function(first, last, cb) {
+  connection.query('SELECT * FROM users WHERE firstname=? AND lastname=?', [first, last], function(err, user) {
+    if (err) {
+      cb(err, null);
+    } else {
+      cb(null, user);
+    }
+  })
+}
+
+/* ==============USER RELATIONSHIPS============== */
+const findVoterCandidate = function(voter, candidate, cb) {
+  connection.query('SELECT * FROM votercandidate WHERE voter = ? AND candidate = ?', [voter, candidate], function(err, results) {
+    if (err) {
+      cb(err, null)
+    } else {
+      cb(null, results);
+    }
+  })
+}
+
+const followCandidate = function(voter, candidate, cb) {
+  findVoterCandidate(voter, candidate, function(err, result) {
+   if (err, null) {
+     cb(null, result)
+   } else if (result.length > 0) {
+     cb(null, 'You already follow that user.')
+   } else {
+    if (result.length === 0) {
+      connection.query('INSERT INTO votercandidate (voter, candidate) VALUES (?, ?)', [voter, candidate], function(err, result) {
+        if (err) {
+          cb(err)
+        } else {
+          cb(result);
+        }
+      });
+    }
+  }});
+}
+
+const unfollowCandidate = function(voter, candidate, cb) {
+  findVoterCandidate(voter, candidate, function(err, result) {
+    if (err) {
+      cb(err, null);
+    } else if (!result.length) {
+      cb(null, 'You don\'t follow this candidate.')
+    } else {
+      connection.query('DELETE FROM votercandidate WHERE voter = ? AND candidate = ?', [voter, candidate], function(err, result) {
+        if (err) {
+          cb(result)
+        } else {
+          cb(result);
+        }
+      })
+    }
+  })
+}
+
+const getFavoritesFollowers = function(user, cb) {
+  getUserByEmail(user, function(err, user) {
+    if (err) {
+      cb(err, null);
+    }
+    if (user[0].role === 'Voter') { // if user is a voter, get names of all their favorites by joining the users table with the results of a joined user/user relationships table
+      connection.query('SELECT firstname, lastname FROM users INNER JOIN (SELECT candidate FROM votercandidate INNER JOIN users WHERE voter=users.id AND users.id=?) cs WHERE cs.candidate=users.id', [user[0].id], function(err, candidates) {
+        if (err) {
+          cb(err, null);
+        } else {
+          cb(null, ['favorites', candidates]);
+        }
+      })
+    } else { // same for if they are a candidate, just in the opposite order
+      connection.query('SELECT firstname, lastname FROM users INNER JOIN (SELECT voter FROM votercandidate INNER JOIN users WHERE candidate=users.id AND users.id=?) cs WHERE cs.voter=users.id;', [user[0].id], function(err, voters) {
+        if (err) {
+          cb(err, null);
+        } else {
+          cb(null, ['followers', voters])
+        }
+      })
+    }
+  })
+}
+
+const getCandidateFollowers = function(first, last, cb) {
+  getUserByName(first, last, function(err, user) {
+    if (err) {
+      cb(err, null);
+    } else {
+      connection.query('SELECT firstname, lastname FROM users INNER JOIN votercandidate WHERE users.id=voter AND candidate=?', [user[0].id], function(err, followers) {
+        if (err) {
+          cb(err, null);
+        } else {
+          cb(null, followers);
+        }
+      });
+    }
+  })
+}
+
+/* ==============EVENTS============== */
+const addEvent = function(title, state, city, streetAddress, date, time, description, host, cb) { // host should be the email of the logged in user
   getEventByTitle(title, function(err, event) {
     if (err) {
       cb(err, null);
@@ -90,7 +212,7 @@ var addEvent = function(title, state, city, streetAddress, date, time, descripti
   });
 }
 
-var attendEvent = function(title, email, cb) { // query will insert based on userid and eventid so retrieve those first
+const attendEvent = function(title, email, cb) { // query will insert based on userid and eventid so retrieve those first
   getUserByEmail(email, function(err, user) {
     if (err) {
       cb(err, null);
@@ -100,7 +222,7 @@ var attendEvent = function(title, email, cb) { // query will insert based on use
         if (err) {
           cb(err, null);
         }
-        attendees.forEach(attendee => {
+        attendees.forEach(attendee => { // check to see if attendee is already attending event
           if (attendee.user === user[0].id) {
             found = true;
             cb(null, 'You are already attending that event.');
@@ -120,39 +242,7 @@ var attendEvent = function(title, email, cb) { // query will insert based on use
   })
 }
 
-var getUserByEmail = function(email, cb) {
-  connection.query('SELECT * FROM users WHERE email=?', [email], function(err, user) {
-    if (err) {
-      cb(err, null);
-    } else {
-      cb(null, user);
-    }
-  })
-}
-
-var getUserNameById = function(id, cb) {
-  connection.query('SELECT firstname, lastname FROM users WHERE id=?', [id], function(err, user) {
-    if (err) {
-      cb(err, null);
-    } else {
-      cb(null, user);
-    }
-  })
-}
-
-var getUserByName = function(first, last, cb) {
-  connection.query('SELECT * FROM users WHERE firstname=? AND lastname=?', [first, last], function(err, user) {
-    // need to add query to also get followers/favorites from votercandidate table and send them back too
-    if (err) {
-      cb(err, null);
-    } else {
-      cb(null, user);
-    }
-  })
-}
-
-
-var getAllEvents = function(cb) {
+const getAllEvents = function(cb) {
   connection.query('SELECT * FROM events', function(err, events) {
     if (err) {
       cb(err, null);
@@ -168,7 +258,7 @@ var getAllEvents = function(cb) {
   })
 }
 
-var getNewEvents = function(number, offset, cb) {
+const getNewEvents = function(number, offset, cb) { // get newest events in increments of 10, using an offset based on how many events the front end currently has
   connection.query('SELECT events.id, events.title, events.state, events.city, events.streetAddress, events.date, events.time, events.description, events.created, users.firstname, users.lastname FROM events LEFT JOIN users ON events.host=users.id LIMIT ? OFFSET ?', [number, offset], function(err, events) {
     if (err) {
       cb(err, null)
@@ -176,12 +266,9 @@ var getNewEvents = function(number, offset, cb) {
       cb(null, events);
     }
   })
-  // connection.query('SELECT * FROM events LEFT JOIN users WHERE id>=? AND id<? + 10', [number, number], function(err, events) {
-  //
-  // })
 }
 
-var getEventByTitle = function(title, cb) {
+const getEventByTitle = function(title, cb) {
   connection.query('SELECT * FROM events WHERE title=?', [title], function(err, event) {
     if (err) {
       cb(err, null);
@@ -191,7 +278,7 @@ var getEventByTitle = function(title, cb) {
   })
 }
 
-var getAllEventAttendees = function(cb) {
+const getAllEventAttendees = function(cb) {
   connection.query('SELECT firstname, lastname, event FROM users INNER JOIN eventsusers WHERE users.id=user', function(err, attendees) {
     if (err) {
       cb(err, null);
@@ -201,100 +288,12 @@ var getAllEventAttendees = function(cb) {
   })
 }
 
-var getEventAttendees = function(event, cb) {
+const getEventAttendees = function(event, cb) {
   connection.query('SELECT * FROM events e INNER JOIN eventsusers eu WHERE e.id = eu.event AND e.title=?', [event], function(err, event) {
     if (err) {
       cb(err, null);
     } else {
       cb(null, event);
-    }
-  })
-}
-
-var findVoterCandidate = function(voter, candidate, cb) {
-  connection.query('SELECT * FROM votercandidate WHERE voter = ? AND candidate = ?', [voter, candidate], function(err, results) {
-    if (err) {
-      cb(err, null)
-    } else {
-      cb(null, results);
-    }
-  })
-}
-
-var followCandidate = function(voter, candidate, cb) {
-  findVoterCandidate(voter, candidate, function(err, result) {
-   if (err, null) {
-     cb(null, result)
-   } else if (result.length > 0) {
-     cb(null, 'You already follow that user.')
-   } else {
-    if (result.length === 0) {
-      connection.query('INSERT INTO votercandidate (voter, candidate) VALUES (?, ?)', [voter, candidate], function(err, result) {
-        if (err) {
-          cb(err)
-        } else {
-          cb(result);
-        }
-      });
-    }
-  }});
-}
-
-var unfollowCandidate = function(voter, candidate, cb) {
-  findVoterCandidate(voter, candidate, function(err, result) {
-    if (err) {
-      cb(err, null);
-    } else if (!result.length) {
-      cb(null, 'You don\'t follow this candidate.')
-    } else {
-      connection.query('DELETE FROM votercandidate WHERE voter = ? AND candidate = ?', [voter, candidate], function(err, result) {
-        if (err) {
-          cb(result)
-        } else {
-          cb(result);
-        }
-      })
-    }
-  })
-}
-
-var getFavoritesFollowers = function(user, cb) {
-  getUserByEmail(user, function(err, user) {
-    if (err) {
-      cb(err, null);
-    }
-    if (user[0].role === 'Voter') {
-      connection.query('SELECT firstname, lastname FROM users INNER JOIN (SELECT candidate FROM votercandidate INNER JOIN users WHERE voter=users.id AND users.id=?) cs WHERE cs.candidate=users.id', [user[0].id], function(err, candidates) {
-        if (err) {
-          cb(err, null);
-        } else {
-          cb(null, ['favorites', candidates]);
-        }
-      })
-    } else {
-      connection.query('SELECT firstname, lastname FROM users INNER JOIN (SELECT voter FROM votercandidate INNER JOIN users WHERE candidate=users.id AND users.id=?) cs WHERE cs.voter=users.id;', [user[0].id], function(err, voters) {
-        if (err) {
-          cb(err, null);
-        } else {
-          cb(null, ['followers', voters])
-        }
-      })
-    }
-  })
-}
-
-var getCandidateFollowers = function(first, last, cb) {
-  getUserByName(first, last, function(err, user) {
-    if (err) {
-      cb(err, null);
-    } else {
-      connection.query('SELECT firstname, lastname FROM users INNER JOIN votercandidate WHERE users.id=voter AND candidate=?', [user[0].id], function(err, followers) {
-        if (err) {
-          cb(err, null);
-        } else {
-          cb(null, followers);
-        }
-      });
     }
   })
 }

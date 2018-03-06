@@ -15,7 +15,6 @@ const EventCard = props => {
       contentType: 'application/json',
       data: JSON.stringify(data),
       success: response => {
-        console.log(response);
         if (JSON.parse(response) === 'You are already attending that event.') {
           alert(JSON.parse(response));
         } else {
@@ -47,7 +46,7 @@ const EventCard = props => {
 }
 
 const mapStateToProps = state => ({
-  currentUser: state.data.currentUser
+  currentUser: state.data.currentUser // component needs current user so that if they attend an event it can grab their email
 })
 
 const mapDispatchToProps = dispatch => {

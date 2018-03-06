@@ -18,13 +18,13 @@ class EventForm extends React.Component {
       date: '',
       time: '',
       description: '',
-      host: this.props.currentUser,
-      success: false,
+      host: this.props.currentUser, // host will always only be logged in user creating events
+      success: false, // success and failure states for submission
       failure: false,
     }
   }
 
-  handleChange(e, { name, value }) {
+  handleChange(e, { name, value }) { // monitors fields to keep inputs linked in real time
     this.setState({
       [name]: value
     })
@@ -32,7 +32,7 @@ class EventForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const { title, state, city, streetAddress, date, time, description, host } = this.state;
+    const { title, state, city, streetAddress, date, time, description, host } = this.state; // on click, grabs all fields from state
     if (!title) {
       this.setState({
           failure: true,
@@ -91,15 +91,15 @@ class EventForm extends React.Component {
       contentType: 'application/json',
       data: JSON.stringify(data),
       success: response => {
-        this.setState({success: true});
-        if (+data.time.substr(0, 2) > 12) {
+        this.setState({success: true}); // flash success message
+        if (+data.time.substr(0, 2) > 12) { // parse timestamps -- first, if event is PM, render it as such
           data.time = `${+data.time.slice(0, 2) - 12}:${data.time.slice(3, 5)} PM`
-        } else if (data.time.substr(0, 2) === '00') {
+        } else if (data.time.substr(0, 2) === '00') { // if the timestamp is midnight, show it as 12:00 AM
           data.time = `12:${data.time.slice(3, 5)} AM`
         } else {
-          data.time = `${+data.time.slice(0, 2)}:${data.time.slice(3, 5)} AM`
+          data.time = `${+data.time.slice(0, 2)}:${data.time.slice(3, 5)} AM` // otherwise, it will be a morning time
         }
-        this.props.createEvent({...data, firstname: window.localStorage.firstname, lastname: window.localStorage.lastname});
+        this.props.createEvent({...data, firstname: window.localStorage.firstname, lastname: window.localStorage.lastname}); // create an event, using all form data plus the logged in user which is set in local storage
       },
       error: err => {
 
@@ -115,7 +115,7 @@ class EventForm extends React.Component {
         <Modal.Header>Host An Event</Modal.Header>
         <Modal.Content image>
           <div className='image'>
-            <Icon name='calendar' />
+            <Icon name='calendar' />   {/* success message after successul event creation */}
             {this.state.success && [
               <Message
                 key='1'
@@ -124,7 +124,7 @@ class EventForm extends React.Component {
                 content='You should see it in the feed shortly.'
                 />
             ]
-          }
+          }  {/* failure message, pulling message content as set in function above */}
           {this.state.failure && [
             <Message
               key='1'

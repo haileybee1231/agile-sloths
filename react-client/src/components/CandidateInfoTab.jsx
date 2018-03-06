@@ -1,12 +1,12 @@
 import React from 'react';
 import { connect, bindActionCreators } from 'react-redux';
-import { Grid, Container } from 'semantic-ui-react';
+import { Grid } from 'semantic-ui-react';
 import { saveCandidateInfo } from '../actions/actions.js';
 import helper from '../../../lib/serverHelpers.js';
 import config from '../../../config.js';
 import { withRouter } from 'react-router-dom';
-import axios from 'axios';
-import uuidv1 from 'uuid';
+import axios from 'axios'
+import uuidv1 from 'uuid'
 
 class ConnectedCandidateInfoTab extends React.Component {
   constructor(props) {
@@ -17,11 +17,7 @@ class ConnectedCandidateInfoTab extends React.Component {
   }
 
   componentWillMount() {
-    // create conditional to check if user is a voter--THAT INFO IS NOT CURRENTLY STORED IN CURRENTUSER INFO
-    // if so
-      this.fetchCandidateInfo(this.props.saveCandidateInfo, window.localStorage.zipCode || '78701') //replace with currentUser zip (can take any address though) -- THAT INFO IS NOT CURRENTLY STORED IN CURRENTUSER INFO
-    // else
-      // do nothing
+    this.fetchCandidateInfo(this.props.saveCandidateInfo, window.localStorage.zipCode || '78701') // defaults to a local Austin zip, can be refactored to take logged in user's zip
   }
 
   fetchCandidateInfo(dispatch, address) {
@@ -37,14 +33,13 @@ class ConnectedCandidateInfoTab extends React.Component {
   }
 
   render() {
-    const searchedLocation = this.props.candidateInfo.data ? this.props.candidateInfo.data.normalizedInput : undefined;
+    // const searchedLocation = this.props.candidateInfo.data.normalizedInput; // returning undefined
     const styles = {
       header: {
-        fontSize: '18px'
+        fontSize: '24px'
       },
       name: {
-        fontSize: '16px',
-        fontWeight: 'bold'
+        fontSize: '16px'
       },
       hours: {
         fontSize: '13px'
@@ -55,29 +50,24 @@ class ConnectedCandidateInfoTab extends React.Component {
     }
     return (
       <div>
-        {this.props.candidateInfo.data !== undefined 
-          ? <div>
-              <p style={styles.header}>Representatives in { searchedLocation.city }, { searchedLocation.state }</p>
-              <Grid divided='vertically'>
-                {this.props.candidateInfo.data.officials.map(candidate => ( // takes the first 10 (because there are a lot)
-                    <Grid.Row columns={1} key={ uuidv1() }>
-                      <Grid.Column>
-                        <div>
-                          <span style={ styles.name }> <a href={ candidate.urls[0] } target="_blank">{ candidate.name }</a> | { candidate.party }</span> <br></br>
-                          <span style={ styles.address }>{ candidate.address[0].line1 }</span> <br></br>{/* refactor to accommodate an array of addresses */}
-                          <span style={ styles.address }>{ candidate.address[0].city }, { candidate.address[0].state } { candidate.address[0].zip } </span> <br></br>
-                        </div>
-                      </Grid.Column>
-                    </Grid.Row> 
-                  ))}
-              </Grid>
-            </div> 
-          :  <div>
-              <Container>
-                loading representatives
-              </Container>
-            </div>
-      }
+        {/* <p style={styles.header}>Representatives in { this.props.candidateInfo.data.normalizedInput.city }, { this.props.candidateInfo.data.normalizedInput.state }</p> // returning undefined */}
+        <p style={ styles.header }>Other Representatives in Your Area</p>{/* would rather specify based on searched location like above */}
+        <Grid divided='vertically'>
+          {this.props.candidateInfo && // checks to see if there is candidateInfo object
+            this.props.candidateInfo.data && // checks if that object has  officials before iterating
+            this.props.candidateInfo.data.officials.map(candidate => ( // takes the first 10 (because there are a lot)
+              <Grid.Row columns={1} key={uuidv1()}>
+                <Grid.Column>
+                  <div>
+                    <p style={ styles.name }>{ candidate.name } | { candidate.party }</p>
+                    <p style={ styles.address }>{ candidate.address[0].line1 }</p> {/* refactor to accommodate an array of addresses */}
+                    <p style={ styles.address }>{ candidate.address[0].city }, { candidate.address[0].state } </p>
+                    <p style={ styles.address }>{ candidate.address[0].zip }</p>
+                  </div>
+                </Grid.Column>
+              </Grid.Row>
+            ))}
+        </Grid>
       </div>
     )
   }

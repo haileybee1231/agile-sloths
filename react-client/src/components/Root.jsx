@@ -7,13 +7,13 @@ import { createBrowserHistory } from 'history';
 import App from './App.jsx';
 import reducers from '../reducers/reducers.js';
 
-// store file not currently being used.
-// Biggest difference is current version does not account for redux plugin
+// at some point we ended up with two stores? They are both doing something, but there should defintitely only be one...
 const store = createStore(
   combineReducers({
     ...reducers,
     routing: routerReducer
   }),
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
 // used to give URL history to redux

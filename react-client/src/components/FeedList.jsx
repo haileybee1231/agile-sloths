@@ -15,20 +15,20 @@ class FeedList extends React.Component {
     super(props);
 
     this.state = {
-      moreEvents: false
+      moreEvents: false // renders loading message vs end of events message in feed
     }
     this.fetchMoreEvents = this.fetchMoreEvents.bind(this);
   }
 
-  componentDidMount() {
-    this.fetchEvents();
-    this.eventTimer = setInterval(() => {
+  componentDidMount() { // on component mount,
+    this.fetchEvents(); // fetch events starting at 0
+    this.eventTimer = setInterval(() => { // then start a time to grab more every 5 seconds
       this.fetchMoreEvents()
     }, 5000);
   }
 
   componentWillUnmount() {
-    clearInterval(this.eventTimer);
+    clearInterval(this.eventTimer); // if you click away from feed page, stop automatic update
   }
 
   handleClick(e) {
@@ -44,13 +44,13 @@ class FeedList extends React.Component {
   }
 
   fetchEvents() {
-    !this.props.events || this.props.events.length === 0 ?
+    !this.props.events || this.props.events.length === 0 ? // should only fire when there are no events in memory on client
     $.ajax({
       type: 'GET',
       url: `/api/events?0`,
       success: newEvents => {
         newEvents = JSON.parse(newEvents);
-        if (newEvents.fetchedCount < 10) {
+        if (newEvents.fetchedCount < 10) { // if less than 10 events come back, it means there are currently no more messages, so feed should display that it has reached the end
           this.setState({
             moreEvents: false
           })
@@ -59,11 +59,11 @@ class FeedList extends React.Component {
             moreEvents: true
           })
         }
-        let eventIds = [];
+        let eventIds = []; // event id array used to make sure duplicate arrays don't end up in feed
         if (newEvents && newEvents.events.length > 0) {
           newEvents.events.forEach(event => {
             eventIds.push(event.id);
-            event.time = event.time.slice(0, event.time.length - 3);
+            event.time = event.time.slice(0, event.time.length - 3); // parse time as in event card
             if (+event.time.substr(0, 2) > 12) {
               event.time = `${+event.time.slice(0, 2) - 12}:${event.time.slice(3, 5)} PM`
             } else if (event.time.substr(0, 2) === '00') {
@@ -73,7 +73,7 @@ class FeedList extends React.Component {
             }
           })
         }
-        this.props.fetchEventsAction(newEvents.events, eventIds, newEvents.fetchedCount);
+        this.props.fetchEventsAction(newEvents.events, eventIds, newEvents.fetchedCount); // finally, send parsed events to action to be set to state along with eventIds array and fetchcount
       },
       error: (err) => {
         console.error('Could not fetch events: ', err);
@@ -81,7 +81,7 @@ class FeedList extends React.Component {
     }) : null
   }
 
-  fetchMoreEvents() {
+  fetchMoreEvents() { // does exactly the same as above, but fires when there already ARE events in memory. This way, you can end up with infinite scroll, as this fires when you scroll down in addition to every 5 seconds
     this.props.events && this.props.events.length > 0 ?
     $.ajax({
       type: 'GET',
@@ -119,7 +119,7 @@ class FeedList extends React.Component {
     }) : null;
   }
 
-  handleClick(e){
+  handleClick(e){ // visitor can access user pages by clicking event names in feed
     let name = e.target.innerHTML;
     $.ajax({
       type: 'GET',

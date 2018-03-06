@@ -18,21 +18,20 @@ class App extends React.Component {
     super(props)
   }
 
-  componentWillMount() {
+  componentWillMount() { // grab current position (zip and formatted address) from Google for API calls
     window.navigator.geolocation.getCurrentPosition(function(pos){
       $.ajax({
         type: 'GET',
         url: 'http://maps.googleapis.com/maps/api/geocode/json?latlng='+pos.coords.latitude+','+pos.coords.longitude+'&sensor=true',
         success: data => {
           window.localStorage.zipCode = data.results[0].address_components[7].short_name;
-          // window.localStorage.address = data.results[0].formatted_address;
+          window.localStorage.address = data.results[0].formatted_address;
         }
       })
     });
   }
 
-  // App component handles all redirections based on path options below
-  // switch first route to Profile to see profile
+  // App component, which is render in root, handles all redirections based on react router path options below
   render() {
     return (
 

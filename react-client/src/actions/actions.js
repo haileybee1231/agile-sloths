@@ -1,4 +1,4 @@
-export const login = (username, firstname) => ( // actions return a plain object with a type and payload
+export const login = (username, firstname) => ( // actions return a plain object with a type and payload to the reducer
   {
     type: 'LOGIN',
     payload: {
@@ -68,7 +68,7 @@ export const attendEventAction = (event, user) => (
   }
 )
 
-export const setUser = user => {
+export const setUser = user => { // sets user on click for render of their page
   return {
     type: 'SET-USER',
     payload: {
@@ -142,7 +142,7 @@ export const handleFollowAction = user => {
   }
 }
 
-export const setFavoritesFollowers = (fftype, favoritesfollowers) => (
+export const setFavoritesFollowers = (fftype, favoritesfollowers) => ( // takes a type of voter or candidate, provided by server, for conditional rendering purposes
   {
     type: 'SET-FAVORITES-FOLLOWERS',
     payload: {
